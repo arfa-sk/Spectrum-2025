@@ -78,12 +78,13 @@ export function RobotCanvas({ amplitude, speed = 0.35, scale = 0.26, amplitudeMu
     // Pause animation when tab hidden or user prefers reduced motion
     const m = typeof window !== "undefined" ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     const onVisibility = () => setActive(!document.hidden && !(m && m.matches));
-    m?.addEventListener?.('change', onVisibility as any);
+    const handleMediaChange = () => onVisibility();
+    m?.addEventListener?.('change', handleMediaChange);
     document.addEventListener('visibilitychange', onVisibility);
     onVisibility();
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
-      m?.removeEventListener?.('change', onVisibility as any);
+      m?.removeEventListener?.('change', handleMediaChange);
     };
   }, []);
 

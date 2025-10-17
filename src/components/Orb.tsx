@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Triangle, Vec3 } from 'ogl';
 
+type ColorTheme = 'gold' | 'bronze' | 'silver' | 'metallic' | 'cyan' | 'custom';
+
 interface OrbProps {
-  colorTheme?: 'gold' | 'bronze' | 'silver' | 'metallic' | 'cyan' | 'custom';
+  colorTheme?: ColorTheme;
   customColors?: {
     primary: string;
     secondary: string;
@@ -23,7 +25,7 @@ export default function Orb({
   const ctnDom = useRef<HTMLDivElement>(null);
 
   // Color palettes for different themes
-  const colorPalettes = {
+  const colorPalettes: Record<Exclude<ColorTheme, 'custom'>, { primary: number[]; secondary: number[]; accent: number[] }> = {
     gold: {
       primary: [1.0, 0.84, 0.0],      // #FFD700
       secondary: [1.0, 0.65, 0.0],    // #FFA500
@@ -60,7 +62,8 @@ export default function Orb({
         accent: hexToRgb(customColors.accent)
       };
     }
-    return colorPalettes[colorTheme] || colorPalettes.gold;
+    const themeKey = (colorTheme === 'custom' ? 'gold' : colorTheme) as Exclude<ColorTheme, 'custom'>;
+    return colorPalettes[themeKey] || colorPalettes.gold;
   };
 
   // Convert hex to RGB
