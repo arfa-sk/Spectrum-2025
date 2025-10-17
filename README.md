@@ -1,36 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spectrum 2025 - DHA Suffa University Tech Festival
 
-## Getting Started
+![Spectrum 2025](public/sponsors/Logo%20Spectrum.png)
 
-First, run the development server:
+Pakistan's Premier Tech Festival featuring Hackathons, Gaming Competitions, and Talent Showcases.
+
+## 🚀 Features
+
+- ✨ **Beautiful Landing Page** with 3D animations and effects
+- 📝 **Registration System** with Supabase integration
+- 🎨 **Dynamic Forms** with real-time validation
+- 🎯 **Event Categories**: Hackathon, Gaming Arena, Suffa's Got Talent
+- 🌟 **3D Star Field** background using Three.js
+- ⏱️ **Live Countdown Timer** to event date
+- 🎨 **Mouse Tracking Effects** and interactive animations
+- 📱 **Fully Responsive** design for all devices
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 15.5.3 (App Router)
+- **Frontend:** React 19.1.0 + TypeScript
+- **Styling:** Tailwind CSS 4.1.13
+- **Animations:** Framer Motion, Custom CSS
+- **3D Graphics:** Three.js, React Three Fiber
+- **Backend:** Supabase (PostgreSQL)
+- **Icons:** React Icons, Lucide React
+- **Fonts:** Orbitron, Rajdhani, Geist
+
+## 📦 Installation
 
 ```bash
+# Clone the repository
+git clone <your-repo-url>
+cd spectrum-2025
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+# Create a .env.local file with:
+# NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Supabase Configuration
 
-## Learn More
+1. Create a [Supabase](https://supabase.com/) project
+2. Run the SQL schema from `supabase-schema.sql` in the SQL Editor
+3. Get your project URL and anon key from Settings > API
+4. Create `.env.local` with your credentials
 
-To learn more about Next.js, take a look at the following resources:
+See [SETUP.md](SETUP.md) for detailed instructions.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-## Deploy on Vercel
+## 📄 Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **`/`** - Landing page with hero, events, sponsors, about, contact
+- **`/register`** - Registration form for participants
+- **`/sponsors`** - (Coming soon) Full sponsor showcase
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎯 Event Categories
+
+### Hackathon (PKR 150,000)
+- Web Dev
+- Mobile App
+- Data Science
+- Cyber Security
+- UI/UX
+- Startup Ideathon
+
+### Gaming Arena (PKR 50,000)
+- PUBG
+- Valorant
+- FIFA
+- Tekken
+
+### Suffa's Got Talent (TBA)
+- Singing
+- Dance
+- Stand-up Comedy
+- Short Film
+- Art
+- Photography
+
+## 🗂️ Project Structure
+
+```
+spectrum-2025/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx           # Landing page
+│   │   ├── layout.tsx         # Root layout
+│   │   ├── globals.css        # Global styles
+│   │   └── register/
+│   │       ├── page.tsx       # Registration form
+│   │       └── layout.tsx     # Register page metadata
+│   ├── components/
+│   │   ├── Navbar.tsx         # Navigation header
+│   │   ├── HeroSection.tsx    # Hero with countdown
+│   │   ├── AboutUs.tsx        # About section with 3D stars
+│   │   └── ContactUs.tsx      # Contact form & map
+│   └── lib/
+│       ├── supabaseClient.ts  # Supabase config
+│       └── utils.ts           # Utility functions
+├── public/
+│   └── sponsors/              # Sponsor logos
+├── supabase-schema.sql        # Database schema
+├── SETUP.md                   # Setup instructions
+└── REGISTRATION_FEATURES.md   # Registration docs
+```
+
+## 🎨 Design System
+
+- **Primary Colors:** Gold (#FFD700), Black (#000000)
+- **Accent Colors:** Cyber Blue, Pink, Green, Purple
+- **Fonts:** Orbitron (tech/headings), Rajdhani (modern/body)
+- **Animations:** Shimmer, Float, Glitch, Pulse, Marquee
+
+## 📝 Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+## 🔧 Development
+
+The project uses:
+- **TypeScript** for type safety
+- **ESLint** for code quality
+- **Tailwind CSS** for styling
+- **shadcn/ui** components (configured)
+
+## 📞 Contact
+
+- **Email:** dsuspectrum@gmail.com
+- **Phone:** 0309 9226663
+- **Location:** DHA Suffa University, Karachi
+- **Social:** [@acmatdsu](https://instagram.com/acmatdsu)
+
+## 🎓 About DHA Suffa University
+
+Spectrum 2025 is organized by the ACM Chapter at DHA Suffa University, Karachi's leading tech institution.
+
+## 📅 Event Date
+
+**December 20, 2025** | 9:00 AM onwards
+
+## 🏆 Total Prize Pool
+
+**PKR 400,000+**
+
+## 📄 License
+
+This project is private and owned by DHA Suffa University.
+
+---
+
+**Built with ❤️ by the Spectrum 2025 Team**
