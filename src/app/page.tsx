@@ -5,6 +5,7 @@ import AboutUs from "@/components/AboutUs";
 import ContactUs from "@/components/ContactUs";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import Sponsors from "@/components/Sponsors";
@@ -27,18 +28,7 @@ export default function Home() {
       <AboutUs />
       <Sponsors />
       <ContactUs />
-
-      {/* === FOOTER === */}
-      <footer className="py-6 bg-black text-center border-t border-[#FFD700]/30">
-        <p
-          className={`${orbitron.className} text-sm md:text-base animate-shimmer text-white`}
-        >
-          © 2025 Spectrum — DHA Suffa University
-        </p>
-        <p className="text-xs text-neutral-400 mt-1">
-          Empowering Tech Innovators | Coding • Robotics • AI • Creativity
-        </p>
-      </footer>
+      <Footer />
 
       {/* === CUSTOM ANIMATIONS === */}
       <style jsx>{`

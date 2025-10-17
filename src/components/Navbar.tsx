@@ -14,10 +14,10 @@ type NavItem = { name: string; href: string; icon: React.FC<any> };
 
 // Adjusted to site sections and original headings
 const NAV_ITEMS: NavItem[] = [
-  { name: "About Us", href: "#about", icon: Briefcase },
+  { name: "About Us", href: "/#about", icon: Briefcase },
   { name: "Register", href: "/register", icon: Wrench },
-  { name: "Sponsors", href: "#sponsors", icon: Info },
-  { name: "Contact", href: "#contact", icon: Mail },
+  { name: "Sponsors", href: "/#sponsors", icon: Info },
+  { name: "Contact", href: "/#contact", icon: Mail },
 ];
 
 export default function Navbar(): JSX.Element {

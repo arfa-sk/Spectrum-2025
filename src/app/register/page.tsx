@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Orbitron, Rajdhani } from "next/font/google";
+import { useState, useEffect, useRef } from "react";
+import { Orbitron, Rajdhani, Space_Grotesk } from "next/font/google";
 import { supabase } from "@/lib/supabaseClient";
 import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { TimelineContent } from "@/components/timeline-animation";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["400", "600"] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // Type definitions
 interface FormData {
@@ -49,7 +53,7 @@ const subCategories: SubCategories = {
 };
 
 export default function RegisterPage() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -70,11 +74,6 @@ export default function RegisterPage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
 
   // Reset sub-category when main category changes
   useEffect(() => {
@@ -217,15 +216,9 @@ export default function RegisterPage() {
     : [];
 
   return (
-    <main className="relative min-h-screen bg-white text-black overflow-hidden">
-      {/* Mouse Glow Effect */}
-      <div
-        className="pointer-events-none fixed inset-0 z-40"
-        style={{
-          background: `radial-gradient(350px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 215, 0, 0.15), transparent 70%)`,
-          transition: "background 0.1s ease",
-        }}
-      />
+    <>
+      <Navbar />
+      <main ref={sectionRef} className="relative min-h-screen bg-white text-black overflow-hidden">
 
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden -z-10 opacity-30">
@@ -236,51 +229,82 @@ export default function RegisterPage() {
 
       {/* Header Section */}
       <div className="relative z-10 pt-32 pb-16 px-6 text-center">
-        <Link
-          href="/"
-          className="inline-block mb-6 text-sm text-gray-600 hover:text-[#FFD700] transition"
-        >
-          ← Back to Home
-        </Link>
-        <h1
-          className={`${orbitron.className} text-5xl md:text-7xl font-extrabold mb-6 animate-shimmer`}
-        >
-          REGISTER NOW
-        </h1>
-        <div className="w-32 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
-        <p className={`${rajdhani.className} text-lg md:text-xl text-gray-700 max-w-2xl mx-auto`}>
-          Join Pakistan&apos;s Premier Tech Festival — Spectrum 2025
-        </p>
+        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
+          <Link
+            href="/"
+            className="inline-block mb-6 text-sm text-gray-600 hover:text-[#FFD700] transition"
+          >
+            ← Back to Home
+          </Link>
+        </TimelineContent>
+        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
+          <h1
+            className={`${orbitron.className} text-5xl md:text-7xl font-extrabold mb-6 text-black`}
+          >
+            REGISTER NOW
+          </h1>
+        </TimelineContent>
+        <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
+          <div className="w-32 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
+        </TimelineContent>
+        <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
+          <p className={`${spaceGrotesk.className} text-lg md:text-xl text-gray-700 max-w-2xl mx-auto`}>
+            Join Pakistan&apos;s Premier Tech Festival — Spectrum 2025
+          </p>
+        </TimelineContent>
       </div>
 
       {/* Status Messages */}
       {submitStatus === "success" && (
-        <div className="max-w-4xl mx-auto px-6 mb-8">
-          <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
-            <FaCheckCircle className="text-green-500 text-3xl flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="font-bold text-green-800 text-lg mb-1">Success!</h3>
-              <p className="text-green-700">{submitMessage}</p>
+        <TimelineContent animationNum={4} timelineRef={sectionRef} once={false}>
+          <div className="max-w-4xl mx-auto px-6 mb-8">
+            <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
+              <FaCheckCircle className="text-green-500 text-3xl flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-green-800 text-lg mb-1">Success!</h3>
+                <p className="text-green-700">{submitMessage}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </TimelineContent>
       )}
 
       {submitStatus === "error" && submitMessage && (
-        <div className="max-w-4xl mx-auto px-6 mb-8">
-          <div className="bg-red-50 border-2 border-red-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
-            <FaExclamationCircle className="text-red-500 text-3xl flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="font-bold text-red-800 text-lg mb-1">Error</h3>
-              <p className="text-red-700">{submitMessage}</p>
+        <TimelineContent animationNum={4} timelineRef={sectionRef} once={false}>
+          <div className="max-w-4xl mx-auto px-6 mb-8">
+            <div className="bg-red-50 border-2 border-red-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
+              <FaExclamationCircle className="text-red-500 text-3xl flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-red-800 text-lg mb-1">Error</h3>
+                <p className="text-red-700">{submitMessage}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </TimelineContent>
       )}
 
       {/* Registration Form */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20">
-        <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
+        <TimelineContent 
+          animationNum={5} 
+          timelineRef={sectionRef} 
+          once={true}
+          customVariants={{
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.6,
+                ease: [0.25, 0.1, 0.25, 1],
+              },
+            },
+            hidden: {
+              opacity: 0,
+              y: 30,
+            },
+          }}
+        >
+          <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Personal Information Section */}
             <div>
@@ -542,7 +566,7 @@ export default function RegisterPage() {
                   }}
                   className="mt-1 h-5 w-5 accent-black border-2 border-gray-300 rounded"
                 />
-                <span className="text-sm md:text-base text-gray-800">
+                <span className={`${spaceGrotesk.className} text-sm md:text-base text-gray-800`}>
                   I agree to the terms and conditions.
                 </span>
               </label>
@@ -555,11 +579,11 @@ export default function RegisterPage() {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-6">
+            <div className="pt-6 text-center">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-4 px-8 bg-gradient-to-r from-[#FFD700] to-black text-white text-lg font-bold rounded-xl shadow-[0_0_30px_rgba(255,215,0,0.5)] hover:shadow-[0_0_50px_rgba(255,215,0,0.8)] hover:scale-[1.02] transition-all duration-300 ${
+                className={`${orbitron.className} inline-block px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110 ${
                   isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
@@ -596,12 +620,13 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            <p className="text-center text-sm text-gray-600 mt-6">
+            <p className="text-center text-sm text-gray-400 mt-6">
               By registering, you agree to our terms and conditions. We&apos;ll contact you with further details
               about the event.
             </p>
           </form>
-        </div>
+          </div>
+        </TimelineContent>
       </div>
 
       {/* Custom Animations */}
@@ -676,7 +701,9 @@ export default function RegisterPage() {
           animation: slide-down 0.5s ease-out;
         }
       `}</style>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }
 
