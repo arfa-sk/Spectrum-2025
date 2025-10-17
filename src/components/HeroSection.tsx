@@ -6,6 +6,7 @@ import Orb from "./Orb";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { TimelineContent } from "@/components/timeline-animation";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type React from "react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -22,6 +23,8 @@ export default function HeroSection() {
   const eventDate = new Date("2025-12-20T09:00:00");
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const timelineRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,6 +52,7 @@ export default function HeroSection() {
 
   return (
     <section 
+      ref={sectionRef}
       className="relative flex flex-col items-center text-center px-6 overflow-hidden bg-white"
       role="banner"
       aria-label="Spectrum 2025 Hero Section"
@@ -56,10 +60,10 @@ export default function HeroSection() {
 
       {/* HERO CONTENT */}
       <div className="relative z-20 min-h-[110vh] flex flex-col items-center justify-start pt-20 md:pt-28">
-        <TimelineContent animationNum={0} timelineRef={timelineRef} once as="div">
+        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false} as="div">
           <p className={`${spaceGrotesk.className} text-xl md:text-2xl text-neutral-800 tracking-[0.22em] mb-4 uppercase`}>DHA Innovista Presents</p>
         </TimelineContent>
-        <TimelineContent animationNum={1} timelineRef={timelineRef} once as="div">
+        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
           <h1 
             className={`${orbitron.className} text-6xl md:text-8xl font-extrabold mb-10 animate-shimmer`}
             aria-label="Spectrum 2025 - The Ultimate Tech Fest"
@@ -81,7 +85,7 @@ export default function HeroSection() {
             { label: "Minutes", value: countdown.minutes },
             { label: "Seconds", value: countdown.seconds },
           ].map((unit, i) => (
-      <TimelineContent key={i} animationNum={i} timelineRef={timelineRef} as="div" once className="relative flex flex-col items-center">
+      <TimelineContent key={i} animationNum={i} timelineRef={sectionRef} as="div" once={false} className="relative flex flex-col items-center">
         {/* Main number */}
         <span className="text-4xl md:text-6xl font-semibold leading-none text-black animate-fadeUp">
                 {unit.value.toString().padStart(2, "0")}
@@ -106,7 +110,7 @@ export default function HeroSection() {
 
       {/* CTA BUTTON */}
       <div className="relative z-50 pointer-events-auto">
-        <TimelineContent animationNum={5} timelineRef={timelineRef} once as="div">
+        <TimelineContent animationNum={5} timelineRef={sectionRef} once={false} as="div">
           <Link
             href="/register"
             className={`${orbitron.className} inline-block mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110`}
@@ -120,89 +124,91 @@ export default function HeroSection() {
       {/* 3D Robot - constrained to left side so it never covers CTA */}
       <div className="hidden md:block absolute left-0 top-[58%] -translate-y-1/2 z-10 h-[380px] w-[46vw] pointer-events-none">
         <div className="w-full h-full">
-          <RobotCanvasLazy amplitudeMultiplier={0.78} speed={0.22} scale={0.26} />
+          {!reduceMotion && <RobotCanvasLazy amplitudeMultiplier={0.78} speed={0.22} scale={0.26} />}
         </div>
       </div>
 
       {/* MULTILAYER ORB COMPONENTS */}
       <div className="absolute top-[68%] md:top-[66%] flex flex-col items-center justify-center w-full z-10 pointer-events-none">
-        <div className="orb-container" style={{ 
-          width: '100%', 
-          height: '800px', 
-          position: 'relative'
-        }}>
-          {/* Background Orb - Gold theme */}
-          <div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)',
-            width: '120%', 
-            height: '120%',
-            opacity: 0.8
+        {!reduceMotion && (
+          <div className="orb-container" style={{ 
+            width: '100%', 
+            height: '800px', 
+            position: 'relative'
           }}>
-            <Orb
-              colorTheme="gold"
-              hoverIntensity={0.4}
-              rotateOnHover={true}
-              forceHoverState={false}
-            />
-          </div>
-          
-          {/* Middle Orb - Silver theme */}
-          <div style={{ 
-            position: 'absolute', 
-            top: '49.5%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)',
-            width: '105%', 
-            height: '105%',
-            opacity: 1.0
-          }}>
-            <Orb
-              colorTheme="metallic"
-              hoverIntensity={0.65}
-              rotateOnHover={true}
-              forceHoverState={false}
-            />
-      </div>
-
-          {/* Foreground Orb - Shiny Gold theme */}
-          <div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)',
-            width: '90%', 
-            height: '90%',
-            opacity: 1.0
-          }}>
-            <Orb
-              colorTheme="gold"
-              hoverIntensity={1.0}
-              rotateOnHover={true}
-              forceHoverState={false}
-            />
+            {/* Background Orb - Gold theme */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '50%', 
+              left: '50%', 
+              transform: 'translate(-50%, -50%)',
+              width: '120%', 
+              height: '120%',
+              opacity: 0.8
+            }}>
+              <Orb
+                colorTheme="gold"
+                hoverIntensity={0.4}
+                rotateOnHover={true}
+                forceHoverState={false}
+              />
             </div>
-
-          {/* Inner Orb - Bronze accent */}
-          <div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)',
-            width: '75%', 
-            height: '75%',
-            opacity: 0.9
-          }}>
-            <Orb
-              colorTheme="bronze"
-              hoverIntensity={0.5}
-              rotateOnHover={true}
-              forceHoverState={false}
-            />
-          </div>
+            
+            {/* Middle Orb - Silver theme */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '49.5%', 
+              left: '50%', 
+              transform: 'translate(-50%, -50%)',
+              width: '105%', 
+              height: '105%',
+              opacity: 1.0
+            }}>
+              <Orb
+                colorTheme="metallic"
+                hoverIntensity={0.65}
+                rotateOnHover={true}
+                forceHoverState={false}
+              />
         </div>
+
+            {/* Foreground Orb - Shiny Gold theme */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '50%', 
+              left: '50%', 
+              transform: 'translate(-50%, -50%)',
+              width: '90%', 
+              height: '90%',
+              opacity: 1.0
+            }}>
+              <Orb
+                colorTheme="gold"
+                hoverIntensity={1.0}
+                rotateOnHover={true}
+                forceHoverState={false}
+              />
+              </div>
+
+            {/* Inner Orb - Bronze accent */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '50%', 
+              left: '50%', 
+              transform: 'translate(-50%, -50%)',
+              width: '75%', 
+              height: '75%',
+              opacity: 0.9
+            }}>
+              <Orb
+                colorTheme="bronze"
+                hoverIntensity={0.5}
+                rotateOnHover={true}
+                forceHoverState={false}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
 

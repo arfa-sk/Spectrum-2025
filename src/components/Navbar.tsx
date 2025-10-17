@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { JSX } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -24,6 +24,7 @@ export default function Navbar(): JSX.Element {
   const [active, setActive] = useState<string>(NAV_ITEMS[0].name);
   const [visible, setVisible] = useState<boolean>(true);
   const [lastScrollY, setLastScrollY] = useState<number>(0);
+  const navbarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -49,13 +50,14 @@ export default function Navbar(): JSX.Element {
 
   return (
     <header
+      ref={navbarRef}
       className={clsx(
-        "fixed top-0 left-0 right-0 z-40 transition-transform duration-300 pointer-events-none",
+        "fixed top-0 left-0 right-0 z-40 transition-transform duration-300",
         visible ? "translate-y-0" : "-translate-y-full"
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <TimelineContent animationNum={0} timelineRef={{ current: (typeof document !== 'undefined' ? (document.body as HTMLElement) : null) } as React.RefObject<HTMLElement | null>} once>
+        <TimelineContent animationNum={0} timelineRef={navbarRef} once={false}>
           <Link href="/" className="pointer-events-auto">
             <Image
               src="/sponsors/Logo%20Spectrum.png"
@@ -80,7 +82,7 @@ export default function Navbar(): JSX.Element {
               const Icon = item.icon;
               const activeTab = active === item.name;
               return (
-                <TimelineContent key={item.name} animationNum={idx + 1} timelineRef={{ current: (typeof document !== 'undefined' ? (document.body as HTMLElement) : null) } as React.RefObject<HTMLElement | null>} once>
+                <TimelineContent key={item.name} animationNum={idx + 1} timelineRef={navbarRef} once={false}>
                   <Link
                     href={item.href}
                     onClick={() => setActive(item.name)}

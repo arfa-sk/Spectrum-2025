@@ -4,15 +4,15 @@ import Link from "next/link";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
 import type React from "react";
+import { useRef } from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export default function Sponsors() {
-  const timelineRef = {
-    current:
-      typeof document !== "undefined" ? (document.body as HTMLElement) : null,
-  } as React.RefObject<HTMLElement | null>;
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const reduceMotion = useReducedMotion();
 
   const logos = [
     "/sponsors/sponsor1.jpeg",
@@ -26,11 +26,12 @@ export default function Sponsors() {
   return (
     <section
       id="sponsors"
+      ref={sectionRef}
       className="relative py-28 bg-gradient-to-b from-white to-neutral-50 border-t border-black/10"
     >
       <div className="max-w-6xl mx-auto px-6 text-center overflow-hidden">
         {/* Title */}
-        <TimelineContent animationNum={0} timelineRef={timelineRef} once>
+        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
           <h2
             className={`${orbitron.className} text-4xl md:text-5xl font-bold tracking-tight text-black uppercase`}
           >
@@ -38,19 +39,19 @@ export default function Sponsors() {
           </h2>
         </TimelineContent>
 
-        <TimelineContent animationNum={1} timelineRef={timelineRef} once>
+        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
           <p className={`${spaceGrotesk.className} mt-3 text-black/60 text-sm md:text-base`}>
             We collaborate with brands who believe in creativity, technology, and impact.
           </p>
         </TimelineContent>
 
-        {/* Divider */}
-        <div className="mt-6 flex justify-center">
-          <div className="h-px w-32 bg-black/10" />
+        {/* Divider (gold bar like ContactUs) */}
+        <div className="mt-6">
+          <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6" />
         </div>
 
         {/* Scrolling Sponsors - dual rows with edge fades and pause-on-hover */}
-        <TimelineContent animationNum={2} timelineRef={timelineRef} once>
+        <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
           <div className="mt-16 space-y-8">
             {[0, 1].map((row) => (
               <div
@@ -66,7 +67,7 @@ export default function Sponsors() {
               >
                 <div
                   className={`flex gap-10 ${
-                    row === 0 ? "animate-scroll-left" : "animate-scroll-right"
+                    reduceMotion ? "" : row === 0 ? "animate-scroll-left" : "animate-scroll-right"
                   } group-hover:[animation-play-state:paused]`}
                 >
                   {[...logos, ...logos].map((src, i) => (

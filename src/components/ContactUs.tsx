@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaLinkedin, FaInstagram } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { Orbitron } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type React from "react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -14,6 +16,7 @@ export default function ContactUs() {
   const [activeField, setActiveField] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
   const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => setIsBrowser(true), []);
@@ -22,23 +25,8 @@ export default function ContactUs() {
     const handleMouseMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
     window.addEventListener("mousemove", handleMouseMove);
     
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const section = sectionRef.current;
-        const scrollTop = window.scrollY;
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const progress = Math.max(0, Math.min(1, (scrollTop - sectionTop + window.innerHeight / 2) / sectionHeight));
-        setScrollProgress(progress);
-      }
-    };
-    
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -78,25 +66,23 @@ export default function ContactUs() {
         {/* Scroll progress indicator removed as requested */}
       </div>
 
-      {/* === MOUSE GLOW === */}
-      <div
-        className="pointer-events-none fixed inset-0 z-20"
-        style={{
-          background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 215, 0, 0.06), transparent 70%)`,
-        }}
-      />
+      {/* Mouse glow removed as requested */}
 
       {/* HEADER SECTION */}
       <div className="text-center mb-16 px-6">
-        <TimelineContent animationNum={0} timelineRef={{ current: (typeof document !== 'undefined' ? (document.body as HTMLElement) : null) } as React.RefObject<HTMLElement | null>} once>
+        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
           <h1 className={`${orbitron.className} text-5xl md:text-6xl font-extrabold text-black mb-6`}>
             CONNECT WITH US
           </h1>
         </TimelineContent>
-        <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
-        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-          Have questions about SPECTRUM 2025? Reach out to our team for information about events, registration, sponsorships, and more.
-        </p>
+        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
+        </TimelineContent>
+        <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+            Have questions about SPECTRUM 2025? Reach out to our team for information about events, registration, sponsorships, and more.
+          </p>
+        </TimelineContent>
       </div>
 
       {/* === CONTENT === */}
@@ -105,9 +91,11 @@ export default function ContactUs() {
         {/* Left: Contact Information */}
         <div className="flex-1 space-y-10 w-full lg:w-2/5">
           <div>
-            <h2 className={`${orbitron.className} text-3xl font-bold text-black mb-6`}>
-              Get In Touch
-            </h2>
+            <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
+              <h2 className={`${orbitron.className} text-3xl font-bold text-black mb-6`}>
+                Get In Touch
+              </h2>
+            </TimelineContent>
             
             {[{
               icon: FaMapMarkerAlt,
@@ -122,46 +110,31 @@ export default function ContactUs() {
               title: "Call Us",
               text: "0309 9226663"
             }].map(({ icon: Icon, title, text }, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-5 p-6 rounded-xl bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group mb-6"
-                onMouseEnter={() => setActiveField(`info-${i}`)}
-                onMouseLeave={() => setActiveField(null)}
-              >
-                <div className={`p-3 rounded-lg bg-black group-hover:bg-[#FFD700] transition-colors duration-300 ${activeField === `info-${i}` ? 'animate-pulse' : ''}`}>
-                  <Icon className="text-white text-xl" />
+              <TimelineContent key={i} animationNum={4 + i} timelineRef={sectionRef} once={false}>
+                <div
+                  className="flex items-start gap-5 p-6 rounded-xl bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group mb-6"
+                  onMouseEnter={() => setActiveField(`info-${i}`)}
+                  onMouseLeave={() => setActiveField(null)}
+                >
+                  <div className={`p-3 rounded-lg bg-black group-hover:bg-[#FFD700] transition-colors duration-300 ${activeField === `info-${i}` ? 'animate-pulse' : ''}`}>
+                    <Icon className="text-white text-xl" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-black">{title}</h3>
+                    <p className="text-gray-600 mt-2">{text}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-black">{title}</h3>
-                  <p className="text-gray-600 mt-2">{text}</p>
-                </div>
-              </div>
+              </TimelineContent>
             ))}
           </div>
 
-          {/* Social Media Links */}
-          <div>
-            <h3 className={`${orbitron.className} text-xl font-bold text-black mb-4`}>Follow Us</h3>
-            <div className="flex space-x-4">
-              {[
-                { icon: FaLinkedin, color: "bg-blue-600", url: "#" },
-                { icon: FaTwitter, color: "bg-blue-400", url: "#" },
-                { icon: FaInstagram, color: "bg-gradient-to-r from-purple-500 to-pink-500", url: "#" },
-              ].map(({ icon: Icon, color, url }, i) => (
-                <a
-                  key={i}
-                  href={url}
-                  className={`p-3 rounded-lg ${color} text-white transform transition-all duration-300 hover:scale-110 hover:rotate-6`}
-                >
-                  <Icon className="text-xl" />
-                </a>
-              ))}
-            </div>
-          </div>
+          {/* Social Media Links removed as requested */}
         </div>
 
         {/* Right: Contact Form */}
-        <div className="flex-1 w-full lg:w-3/5 bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
+        <div className="flex-1 w-full lg:w-3/5">
+          <TimelineContent animationNum={7} timelineRef={sectionRef} once={false}>
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
           <div className="flex items-center mb-8">
             <div className="p-3 bg-black rounded-lg mr-4">
               <FaPaperPlane className="text-xl text-[#FFD700]" />
@@ -251,29 +224,35 @@ export default function ContactUs() {
               <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
             </button>
           </form>
+            </div>
+          </TimelineContent>
         </div>
       </div>
 
       {/* Bottom: Google Map */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 mt-20">
-        <div className="mb-8 text-center">
-          <h3 className={`${orbitron.className} text-3xl font-bold text-black mb-2`}>Find Us Here</h3>
-          <div className="h-1 w-16 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-4"></div>
-        </div>
+        <TimelineContent animationNum={8} timelineRef={sectionRef} once={false}>
+          <div className="mb-8 text-center">
+            <h3 className={`${orbitron.className} text-3xl font-bold text-black mb-2`}>Find Us Here</h3>
+            <div className="h-1 w-16 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-4"></div>
+          </div>
+        </TimelineContent>
         
-        <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
-          {isBrowser && (
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.234971035021!2d67.08152407501018!3d24.831132884064562!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f1a5ed0ecfd%3A0xb276f4413a47a6b9!2sDHA%20Suffa%20University!5e0!3m2!1sen!2s!4v1689056789471!5m2!1sen!2s"
-              width="100%"
-              height="100%"
-              className="border-0"
-              allowFullScreen
-              loading="lazy"
-            />
-          )}
-          <div className="absolute inset-0 pointer-events-none border border-[#FFD700]/30 rounded-2xl"></div>
-        </div>
+        <TimelineContent animationNum={9} timelineRef={sectionRef} once={false}>
+          <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
+            {isBrowser && (
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.234971035021!2d67.08152407501018!3d24.831132884064562!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f1a5ed0ecfd%3A0xb276f4413a47a6b9!2sDHA%20Suffa%20University!5e0!3m2!1sen!2s!4v1689056789471!5m2!1sen!2s"
+                width="100%"
+                height="100%"
+                className="border-0"
+                allowFullScreen
+                loading="lazy"
+              />
+            )}
+            <div className="absolute inset-0 pointer-events-none border border-[#FFD700]/30 rounded-2xl"></div>
+          </div>
+        </TimelineContent>
       </div>
 
       {/* Animations */}
