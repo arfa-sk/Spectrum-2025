@@ -3,6 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 import { Orbitron } from "next/font/google";
+import { TimelineContent } from "@/components/timeline-animation";
+import type React from "react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -90,9 +92,11 @@ export default function ContactUs() {
 
       {/* HEADER SECTION */}
       <div className="text-center mb-16 px-6">
-        <h1 className={`${orbitron.className} text-5xl md:text-6xl font-extrabold text-black mb-6`}>
-          CONNECT WITH US
-        </h1>
+        <TimelineContent animationNum={0} timelineRef={{ current: (typeof document !== 'undefined' ? (document.body as HTMLElement) : null) } as React.RefObject<HTMLElement | null>} once>
+          <h1 className={`${orbitron.className} text-5xl md:text-6xl font-extrabold text-black mb-6`}>
+            CONNECT WITH US
+          </h1>
+        </TimelineContent>
         <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
           Have questions about SPECTRUM 2025? Reach out to our team for information about events, registration, sponsorships, and more.

@@ -5,6 +5,8 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { Suspense } from "react";
 import { Orbitron } from "next/font/google";
+import { TimelineContent } from "@/components/timeline-animation";
+import type React from "react";
 
 // Import Hero font
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -31,11 +33,13 @@ export default function AboutUs() {
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center animate-float">
-        <h2
-          className={`${orbitron.className} text-6xl font-extrabold animate-shimmer drop-shadow-[0_0_30px_rgba(255,215,0,0.8)]`}
-        >
-          About Us
-        </h2>
+        <TimelineContent animationNum={0} timelineRef={{ current: (typeof document !== 'undefined' ? (document.body as HTMLElement) : null) } as React.RefObject<HTMLElement | null>} once>
+          <h2
+            className={`${orbitron.className} text-6xl font-extrabold animate-shimmer drop-shadow-[0_0_30px_rgba(255,215,0,0.8)]`}
+          >
+            About Us
+          </h2>
+        </TimelineContent>
 
         <p className="mt-6 text-lg leading-relaxed text-neutral-200 drop-shadow-[0_0_20px_rgba(0,0,0,0.9)] font-['Helvetica']">
           Spectrum’25 is Karachi’s ultimate tech festival! Our mission is to ignite creativity,
