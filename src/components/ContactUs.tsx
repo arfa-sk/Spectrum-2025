@@ -75,11 +75,7 @@ export default function ContactUs() {
         <div className="absolute bottom-1/3 right-1/4 w-48 h-48 border border-[#FFD700]/10 rotate-45 animate-float-medium"></div>
         <div className="absolute top-2/3 left-1/5 w-32 h-32 border border-[#FFD700]/10 rounded-full animate-float-fast"></div>
         
-        {/* Scroll progress indicator */}
-        <div 
-          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FFD700] to-black/10"
-          style={{ transform: `scaleX(${scrollProgress})`, transformOrigin: 'left' }}
-        ></div>
+        {/* Scroll progress indicator removed as requested */}
       </div>
 
       {/* === MOUSE GLOW === */}
