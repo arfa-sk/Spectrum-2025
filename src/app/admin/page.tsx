@@ -12,7 +12,7 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 
 export default function AdminDashboard() {
   const { user, signOut } = useAuth();
-  const { stats, totalRegistrations, todayRegistrations, loading } = useRealtimeStats();
+  const { stats, totalRegistrations, todayRegistrations, loading, error, refetch, isRealtimeActive } = useRealtimeStats();
   const [isConnected, setIsConnected] = useState(true);
 
   const topCategory = stats.length > 0 ? stats[0].main_category : "N/A";
@@ -34,9 +34,9 @@ export default function AdminDashboard() {
                     Admin Dashboard
                   </h1>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 text-green-600">
+                    <div className={`flex items-center gap-1 ${isRealtimeActive ? 'text-green-600' : 'text-gray-600'}`}>
                       <FaWifi className="text-sm" />
-                      <span className="text-xs font-medium">Auto-refresh</span>
+                      <span className="text-xs font-medium">{isRealtimeActive ? 'Realtime' : 'Auto-refresh'}</span>
                     </div>
                     {loading && (
                       <div className="flex items-center gap-1 text-blue-600">
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
                 </div>
                 <p className="text-gray-600 mt-1">
                   Spectrum 2025 Management Panel
-                  <span className="text-green-600 text-sm ml-2">• Auto-refreshing every 60s</span>
+                  <span className="text-green-600 text-sm ml-2">• {isRealtimeActive ? 'Live updates' : 'Auto-refreshing every 60s'}</span>
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -98,6 +98,16 @@ export default function AdminDashboard() {
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFD700]"></div>
+            </div>
+          ) : error ? (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <p className="text-red-600">{error}</p>
+              <button
+                onClick={refetch}
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Try Again
+              </button>
             </div>
           ) : (
             <>

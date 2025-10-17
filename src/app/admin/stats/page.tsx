@@ -13,7 +13,7 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 // Interface moved to useRealtimeStats hook
 
 export default function AdminStats() {
-  const { stats, totalRegistrations, todayRegistrations, loading, error, refetch } = useRealtimeStats();
+  const { stats, totalRegistrations, todayRegistrations, loading, error, refetch, isRealtimeActive } = useRealtimeStats();
   const { hasNewRegistrations, notificationCount, clearNotifications } = useRegistrationNotifications();
   const [isConnected, setIsConnected] = useState(true);
 
@@ -55,9 +55,9 @@ export default function AdminStats() {
                     Registration Statistics
                   </h1>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 text-green-600">
+                    <div className={`flex items-center gap-1 ${isRealtimeActive ? 'text-green-600' : 'text-gray-600'}`}>
                       <FaWifi className="text-sm" />
-                      <span className="text-xs font-medium">Auto-refresh</span>
+                      <span className="text-xs font-medium">{isRealtimeActive ? 'Realtime' : 'Auto-refresh'}</span>
                     </div>
                     {loading && (
                       <div className="flex items-center gap-1 text-blue-600">
@@ -69,7 +69,7 @@ export default function AdminStats() {
                 </div>
                 <p className="text-gray-600 mt-1">
                   Spectrum 2025 Event Analytics
-                  <span className="text-green-600 text-sm ml-2">• Auto-refreshing every 60s</span>
+                  <span className="text-green-600 text-sm ml-2">• {isRealtimeActive ? 'Live updates' : 'Auto-refreshing every 60s'}</span>
                   {hasNewRegistrations && (
                     <span className="text-red-600 text-sm ml-2">• {notificationCount} new registration(s) detected!</span>
                   )}

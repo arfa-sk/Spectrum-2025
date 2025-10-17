@@ -6,6 +6,7 @@ import ContactUs from "@/components/ContactUs";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Link from "next/link";
+import Image from "next/image";
 
 // Import Google fonts
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -38,10 +39,13 @@ export default function Home() {
                     key={i}
                     className="hover:scale-110 hover:rotate-1 transition duration-300"
                   >
-                    <img
+                    <Image
                       src="/sponsors/sss.png"
                       alt="sponsor"
-                      className="h-20 md:h-24 lg:h-28 object-contain rounded-xl shadow-[0_0_20px_gold]"
+                      width={160}
+                      height={96}
+                      className="h-20 md:h-24 lg:h-28 w-auto object-contain rounded-xl shadow-[0_0_20px_gold]"
+                      priority={i === 0}
                     />
                   </div>
                 ))}

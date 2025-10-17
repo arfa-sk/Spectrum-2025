@@ -13,8 +13,8 @@ type NavItem = { name: string; href: string; icon: React.FC<any> };
 
 // Adjusted to site sections and original headings
 const NAV_ITEMS: NavItem[] = [
-  { name: "Events", href: "#events", icon: Briefcase },
-  { name: "Leaderboard", href: "#leaderboard", icon: Wrench },
+  { name: "About Us", href: "#about", icon: Briefcase },
+  { name: "Register", href: "/register", icon: Wrench },
   { name: "Sponsors", href: "#sponsors", icon: Info },
   { name: "Contact", href: "#contact", icon: Mail },
 ];

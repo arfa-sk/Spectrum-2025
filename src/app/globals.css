@@ -69,19 +69,29 @@ body:hover::before {
   height: 50px;
 }
 
-/* Gradient text utility */
-.gradient-text {
+/* Gradient text utilities */
+.gradient-text, .text-gradient {
+  display: inline-block;
   background: linear-gradient(
     90deg,
     var(--accent),
     var(--accent-pink),
     var(--accent-green)
   );
+  background-clip: text; /* standard */
   -webkit-background-clip: text;
+  color: transparent !important; /* ensure non-webkit browsers hide solid color */
   -webkit-text-fill-color: transparent;
   background-size: 200% 200%;
   animation: gradientShift 6s ease infinite;
 }
+
+/* Missing fadeUp animation for countdown numbers */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeUp { animation: fadeUp 400ms ease both; }
 
 /* Glass effect */
 .glass {

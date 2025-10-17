@@ -47,6 +47,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
+## 🚢 Deployment
+
+- Build for production: `npm run build`, then start: `npm start`.
+- Configure environment variables on your host (e.g., Vercel):
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+### Push to GitHub
+
+```bash
+git add -A
+git commit -m "chore: prepare for deployment"
+git remote add origin https://github.com/<your-username>/<your-repo>.git # if not set
+git push -u origin main
+```
+
 ## ⚙️ Setup
 
 ### 1. Supabase Configuration

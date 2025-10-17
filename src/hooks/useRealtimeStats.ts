@@ -16,6 +16,7 @@ export function useRealtimeStats() {
   const [todayRegistrations, setTodayRegistrations] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isRealtimeActive, setIsRealtimeActive] = useState(false);
 
   const fetchStats = async () => {
     try {
@@ -60,14 +61,48 @@ export function useRealtimeStats() {
     // Initial fetch
     fetchStats();
 
-    // Set up polling for updates every 60 seconds (even more efficient)
-    const interval = setInterval(() => {
+    // Poll as a fallback; will stop when realtime is active
+    const pollInterval = setInterval(() => {
       fetchStats();
-    }, 60000); // Check for updates every 60 seconds
+    }, 60000);
 
-    // Cleanup interval on unmount
+    // Subscribe to changes affecting stats: registrations table INSERT/UPDATE/DELETE
+    const channel = supabase
+      .channel("registrations-stats-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "registrations" },
+        () => {
+          if (!isRealtimeActive) setIsRealtimeActive(true);
+          clearInterval(pollInterval);
+          fetchStats();
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "registrations" },
+        () => {
+          if (!isRealtimeActive) setIsRealtimeActive(true);
+          clearInterval(pollInterval);
+          fetchStats();
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "registrations" },
+        () => {
+          if (!isRealtimeActive) setIsRealtimeActive(true);
+          clearInterval(pollInterval);
+          fetchStats();
+        }
+      )
+      // If you have a materialized view/table `registration_stats` updated via triggers,
+      // you can also subscribe to it directly to minimize refetches.
+      .subscribe();
+
     return () => {
-      clearInterval(interval);
+      supabase.removeChannel(channel);
+      clearInterval(pollInterval);
     };
   }, []);
 
@@ -78,5 +113,6 @@ export function useRealtimeStats() {
     loading,
     error,
     refetch: fetchStats,
+    isRealtimeActive,
   };
 }

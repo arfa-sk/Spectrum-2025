@@ -54,7 +54,7 @@ export default function ContactUs() {
   };
 
   return (
-    <section ref={sectionRef} className="relative z-10 py-20 md:py-28 overflow-hidden min-h-screen bg-white">
+    <section id="contact" ref={sectionRef} className="relative z-10 py-20 md:py-28 overflow-hidden min-h-screen bg-white">
 
       {/* === ANIMATED BACKGROUND ELEMENTS === */}
       <div className="absolute inset-0 overflow-hidden -z-10">

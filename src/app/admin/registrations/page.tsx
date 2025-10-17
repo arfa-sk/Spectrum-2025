@@ -29,13 +29,15 @@ interface Registration {
 }
 
 export default function AdminRegistrations() {
-  const { registrations, loading, error, refetch } = useRealtimeRegistrations();
+  const { registrations, loading, error, refetch, isRealtimeActive } = useRealtimeRegistrations();
   const { hasNewRegistrations, notificationCount, clearNotifications } = useRegistrationNotifications();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [isConnected, setIsConnected] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 25;
 
   const handleRefresh = () => {
     refetch();
@@ -71,6 +73,14 @@ export default function AdminRegistrations() {
         return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
       }
     });
+
+  const totalPages = Math.max(1, Math.ceil(filteredRegistrations.length / pageSize));
+  const paginated = filteredRegistrations.slice((page - 1) * pageSize, page * pageSize);
+
+  const goFirst = () => setPage(1);
+  const goPrev = () => setPage((p) => Math.max(1, p - 1));
+  const goNext = () => setPage((p) => Math.min(totalPages, p + 1));
+  const goLast = () => setPage(totalPages);
 
   const exportToCSV = () => {
     const csvContent = [
@@ -121,9 +131,9 @@ export default function AdminRegistrations() {
                     All Registrations
                   </h1>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 text-green-600">
+                    <div className={`flex items-center gap-1 ${isRealtimeActive ? 'text-green-600' : 'text-gray-600'}`}>
                       <FaWifi className="text-sm" />
-                      <span className="text-xs font-medium">Auto-refresh</span>
+                      <span className="text-xs font-medium">{isRealtimeActive ? 'Realtime' : 'Auto-refresh'}</span>
                     </div>
                     {loading && (
                       <div className="flex items-center gap-1 text-blue-600">
@@ -135,7 +145,7 @@ export default function AdminRegistrations() {
                 </div>
                 <p className="text-gray-600 mt-1">
                   {filteredRegistrations.length} of {registrations.length} registrations
-                  <span className="text-green-600 text-sm ml-2">• Auto-refreshing every 60s</span>
+                  <span className="text-green-600 text-sm ml-2">• {isRealtimeActive ? 'Live updates' : 'Auto-refreshing every 60s'}</span>
                   {hasNewRegistrations && (
                     <span className="text-red-600 text-sm ml-2">• {notificationCount} new registration(s) detected!</span>
                   )}
@@ -306,7 +316,7 @@ export default function AdminRegistrations() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredRegistrations.map((reg) => (
+                    {paginated.map((reg) => (
                       <tr key={reg.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
@@ -358,6 +368,21 @@ export default function AdminRegistrations() {
               {filteredRegistrations.length === 0 && (
                 <div className="text-center py-12">
                   <p className="text-gray-500">No registrations found matching your criteria.</p>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {filteredRegistrations.length > 0 && (
+                <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+                  <div className="text-sm text-gray-600">
+                    Page {page} of {totalPages} • Showing {paginated.length} of {filteredRegistrations.length}
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={goFirst} disabled={page === 1} className="px-3 py-1 border rounded disabled:opacity-50">« First</button>
+                    <button onClick={goPrev} disabled={page === 1} className="px-3 py-1 border rounded disabled:opacity-50">‹ Prev</button>
+                    <button onClick={goNext} disabled={page === totalPages} className="px-3 py-1 border rounded disabled:opacity-50">Next ›</button>
+                    <button onClick={goLast} disabled={page === totalPages} className="px-3 py-1 border rounded disabled:opacity-50">Last »</button>
+                  </div>
                 </div>
               )}
             </div>

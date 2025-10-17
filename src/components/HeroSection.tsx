@@ -3,11 +3,18 @@
 import { useEffect, useState } from "react";
 import { Orbitron, Rajdhani, Antonio, Space_Grotesk } from "next/font/google";
 import Orb from "./Orb";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["400", "600"] });
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+
+const RobotCanvasLazy = dynamic(
+  () => import("./RobotCanvas").then((m) => m.RobotCanvas),
+  { ssr: false }
+);
 
 export default function HeroSection() {
   const eventDate = new Date("2025-12-20T09:00:00");
@@ -54,29 +61,29 @@ export default function HeroSection() {
           SPECTRUM 2025
         </h1>
 
-        {/* NEXT-LEVEL TECH COUNTDOWN */}
+      {/* NEXT-LEVEL TECH COUNTDOWN */}
 <div className="flex flex-col items-center justify-center text-black font-[Space_Grotesk] select-none">
   <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-black/50 mb-3">
     Launching In
   </p>
 
   <div className="flex items-end justify-center gap-4 md:gap-6">
-    {[
-      { label: "Days", value: countdown.days },
-      { label: "Hours", value: countdown.hours },
-      { label: "Minutes", value: countdown.minutes },
-      { label: "Seconds", value: countdown.seconds },
-    ].map((unit, i) => (
+          {[
+            { label: "Days", value: countdown.days },
+            { label: "Hours", value: countdown.hours },
+            { label: "Minutes", value: countdown.minutes },
+            { label: "Seconds", value: countdown.seconds },
+          ].map((unit, i) => (
       <div key={i} className="relative flex flex-col items-center">
         {/* Main number */}
-        <span className="text-4xl md:text-6xl font-semibold leading-none text-gradient animate-fadeUp">
-          {unit.value.toString().padStart(2, "0")}
-        </span>
+        <span className="text-4xl md:text-6xl font-semibold leading-none text-black animate-fadeUp">
+                {unit.value.toString().padStart(2, "0")}
+              </span>
 
         {/* Label */}
         <span className="mt-1 text-[0.6rem] md:text-xs uppercase tracking-[0.25em] text-black/50">
-          {unit.label}
-        </span>
+                {unit.label}
+              </span>
 
         {/* Divider ":" */}
         {i < 3 && (
@@ -84,19 +91,28 @@ export default function HeroSection() {
             :
           </span>
         )}
-      </div>
-    ))}
-  </div>
+            </div>
+          ))}
+        </div>
 </div>
 
 
       {/* CTA BUTTON */}
-      <a
-        href="/register"
-        className={`${orbitron.className} mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition`}
-      >
-        Register
-      </a>
+      <div className="relative z-50 pointer-events-auto">
+        <Link
+          href="/register"
+          className={`${orbitron.className} inline-block mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110`}
+        >
+          Register
+        </Link>
+      </div>
+      </div>
+
+      {/* 3D Robot - constrained to left side so it never covers CTA */}
+      <div className="hidden md:block absolute left-0 top-[58%] -translate-y-1/2 z-10 h-[380px] w-[46vw] pointer-events-none">
+        <div className="w-full h-full">
+          <RobotCanvasLazy amplitudeMultiplier={0.78} speed={0.22} scale={0.26} />
+        </div>
       </div>
 
       {/* MULTILAYER ORB COMPONENTS */}
