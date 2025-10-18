@@ -12,7 +12,6 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
-import SpotlightCard from "@/components/SpotlightCard";
 import { useRef, use } from "react";
 import { notFound } from "next/navigation";
 
