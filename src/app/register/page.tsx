@@ -230,56 +230,56 @@ export default function RegisterPage() {
       {/* Header Section */}
       <div className="relative z-10 pt-32 pb-16 px-6 text-center">
         <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
-          <Link
-            href="/"
-            className="inline-block mb-6 text-sm text-gray-600 hover:text-[#FFD700] transition"
-          >
-            ← Back to Home
-          </Link>
+        <Link
+          href="/"
+          className="inline-block mb-6 text-sm text-gray-600 hover:text-[#FFD700] transition"
+        >
+          ← Back to Home
+        </Link>
         </TimelineContent>
         <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
-          <h1
+        <h1
             className={`${orbitron.className} text-5xl md:text-7xl font-extrabold mb-6 text-black`}
-          >
-            REGISTER NOW
-          </h1>
+        >
+          REGISTER NOW
+        </h1>
         </TimelineContent>
         <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
-          <div className="w-32 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
+        <div className="w-32 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
         </TimelineContent>
         <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
           <p className={`${spaceGrotesk.className} text-lg md:text-xl text-gray-700 max-w-2xl mx-auto`}>
-            Join Pakistan&apos;s Premier Tech Festival — Spectrum 2025
-          </p>
+          Join Pakistan&apos;s Premier Tech Festival — Spectrum 2025
+        </p>
         </TimelineContent>
       </div>
 
       {/* Status Messages */}
       {submitStatus === "success" && (
         <TimelineContent animationNum={4} timelineRef={sectionRef} once={false}>
-          <div className="max-w-4xl mx-auto px-6 mb-8">
-            <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
-              <FaCheckCircle className="text-green-500 text-3xl flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-bold text-green-800 text-lg mb-1">Success!</h3>
-                <p className="text-green-700">{submitMessage}</p>
-              </div>
+        <div className="max-w-4xl mx-auto px-6 mb-8">
+          <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
+            <FaCheckCircle className="text-green-500 text-3xl flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-bold text-green-800 text-lg mb-1">Success!</h3>
+              <p className="text-green-700">{submitMessage}</p>
             </div>
           </div>
+        </div>
         </TimelineContent>
       )}
 
       {submitStatus === "error" && submitMessage && (
         <TimelineContent animationNum={4} timelineRef={sectionRef} once={false}>
-          <div className="max-w-4xl mx-auto px-6 mb-8">
-            <div className="bg-red-50 border-2 border-red-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
-              <FaExclamationCircle className="text-red-500 text-3xl flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-bold text-red-800 text-lg mb-1">Error</h3>
-                <p className="text-red-700">{submitMessage}</p>
-              </div>
+        <div className="max-w-4xl mx-auto px-6 mb-8">
+          <div className="bg-red-50 border-2 border-red-500 rounded-xl p-6 flex items-start gap-4 animate-slide-down">
+            <FaExclamationCircle className="text-red-500 text-3xl flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-bold text-red-800 text-lg mb-1">Error</h3>
+              <p className="text-red-700">{submitMessage}</p>
             </div>
           </div>
+        </div>
         </TimelineContent>
       )}
 
@@ -304,7 +304,7 @@ export default function RegisterPage() {
             },
           }}
         >
-          <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
+        <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Personal Information Section */}
             <div>
@@ -625,7 +625,7 @@ export default function RegisterPage() {
               about the event.
             </p>
           </form>
-          </div>
+        </div>
         </TimelineContent>
       </div>
 
@@ -701,7 +701,7 @@ export default function RegisterPage() {
           animation: slide-down 0.5s ease-out;
         }
       `}</style>
-      </main>
+    </main>
       <Footer />
     </>
   );
