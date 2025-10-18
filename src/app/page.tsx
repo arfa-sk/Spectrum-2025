@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import Sponsors from "@/components/Sponsors";
+import Gallery from "@/components/Gallery";
 
 // Import Google fonts
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -26,6 +27,10 @@ export default function Home() {
       {/* Register CTAs removed */}
 
       <AboutUs />
+      
+      {/* Gallery Section */}
+      <Gallery title="Gallery" />
+      
       <Sponsors />
       <ContactUs />
       <Footer />

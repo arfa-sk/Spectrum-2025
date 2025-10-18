@@ -108,7 +108,7 @@ export default function Navbar(): JSX.Element {
                 </TimelineContent>
               );
             })}
-        </div>
+          </div>
         </div>
       </div>
     </header>

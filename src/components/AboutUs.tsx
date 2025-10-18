@@ -35,11 +35,11 @@ export default function AboutUs() {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center animate-float">
         <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
-          <h2
+        <h2
             className={`${orbitron.className} text-6xl font-extrabold text-white`}
-          >
-            About Us
-          </h2>
+        >
+          About Us
+        </h2>
         </TimelineContent>
 
         {/* Gold to black divider matching Contact/Sponsors */}
@@ -52,14 +52,14 @@ export default function AboutUs() {
           Spectrum&apos;25 is Karachi&apos;s ultimate tech festival! Our mission is to ignite creativity,
           enhance core skills, and build a competitive environment where students innovate,
           collaborate, and connect with industry experts.
-          </p>
+        </p>
         </TimelineContent>
 
         <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
           <p className={`${spaceGrotesk.className} mt-4 text-lg leading-relaxed text-neutral-200 max-w-3xl mx-auto`}>
           Join us for hands-on experiences, workshops, and challenges that bridge academic
           learning with real-world applications.
-          </p>
+        </p>
         </TimelineContent>
 
         {/* Socials */}
