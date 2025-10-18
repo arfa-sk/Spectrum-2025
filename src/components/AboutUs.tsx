@@ -1,9 +1,8 @@
 "use client";
 
-import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
 import { Canvas } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
+import { OrbitControls, Stars } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
@@ -24,17 +23,14 @@ export default function AboutUs() {
       className="relative z-10 py-28 bg-[#0f0f0f] text-white overflow-hidden min-h-[70vh]"
     >
       {/* 3D Canvas Background */}
-      {!reduceMotion && (
-        <div className="absolute inset-0">
-          <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-            <Suspense fallback={null}>
-              <Stars radius={100} depth={50} count={5000} factor={4} fade speed={2} />
-            </Suspense>
-          </Canvas>
-        </div>
-      )}
-
-      {/* Removed extra glow behind title */}
+      <div className="absolute inset-0">
+        <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
+          <Suspense fallback={null}>
+            <Stars radius={100} depth={50} count={5000} factor={4} fade speed={2} />
+            <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} />
+          </Suspense>
+        </Canvas>
+      </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center animate-float">
@@ -53,7 +49,7 @@ export default function AboutUs() {
 
         <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
           <p className={`${spaceGrotesk.className} mt-6 text-lg leading-relaxed text-neutral-200 max-w-3xl mx-auto`}>
-          Spectrum’25 is Karachi’s ultimate tech festival! Our mission is to ignite creativity,
+          Spectrum&apos;25 is Karachi&apos;s ultimate tech festival! Our mission is to ignite creativity,
           enhance core skills, and build a competitive environment where students innovate,
           collaborate, and connect with industry experts.
           </p>
@@ -68,22 +64,27 @@ export default function AboutUs() {
 
         {/* Socials */}
         <TimelineContent animationNum={4} timelineRef={sectionRef} once={false}>
-        <div className="flex items-center justify-center gap-6 mt-8 text-2xl">
+        <div className="flex items-center justify-center gap-4 mt-8">
           {[
             { Icon: FaFacebookF, link: "https://www.facebook.com/DSUSpectrum", label: "Facebook" },
             { Icon: FaInstagram, link: "https://www.instagram.com/acmatdsu/", label: "Instagram" },
             { Icon: FaYoutube, link: "https://www.youtube.com/channel/UCfCeJTUDDbEshMkEE3acx1A", label: "YouTube" },
-            { Icon: FaXTwitter, link: "https://twitter.com/acmatdsu", label: "X (Twitter)" },
+            { Icon: FaTwitter, link: "https://twitter.com/acmatdsu", label: "X (Twitter)" },
           ].map(({ Icon, link, label }, i) => (
             <a
               key={i}
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative group p-3 rounded-lg border-2 border-[#FFD700] hover:bg-[#FFD700] hover:text-black transition duration-300 hover:scale-110"
+              className="relative group"
               aria-label={`Visit our ${label}`}
             >
-              <Icon />
+              {/* Gold Shadow/Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#C5A100] to-[#B8860B] rounded-full blur-sm opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+              {/* Main Icon Container */}
+              <div className="relative w-10 h-10 bg-gradient-to-br from-[#FFD700] via-[#C5A100] to-[#B8860B] rounded-full flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg border border-[#C5A100]">
+                <Icon className="text-black text-sm group-hover:scale-110 transition-transform duration-500" />
+              </div>
             </a>
           ))}
         </div>

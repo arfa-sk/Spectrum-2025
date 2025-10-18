@@ -232,7 +232,7 @@ export default function RegisterPage() {
         <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
         <Link
           href="/"
-          className="inline-block mb-6 text-sm text-gray-600 hover:text-[#FFD700] transition"
+          className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-6`}
         >
           ← Back to Home
         </Link>
