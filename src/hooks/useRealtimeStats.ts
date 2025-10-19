@@ -63,7 +63,9 @@ export function useRealtimeStats() {
 
     // Poll as a fallback; will stop when realtime is active
     const pollInterval = setInterval(() => {
-      fetchStats();
+      if (!isRealtimeActive) {
+        fetchStats();
+      }
     }, 60000);
 
     // Subscribe to changes affecting stats: registrations table INSERT/UPDATE/DELETE
@@ -73,7 +75,7 @@ export function useRealtimeStats() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "registrations" },
         () => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           clearInterval(pollInterval);
           fetchStats();
         }
@@ -82,7 +84,7 @@ export function useRealtimeStats() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "registrations" },
         () => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           clearInterval(pollInterval);
           fetchStats();
         }
@@ -91,20 +93,24 @@ export function useRealtimeStats() {
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "registrations" },
         () => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           clearInterval(pollInterval);
           fetchStats();
         }
       )
-      // If you have a materialized view/table `registration_stats` updated via triggers,
-      // you can also subscribe to it directly to minimize refetches.
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Realtime subscription status:", status);
+        if (status === "SUBSCRIBED") {
+          setIsRealtimeActive(true);
+          clearInterval(pollInterval);
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
       clearInterval(pollInterval);
     };
-  }, [isRealtimeActive]);
+  }, []);
 
   return {
     stats,

@@ -53,7 +53,9 @@ export function useRealtimeRegistrations() {
 
     // Start with polling as a fallback; will stop if realtime events arrive
     const pollInterval = setInterval(() => {
-      fetchRegistrations();
+      if (!isRealtimeActive) {
+        fetchRegistrations();
+      }
     }, 60000);
 
     // Subscribe to realtime changes on the registrations table
@@ -63,7 +65,7 @@ export function useRealtimeRegistrations() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "registrations" },
         (payload: RealtimePostgresChangesPayload<Registration>) => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           clearInterval(pollInterval);
           const newReg = payload.new as unknown as Registration;
           setRegistrations((prev) => {
@@ -77,7 +79,7 @@ export function useRealtimeRegistrations() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "registrations" },
         (payload: RealtimePostgresChangesPayload<Registration>) => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           clearInterval(pollInterval);
           const updated = payload.new as unknown as Registration;
           setRegistrations((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
@@ -87,15 +89,17 @@ export function useRealtimeRegistrations() {
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "registrations" },
         (payload: RealtimePostgresChangesPayload<Registration>) => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           clearInterval(pollInterval);
           const removed = payload.old as unknown as Registration;
           setRegistrations((prev) => prev.filter((r) => r.id !== removed.id));
         }
       )
       .subscribe((status) => {
+        console.log("Registrations realtime subscription status:", status);
         if (status === "SUBSCRIBED") {
-          // optional: could log or set a connected state
+          setIsRealtimeActive(true);
+          clearInterval(pollInterval);
         }
       });
 
@@ -103,7 +107,7 @@ export function useRealtimeRegistrations() {
       supabase.removeChannel(channel);
       clearInterval(pollInterval);
     };
-  }, [isRealtimeActive]);
+  }, []);
 
   return {
     registrations,

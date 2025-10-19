@@ -106,7 +106,7 @@ export function useContactMessages() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "contact_messages" },
         (payload: RealtimePostgresChangesPayload<ContactMessage>) => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           setMessages(prev => [payload.new as ContactMessage, ...prev]);
         }
       )
@@ -114,7 +114,7 @@ export function useContactMessages() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "contact_messages" },
         (payload: RealtimePostgresChangesPayload<ContactMessage>) => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           const updatedMessage = payload.new as ContactMessage;
           setMessages(prev => 
             prev.map(msg => 
@@ -127,17 +127,22 @@ export function useContactMessages() {
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "contact_messages" },
         (payload: RealtimePostgresChangesPayload<ContactMessage>) => {
-          if (!isRealtimeActive) setIsRealtimeActive(true);
+          setIsRealtimeActive(true);
           const deletedId = (payload.old as ContactMessage).id;
           setMessages(prev => prev.filter(msg => msg.id !== deletedId));
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Contact messages realtime subscription status:", status);
+        if (status === "SUBSCRIBED") {
+          setIsRealtimeActive(true);
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [isRealtimeActive]);
+  }, []);
 
   return {
     messages,
