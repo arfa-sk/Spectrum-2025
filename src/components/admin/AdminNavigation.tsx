@@ -21,6 +21,11 @@ const navigationItems: NavigationItem[] = [
     label: "Registrations",
     description: "Manage participant registrations"
   },
+  {
+    href: "/admin/contact",
+    label: "Contact Messages",
+    description: "View and manage contact form submissions"
+  },
 ];
 
 export default function AdminNavigation() {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRealtimeStats } from "@/hooks/useRealtimeStats";
 import { useRealtimeRegistrations } from "@/hooks/useRealtimeRegistrations";
+import { useContactStats } from "@/hooks/useContactStats";
 import AdminLayout from "@/components/admin/AdminLayout";
 import StatsCards from "@/components/admin/StatsCards";
 import ChartComponent, { chartColors } from "@/components/admin/ChartComponent";
@@ -12,6 +13,7 @@ import Link from "next/link";
 export default function AdminDashboard() {
   const { stats, totalRegistrations, todayRegistrations, loading, error, refetch, isRealtimeActive } = useRealtimeStats();
   const { registrations } = useRealtimeRegistrations();
+  const { stats: contactStats } = useContactStats();
   const { notifications, addNotification, markAsRead, clearNotification, clearAll } = useNotifications();
   
   // Calculate notification count and new registrations status
@@ -179,6 +181,39 @@ export default function AdminDashboard() {
             showTrends={true}
             className="mb-8"
           />
+
+          {/* Contact Messages Statistics */}
+          {contactStats && (
+            <div className="bg-white rounded-lg shadow p-6 mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-medium text-gray-900">Contact Messages</h3>
+                <Link
+                  href="/admin/contact"
+                  className="text-[#FFD700] hover:text-yellow-600 font-medium text-sm"
+                >
+                  View All Messages →
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">{contactStats.total_messages}</div>
+                  <div className="text-sm text-gray-500">Total Messages</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">{contactStats.unread_messages}</div>
+                  <div className="text-sm text-gray-500">Unread</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">{contactStats.today_messages}</div>
+                  <div className="text-sm text-gray-500">Today</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{contactStats.weekly_messages}</div>
+                  <div className="text-sm text-gray-500">This Week</div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

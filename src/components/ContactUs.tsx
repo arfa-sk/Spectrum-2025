@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { Orbitron } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { supabase } from "@/lib/supabaseClient";
 import type React from "react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -13,6 +14,10 @@ export default function ContactUs() {
   const [isBrowser, setIsBrowser] = useState(false);
   const [activeField, setActiveField] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => setIsBrowser(true), []);
@@ -20,14 +25,79 @@ export default function ContactUs() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject is required";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = "Message must be at least 10 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission logic would go here
-    console.log("Form submitted:", formData);
-    // Reset form
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setSubmitStatus("idle");
+    setSubmitMessage("");
+
+    if (!validateForm()) {
+      setSubmitStatus("error");
+      setSubmitMessage("Please fix the errors above and try again.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert([
+          {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            subject: formData.subject.trim(),
+            message: formData.message.trim(),
+          }
+        ])
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      setSubmitStatus("success");
+      setSubmitMessage("Thank you for your message! We'll get back to you soon.");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      setSubmitStatus("error");
+      setSubmitMessage("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -130,6 +200,21 @@ export default function ContactUs() {
           </div>
           
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Success/Error Messages */}
+            {submitStatus === "success" && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
+                <FaCheckCircle className="text-green-600 text-xl" />
+                <p className="text-green-800 font-medium">{submitMessage}</p>
+              </div>
+            )}
+            
+            {submitStatus === "error" && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                <FaExclamationCircle className="text-red-600 text-xl" />
+                <p className="text-red-800 font-medium">{submitMessage}</p>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="relative">
                 <input 
@@ -138,13 +223,18 @@ export default function ContactUs() {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Your Name" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
+                    errors.name ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   onFocus={() => setActiveField('name')}
                   onBlur={() => setActiveField(null)}
                   required
                 />
                 {activeField === 'name' && (
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
+                )}
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
                 )}
               </div>
               
@@ -155,13 +245,18 @@ export default function ContactUs() {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Your Email" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
+                    errors.email ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   onFocus={() => setActiveField('email')}
                   onBlur={() => setActiveField(null)}
                   required
                 />
                 {activeField === 'email' && (
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
+                )}
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
             </div>
@@ -173,13 +268,18 @@ export default function ContactUs() {
                 value={formData.subject}
                 onChange={handleInputChange}
                 placeholder="Subject" 
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
+                  errors.subject ? 'border-red-300' : 'border-gray-300'
+                }`}
                 onFocus={() => setActiveField('subject')}
                 onBlur={() => setActiveField(null)}
                 required
               />
               {activeField === 'subject' && (
                 <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
+              )}
+              {errors.subject && (
+                <p className="text-red-500 text-sm mt-1">{errors.subject}</p>
               )}
             </div>
             
@@ -190,7 +290,9 @@ export default function ContactUs() {
                 onChange={handleInputChange}
                 placeholder="Your Message" 
                 rows={5}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none"
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none ${
+                  errors.message ? 'border-red-300' : 'border-gray-300'
+                }`}
                 onFocus={() => setActiveField('message')}
                 onBlur={() => setActiveField(null)}
                 required
@@ -198,17 +300,36 @@ export default function ContactUs() {
               {activeField === 'message' && (
                 <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
               )}
+              {errors.message && (
+                <p className="text-red-500 text-sm mt-1">{errors.message}</p>
+              )}
             </div>
             
             <button 
               type="submit"
-              className="group relative w-full bg-black text-white font-medium py-3 px-6 rounded-lg overflow-hidden transition-all duration-300 hover:bg-gray-900"
+              disabled={isSubmitting}
+              className={`group relative w-full font-medium py-3 px-6 rounded-lg overflow-hidden transition-all duration-300 ${
+                isSubmitting 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-black text-white hover:bg-gray-900'
+              }`}
             >
               <span className="relative z-10 flex items-center justify-center">
-                Send Message
-                <FaPaperPlane className="ml-2 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <FaPaperPlane className="ml-2 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </>
+                )}
               </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+              {!isSubmitting && (
+                <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+              )}
             </button>
           </form>
             </div>
