@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
 import type React from "react";

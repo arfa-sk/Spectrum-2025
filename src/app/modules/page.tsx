@@ -49,6 +49,15 @@ export default function ModulesPage() {
         <div className="relative py-20">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
+            {/* Back to Home Link */}
+            <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
+              <Link
+                href="/"
+                className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-6`}
+              >
+                ← Back to Home
+              </Link>
+            </TimelineContent>
             <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
               <h1 className={`${orbitron.className} text-6xl md:text-7xl font-bold text-black mb-6`}>
                 CHOOSE YOUR ARENA

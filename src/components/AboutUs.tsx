@@ -6,7 +6,6 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type React from "react";
 
 // Import Hero font
@@ -15,7 +14,6 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", 
 
 export default function AboutUs() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const reduceMotion = useReducedMotion();
   return (
     <section
       id="about"

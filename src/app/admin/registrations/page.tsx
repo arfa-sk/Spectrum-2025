@@ -1,32 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import { useRealtimeRegistrations } from "@/hooks/useRealtimeRegistrations";
 import { useRegistrationNotifications } from "@/hooks/useRegistrationNotifications";
-import { Orbitron } from "next/font/google";
-import { FaSearch, FaDownload, FaEye, FaFilter, FaWifi, FaTimes, FaSyncAlt, FaBell } from "react-icons/fa";
-import Link from "next/link";
-
-const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-
-interface Registration {
-  id: string;
-  full_name: string;
-  email: string;
-  phone_number: string;
-  university: string;
-  department: string | null;
-  roll_number: string | null;
-  main_category: string;
-  sub_category: string;
-  team_name: string | null;
-  team_members: string | null;
-  message: string | null;
-  terms_accepted: boolean;
-  created_at: string;
-  updated_at: string;
-}
+import AdminLayout from "@/components/admin/AdminLayout";
+import { FaSearch, FaEye } from "react-icons/fa";
+import { Registration } from "@/types/admin";
 
 export default function AdminRegistrations() {
   const { registrations, loading, error, refetch, isRealtimeActive } = useRealtimeRegistrations();
@@ -35,7 +14,6 @@ export default function AdminRegistrations() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [isConnected, setIsConnected] = useState(true);
   const [page, setPage] = useState(1);
   const pageSize = 25;
 
@@ -82,11 +60,11 @@ export default function AdminRegistrations() {
   const goNext = () => setPage((p) => Math.min(totalPages, p + 1));
   const goLast = () => setPage(totalPages);
 
-  const exportToCSV = () => {
+  const handleExport = () => {
     const csvContent = [
       [
         "ID", "Full Name", "Email", "Phone", "University", "Department", "Roll Number",
-        "Main Category", "Sub Category", "Team Name", "Team Members", "Message",
+        "Main Category", "Sub Category", "Team Name", "Team Members",
         "Terms Accepted", "Created At"
       ],
       ...filteredRegistrations.map(reg => [
@@ -101,7 +79,6 @@ export default function AdminRegistrations() {
         reg.sub_category,
         reg.team_name || "",
         reg.team_members || "",
-        reg.message || "",
         reg.terms_accepted ? "Yes" : "No",
         new Date(reg.created_at).toLocaleString()
       ])
@@ -119,102 +96,21 @@ export default function AdminRegistrations() {
   const categories = Array.from(new Set(registrations.map(reg => reg.main_category)));
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h1 className={`${orbitron.className} text-3xl font-bold text-gray-900`}>
-                    All Registrations
-                  </h1>
-                  <div className="flex items-center gap-2">
-                    <div className={`flex items-center gap-1 ${isRealtimeActive ? 'text-green-600' : 'text-gray-600'}`}>
-                      <FaWifi className="text-sm" />
-                      <span className="text-xs font-medium">{isRealtimeActive ? 'Realtime' : 'Auto-refresh'}</span>
-                    </div>
-                    {loading && (
-                      <div className="flex items-center gap-1 text-blue-600">
-                        <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-xs font-medium">Updating...</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <p className="text-gray-600 mt-1">
-                  {filteredRegistrations.length} of {registrations.length} registrations
-                  <span className="text-green-600 text-sm ml-2">• {isRealtimeActive ? 'Live updates' : 'Auto-refreshing every 60s'}</span>
-                  {hasNewRegistrations && (
-                    <span className="text-red-600 text-sm ml-2">• {notificationCount} new registration(s) detected!</span>
-                  )}
-                </p>
-              </div>
-              <div className="flex gap-4">
-                <button
-                  onClick={handleRefresh}
-                  disabled={loading}
-                  className={`flex items-center gap-2 px-4 py-2 font-medium rounded-lg transition-colors disabled:opacity-50 ${
-                    hasNewRegistrations
-                      ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
-                      : "bg-[#FFD700] text-black hover:bg-yellow-500"
-                  }`}
-                >
-                  {hasNewRegistrations ? (
-                    <>
-                      <FaBell className="animate-bounce" />
-                      {notificationCount} New Registration{notificationCount > 1 ? 's' : ''}
-                    </>
-                  ) : (
-                    <>
-                      <FaSyncAlt className={loading ? "animate-spin" : ""} />
-                      Check for Updates
-                    </>
-                  )}
-                </button>
-                <button
-                  onClick={exportToCSV}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <FaDownload />
-                  Export CSV
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="bg-white border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex space-x-8 py-4">
-              <Link
-                href="/admin/stats"
-                className="text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium"
-              >
-                Statistics
-              </Link>
-              <Link
-                href="/admin/registrations"
-                className="text-[#FFD700] border-b-2 border-[#FFD700] pb-2 px-1 text-sm font-medium"
-              >
-                All Registrations
-              </Link>
-              <Link
-                href="/admin"
-                className="text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium"
-              >
-                Dashboard
-              </Link>
-            </nav>
-          </div>
-        </div>
-
-        {/* Filters */}
+    <AdminLayout
+      title="Registrations"
+      subtitle={`${filteredRegistrations.length} of ${registrations.length} registrations`}
+      showRealtimeStatus={true}
+      isRealtimeActive={isRealtimeActive}
+      loading={loading}
+      hasNewRegistrations={hasNewRegistrations}
+      notificationCount={notificationCount}
+      onRefresh={handleRefresh}
+      onExport={handleExport}
+    >
+      {/* Simple Filters */}
         <div className="bg-white border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Search */}
               <div className="relative">
                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -223,17 +119,16 @@ export default function AdminRegistrations() {
                   placeholder="Search registrations..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none text-black"
                 />
               </div>
 
               {/* Category Filter */}
               <div className="relative">
-                <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none appearance-none bg-white"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none appearance-none bg-white text-black"
                 >
                   <option value="">All Categories</option>
                   {categories.map(cat => (
@@ -242,33 +137,32 @@ export default function AdminRegistrations() {
                 </select>
               </div>
 
-              {/* Sort By */}
+            {/* Sort */}
+            <div className="flex gap-2">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none text-black"
               >
                 <option value="created_at">Sort by Date</option>
                 <option value="full_name">Sort by Name</option>
                 <option value="main_category">Sort by Category</option>
                 <option value="university">Sort by University</option>
               </select>
-
-              {/* Sort Order */}
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none text-black"
               >
-                <option value="desc">Newest First</option>
-                <option value="asc">Oldest First</option>
+                <option value="desc">↓</option>
+                <option value="asc">↑</option>
               </select>
+            </div>
             </div>
           </div>
         </div>
 
         {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFD700]"></div>
@@ -289,57 +183,57 @@ export default function AdminRegistrations() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Name
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Email
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         University
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Category
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Team
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Terms
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Date
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {paginated.map((reg) => (
+                {paginated.map((reg) => (
                       <tr key={reg.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-black">
                             {reg.full_name}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-gray-600">
                             {reg.phone_number}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                           {reg.email}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{reg.university}</div>
+                          <div className="text-sm text-black">{reg.university}</div>
                           {reg.department && (
-                            <div className="text-sm text-gray-500">{reg.department}</div>
+                            <div className="text-sm text-gray-600">{reg.department}</div>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{reg.main_category}</div>
-                          <div className="text-sm text-gray-500">{reg.sub_category}</div>
+                          <div className="text-sm text-black">{reg.main_category}</div>
+                          <div className="text-sm text-gray-600">{reg.sub_category}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                           {reg.team_name || "Individual"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -351,7 +245,7 @@ export default function AdminRegistrations() {
                             {reg.terms_accepted ? "Yes" : "No"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                           {new Date(reg.created_at).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -367,28 +261,26 @@ export default function AdminRegistrations() {
 
               {filteredRegistrations.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No registrations found matching your criteria.</p>
+                  <p className="text-black">No registrations found matching your criteria.</p>
                 </div>
               )}
 
               {/* Pagination */}
               {filteredRegistrations.length > 0 && (
                 <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-black">
                     Page {page} of {totalPages} • Showing {paginated.length} of {filteredRegistrations.length}
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={goFirst} disabled={page === 1} className="px-3 py-1 border rounded disabled:opacity-50">« First</button>
-                    <button onClick={goPrev} disabled={page === 1} className="px-3 py-1 border rounded disabled:opacity-50">‹ Prev</button>
-                    <button onClick={goNext} disabled={page === totalPages} className="px-3 py-1 border rounded disabled:opacity-50">Next ›</button>
-                    <button onClick={goLast} disabled={page === totalPages} className="px-3 py-1 border rounded disabled:opacity-50">Last »</button>
+                    <button onClick={goFirst} disabled={page === 1} className="px-3 py-1 border rounded disabled:opacity-50 text-black">« First</button>
+                    <button onClick={goPrev} disabled={page === 1} className="px-3 py-1 border rounded disabled:opacity-50 text-black">‹ Prev</button>
+                    <button onClick={goNext} disabled={page === totalPages} className="px-3 py-1 border rounded disabled:opacity-50 text-black">Next ›</button>
+                    <button onClick={goLast} disabled={page === totalPages} className="px-3 py-1 border rounded disabled:opacity-50 text-black">Last »</button>
                   </div>
-                </div>
-              )}
             </div>
           )}
         </div>
-      </div>
-    </ProtectedRoute>
+      )}
+    </AdminLayout>
   );
 }

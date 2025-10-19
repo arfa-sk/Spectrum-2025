@@ -1,7 +1,7 @@
 "use client";
-import { useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
-import { useRef, useMemo, useCallback } from "react";
-import { motion, useMotionValueEvent } from "framer-motion";
+import { useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef, useMemo } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 

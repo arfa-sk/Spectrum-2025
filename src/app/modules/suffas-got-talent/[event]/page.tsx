@@ -2,6 +2,7 @@
 
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
+import Image from "next/image";
 import {
   FaMicrophone,
   FaUsers,
@@ -177,9 +178,11 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
       <main ref={sectionRef} className="relative min-h-screen bg-white text-black">
         {/* Logo */}
         <div className="absolute top-6 left-6 z-50">
-          <img 
+          <Image 
             src="/sponsors/Logo Spectrum.png" 
             alt="Spectrum Logo" 
+            width={48}
+            height={48}
             className="h-12 w-auto"
           />
         </div>

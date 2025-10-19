@@ -1,19 +1,13 @@
 "use client";
 
-import { Orbitron, Rajdhani } from "next/font/google";
 import AboutUs from "@/components/AboutUs";
 import ContactUs from "@/components/ContactUs";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
-import Link from "next/link";
-import Image from "next/image";
 import Sponsors from "@/components/Sponsors";
 import Gallery from "@/components/Gallery";
-
-// Import Google fonts
-const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["400", "600"] });
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function Home() {
   return (
@@ -26,13 +20,21 @@ export default function Home() {
 
       {/* Register CTAs removed */}
 
-      <AboutUs />
+      <ErrorBoundary>
+        <AboutUs />
+      </ErrorBoundary>
       
       {/* Gallery Section */}
-      <Gallery title="Gallery" />
+      <ErrorBoundary>
+        <Gallery title="Gallery" />
+      </ErrorBoundary>
       
-      <Sponsors />
-      <ContactUs />
+      <ErrorBoundary>
+        <Sponsors />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <ContactUs />
+      </ErrorBoundary>
       <Footer />
 
       {/* === CUSTOM ANIMATIONS === */}

@@ -49,7 +49,7 @@ export function useRegistrationNotifications() {
     checkForNewRegistrations();
 
     return () => clearInterval(interval);
-  }, [isVisible]); // Check when page visibility changes
+  }, [isVisible, checkForNewRegistrations]); // Check when page visibility changes
 
   return {
     hasNewRegistrations,

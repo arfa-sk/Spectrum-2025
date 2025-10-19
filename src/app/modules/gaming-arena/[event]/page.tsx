@@ -2,6 +2,7 @@
 
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
+import Image from "next/image";
 import {
   FaGamepad,
   FaTrophy,
@@ -174,9 +175,11 @@ export default function GamingArenaEventPage({ params }: PageProps) {
         {/* Logo */}
         <div className="absolute top-6 left-6 z-50">
           <Link href="/" className="flex items-center">
-            <img 
+            <Image 
               src="/sponsors/Logo Spectrum.png"
               alt="Spectrum Logo" 
+              width={48}
+              height={48}
               className="h-12 w-auto"
             />
           </Link>

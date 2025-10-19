@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Orbitron, Rajdhani, Space_Grotesk } from "next/font/google";
+import { Orbitron, Space_Grotesk } from "next/font/google";
 import { supabase } from "@/lib/supabaseClient";
 import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import Link from "next/link";
@@ -10,7 +10,6 @@ import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["400", "600"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // Type definitions
@@ -25,7 +24,6 @@ interface FormData {
   subCategory: string;
   teamName: string;
   teamMembers: string;
-  message: string;
 }
 
 interface SubCategories {
@@ -33,23 +31,29 @@ interface SubCategories {
 }
 
 const subCategories: SubCategories = {
-  "Suffa's Got Talent": [
-    "Singing",
-    "Dance",
-    "Stand-up Comedy",
-    "Short Film",
-    "Art",
-    "Photography",
+  "Gaming Arena": [
+    "Valorant",
+    "PUBG Mobile", 
+    "Tekken 7",
+    "FIFA 24"
   ],
   "Hackathon": [
-    "Web Dev",
-    "Mobile App",
+    "Speed Debugging",
+    "Speed Programming", 
+    "Dark Spider",
+    "Web Development",
     "Data Science",
-    "Cyber Security",
-    "UI/UX",
-    "Startup Ideathon",
+    "Mobile App Development",
+    "Database Design"
   ],
-  "Gaming Arena": ["PUBG", "Valorant", "FIFA", "Tekken"],
+  "Suffa's Got Talent": [
+    "Singing",
+    "Standup Comedy",
+    "Skit Battle", 
+    "The Memory Pat",
+    "Treasure Chase",
+    "The Floor is Lava"
+  ],
 };
 
 export default function RegisterPage() {
@@ -65,7 +69,6 @@ export default function RegisterPage() {
     subCategory: "",
     teamName: "",
     teamMembers: "",
-    message: "",
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,6 +97,7 @@ export default function RegisterPage() {
   };
 
   const validateForm = (): boolean => {
+    console.log("=== VALIDATE FORM DEBUG ===");
     const newErrors: Partial<FormData> = {};
 
     // Required field validation
@@ -118,6 +122,13 @@ export default function RegisterPage() {
     // University validation
     if (!formData.university.trim()) {
       newErrors.university = "University/Institute name is required";
+    } else if (!/^[a-zA-Z\s&.,'-]+$/.test(formData.university.trim())) {
+      newErrors.university = "University/Institute name should only contain letters, spaces, and common punctuation";
+    }
+
+    // Department validation (optional but if provided, should be alphabets only)
+    if (formData.department.trim() && !/^[a-zA-Z\s&.,'-]+$/.test(formData.department.trim())) {
+      newErrors.department = "Department should only contain letters, spaces, and common punctuation";
     }
 
     // Category validation
@@ -129,6 +140,27 @@ export default function RegisterPage() {
       newErrors.subCategory = "Please select a sub-category";
     }
 
+    // Team validation for team-based events
+    const teamBasedCategories = ["Gaming Arena", "Hackathon"];
+    console.log("Checking team validation for category:", formData.mainCategory);
+    console.log("Is team-based category:", teamBasedCategories.includes(formData.mainCategory));
+    
+    if (teamBasedCategories.includes(formData.mainCategory)) {
+      console.log("Team name value:", formData.teamName, "Trimmed:", formData.teamName?.trim());
+      console.log("Team members value:", formData.teamMembers, "Trimmed:", formData.teamMembers?.trim());
+      
+      if (!formData.teamName || !formData.teamName.trim()) {
+        console.log("Adding team name error");
+        newErrors.teamName = "Team name is required for team-based events";
+      }
+      if (!formData.teamMembers || !formData.teamMembers.trim()) {
+        console.log("Adding team members error");
+        newErrors.teamMembers = "Team members are required for team-based events";
+      }
+    } else {
+      console.log("Not a team-based category, skipping team validation");
+    }
+
     // Terms & Conditions validation
     if (!termsAccepted) {
       setTermsError("You must agree to the terms and conditions to continue.");
@@ -137,6 +169,10 @@ export default function RegisterPage() {
     }
 
     setErrors(newErrors);
+    console.log("Final errors object:", newErrors);
+    console.log("Error count:", Object.keys(newErrors).length);
+    console.log("Terms accepted:", termsAccepted);
+    console.log("Validation result:", Object.keys(newErrors).length === 0 && termsAccepted);
     return Object.keys(newErrors).length === 0 && termsAccepted;
   };
 
@@ -145,7 +181,21 @@ export default function RegisterPage() {
     setSubmitStatus("idle");
     setSubmitMessage("");
 
-    if (!validateForm()) {
+    // Debug logging
+    console.log("=== FORM SUBMISSION DEBUG ===");
+    console.log("Form data:", formData);
+    console.log("Main category:", formData.mainCategory);
+    console.log("Team name:", formData.teamName);
+    console.log("Team members:", formData.teamMembers);
+    console.log("Terms accepted:", termsAccepted);
+
+    // Run validation
+    const validationResult = validateForm();
+    console.log("Validation result:", validationResult);
+    console.log("Current errors:", errors);
+
+    if (!validationResult) {
+      console.log("Validation failed, blocking submission");
       setSubmitStatus("error");
       setSubmitMessage("Please fix the errors above and try again.");
       return;
@@ -169,14 +219,28 @@ export default function RegisterPage() {
             sub_category: formData.subCategory,
             team_name: formData.teamName || null,
             team_members: formData.teamMembers || null,
-            message: formData.message || null,
             terms_accepted: termsAccepted,
             created_at: new Date().toISOString(),
           },
         ])
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Registration error:", error);
+        
+        // Provide user-friendly error messages
+        if (error.message.includes("row-level security policy")) {
+          throw new Error("Registration failed due to security restrictions. Please try again or contact support.");
+        } else if (error.message.includes("Invalid subcategory")) {
+          throw new Error("Please select a valid subcategory for your chosen category.");
+        } else if (error.message.includes("duplicate key")) {
+          throw new Error("This email is already registered. Please use a different email address.");
+        } else if (error.message.includes("violates check constraint")) {
+          throw new Error("Please fill in all required fields correctly.");
+        } else {
+          throw new Error(`Registration failed: ${error.message}`);
+        }
+      }
 
       setSubmitStatus("success");
       setSubmitMessage("Registration successful! We'll contact you soon.");
@@ -193,7 +257,6 @@ export default function RegisterPage() {
         subCategory: "",
         teamName: "",
         teamMembers: "",
-        message: "",
       });
 
       // Scroll to success message
@@ -429,8 +492,13 @@ export default function RegisterPage() {
                     value={formData.department}
                     onChange={handleInputChange}
                     placeholder="e.g., Computer Science"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
+                      errors.department ? "border-red-500" : "border-gray-300"
+                    }`}
                   />
+                  {errors.department && (
+                    <p className="text-red-500 text-sm mt-1">{errors.department}</p>
+                  )}
                 </div>
 
                 {/* Roll Number */}
@@ -526,29 +594,62 @@ export default function RegisterPage() {
               <div className="space-y-6">
                 {/* Team Name */}
                 <div>
-                  <label className="block text-sm font-bold mb-2">Team Name</label>
+                  <label className="block text-sm font-bold mb-2">
+                    Team Name
+                    {["Gaming Arena", "Hackathon"].includes(formData.mainCategory) && (
+                      <span className="text-red-500 ml-1">*</span>
+                    )}
+                  </label>
                   <input
                     type="text"
                     name="teamName"
                     value={formData.teamName}
                     onChange={handleInputChange}
-                    placeholder="Enter your team name (if applicable)"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                    placeholder={
+                      ["Gaming Arena", "Hackathon"].includes(formData.mainCategory)
+                        ? "Enter your team name (required)"
+                        : "Enter your team name (if applicable)"
+                    }
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
+                      errors.teamName ? "border-red-500" : "border-gray-300"
+                    }`}
                   />
+                  {errors.teamName && (
+                    <p className="text-red-500 text-sm mt-1">{errors.teamName}</p>
+                  )}
                 </div>
 
                 {/* Team Members */}
                 <div>
-                  <label className="block text-sm font-bold mb-2">Team Members</label>
+                  <label className="block text-sm font-bold mb-2">
+                    Team Members
+                    {["Gaming Arena", "Hackathon"].includes(formData.mainCategory) && (
+                      <span className="text-red-500 ml-1">*</span>
+                    )}
+                  </label>
                   <textarea
                     name="teamMembers"
                     value={formData.teamMembers}
                     onChange={handleInputChange}
                     rows={4}
-                    placeholder="List team member names (one per line)&#10;Example:&#10;John Doe&#10;Jane Smith&#10;Mike Johnson"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none"
+                    placeholder={
+                      ["Gaming Arena", "Hackathon"].includes(formData.mainCategory)
+                        ? "List team member names (one per line) - REQUIRED&#10;Example:&#10;John Doe&#10;Jane Smith&#10;Mike Johnson"
+                        : "List team member names (one per line)&#10;Example:&#10;John Doe&#10;Jane Smith&#10;Mike Johnson"
+                    }
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none ${
+                      errors.teamMembers ? "border-red-500" : "border-gray-300"
+                    }`}
                   />
-                  <p className="text-sm text-gray-500 mt-1">Enter each team member&apos;s name on a new line</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {["Gaming Arena", "Hackathon"].includes(formData.mainCategory)
+                      ? "Enter each team member's name on a new line (required for team events)"
+                      : "Enter each team member's name on a new line"
+                    }
+                  </p>
+                  {errors.teamMembers && (
+                    <p className="text-red-500 text-sm mt-1">{errors.teamMembers}</p>
+                  )}
                 </div>
               </div>
             </div>

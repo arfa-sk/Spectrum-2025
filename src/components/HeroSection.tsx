@@ -20,13 +20,14 @@ const RobotCanvasLazy = dynamic(
 );
 
 export default function HeroSection() {
-  const eventDate = new Date("2025-12-20T09:00:00");
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const timelineRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    const eventDate = new Date("2025-12-20T09:00:00");
+    
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = eventDate.getTime() - now;
@@ -47,7 +48,7 @@ export default function HeroSection() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [eventDate]);
+  }, []);
 
 
   return (

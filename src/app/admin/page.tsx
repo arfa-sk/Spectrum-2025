@@ -1,165 +1,224 @@
 "use client";
 
-import { useState } from "react";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { useAuth } from "@/lib/authContext";
+import { useEffect, useState } from "react";
 import { useRealtimeStats } from "@/hooks/useRealtimeStats";
-import { Orbitron } from "next/font/google";
-import { FaUsers, FaTrophy, FaChartBar, FaSignOutAlt, FaCog, FaWifi, FaTimes } from "react-icons/fa";
+import { useRealtimeRegistrations } from "@/hooks/useRealtimeRegistrations";
+import AdminLayout from "@/components/admin/AdminLayout";
+import StatsCards from "@/components/admin/StatsCards";
+import ChartComponent, { chartColors } from "@/components/admin/ChartComponent";
+import { useNotifications } from "@/components/admin/RealTimeNotification";
 import Link from "next/link";
 
-const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-
 export default function AdminDashboard() {
-  const { user, signOut } = useAuth();
   const { stats, totalRegistrations, todayRegistrations, loading, error, refetch, isRealtimeActive } = useRealtimeStats();
-  const [isConnected, setIsConnected] = useState(true);
+  const { registrations } = useRealtimeRegistrations();
+  const { notifications, addNotification, markAsRead, clearNotification, clearAll } = useNotifications();
+  
+  // Calculate notification count and new registrations status
+  const notificationCount = notifications.filter(n => !n.read).length;
+  const hasNewRegistrations = notificationCount > 0;
 
   const topCategory = stats.length > 0 ? stats[0].main_category : "N/A";
 
-  const handleSignOut = async () => {
-    await signOut();
+  // Calculate additional metrics
+  const weeklyRegistrations = registrations.filter(reg => {
+    const regDate = new Date(reg.created_at);
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return regDate >= weekAgo;
+  }).length;
+
+  const monthlyRegistrations = registrations.filter(reg => {
+    const regDate = new Date(reg.created_at);
+    const monthAgo = new Date();
+    monthAgo.setDate(monthAgo.getDate() - 30);
+    return regDate >= monthAgo;
+  }).length;
+
+
+  // Prepare chart data
+  const categoryData = {
+    labels: stats.map(stat => stat.main_category),
+    datasets: [{
+      label: "Registrations",
+      data: stats.map(stat => stat.total_registrations),
+      backgroundColor: chartColors.primary.slice(0, stats.length),
+      borderColor: chartColors.primary.slice(0, stats.length),
+      borderWidth: 1,
+    }]
   };
 
+  const subCategoryData = {
+    labels: stats.map(stat => stat.sub_category),
+    datasets: [{
+      label: "Registrations",
+      data: stats.map(stat => stat.total_registrations),
+      backgroundColor: chartColors.pastel.slice(0, stats.length),
+      borderColor: chartColors.primary.slice(0, stats.length),
+      borderWidth: 1,
+    }]
+  };
+
+  // Daily registrations data (last 7 days)
+  const dailyData = (() => {
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - i));
+      return date.toISOString().split('T')[0];
+    });
+
+    const dailyCounts = last7Days.map(date => {
+      return registrations.filter(reg => 
+        reg.created_at.startsWith(date)
+      ).length;
+    });
+
+    return {
+      labels: last7Days.map(date => new Date(date).toLocaleDateString('en-US', { weekday: 'short' })),
+      datasets: [{
+        label: "Daily Registrations",
+        data: dailyCounts,
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: '#3B82F6',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+      }]
+    };
+  })();
+
+  // Track last processed registration for notifications
+  const [lastRegistrationId, setLastRegistrationId] = useState<string | null>(null);
+  
+  // Add notifications for new registrations (real-time)
+  useEffect(() => {
+    if (registrations.length > 0) {
+      const latestRegistration = registrations[0]; // Most recent registration
+      
+      // Check if this is a new registration (different ID than last one we processed)
+      if (lastRegistrationId !== latestRegistration.id) {
+        // Only add notification if we had a previous registration (not on initial load)
+        if (lastRegistrationId !== null) {
+          addNotification({
+            type: "success",
+            title: "New Registration",
+            message: `${latestRegistration.full_name} registered for ${latestRegistration.main_category} - ${latestRegistration.sub_category}`,
+          });
+        }
+        
+        setLastRegistrationId(latestRegistration.id);
+      }
+    }
+  }, [registrations, addNotification, lastRegistrationId]);
+
+  const handleRefresh = () => {
+    refetch();
+    clearAll();
+  };
+
+  const handleExport = () => {
+    const csvContent = [
+      ["Metric", "Value", "Date"],
+      ["Total Registrations", totalRegistrations.toString(), new Date().toISOString()],
+      ["Today's Registrations", todayRegistrations.toString(), new Date().toISOString()],
+      ["Weekly Registrations", weeklyRegistrations.toString(), new Date().toISOString()],
+      ["Monthly Registrations", monthlyRegistrations.toString(), new Date().toISOString()],
+      ["Categories", stats.length.toString(), new Date().toISOString()],
+      ["Most Popular Category", topCategory, new Date().toISOString()],
+    ].map(row => row.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `spectrum-2025-dashboard-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h1 className={`${orbitron.className} text-3xl font-bold text-gray-900`}>
-                    Admin Dashboard
-                  </h1>
-                  <div className="flex items-center gap-2">
-                    <div className={`flex items-center gap-1 ${isRealtimeActive ? 'text-green-600' : 'text-gray-600'}`}>
-                      <FaWifi className="text-sm" />
-                      <span className="text-xs font-medium">{isRealtimeActive ? 'Realtime' : 'Auto-refresh'}</span>
-                    </div>
-                    {loading && (
-                      <div className="flex items-center gap-1 text-blue-600">
-                        <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-xs font-medium">Updating...</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <p className="text-gray-600 mt-1">
-                  Spectrum 2025 Management Panel
-                  <span className="text-green-600 text-sm ml-2">• {isRealtimeActive ? 'Live updates' : 'Auto-refreshing every 60s'}</span>
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
-                  Welcome, {user?.email}
-                </span>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  <FaSignOutAlt />
-                  Sign Out
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="bg-white border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex space-x-8 py-4">
-              <Link
-                href="/admin"
-                className="text-[#FFD700] border-b-2 border-[#FFD700] pb-2 px-1 text-sm font-medium"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/admin/stats"
-                className="text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium"
-              >
-                Statistics
-              </Link>
-              <Link
-                href="/admin/registrations"
-                className="text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium"
-              >
-                All Registrations
-              </Link>
-            </nav>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <AdminLayout
+      title="Admin Dashboard"
+      subtitle="Spectrum 2025 Management Panel"
+      showRealtimeStatus={true}
+      isRealtimeActive={isRealtimeActive}
+      loading={loading}
+      hasNewRegistrations={hasNewRegistrations}
+      notificationCount={notificationCount}
+      onRefresh={handleRefresh}
+      onExport={handleExport}
+      notifications={notifications}
+      onMarkAsRead={markAsRead}
+      onClearAll={clearAll}
+      onClearNotification={clearNotification}
+    >
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFD700]"></div>
             </div>
-          ) : error ? (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-              <p className="text-red-600">{error}</p>
-              <button
-                onClick={refetch}
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Try Again
-              </button>
+      ) : error ? (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <p className="text-red-600">{error}</p>
+          <button
+            onClick={refetch}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Try Again
+          </button>
             </div>
           ) : (
             <>
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatsCards
+            totalRegistrations={totalRegistrations}
+            todayRegistrations={todayRegistrations}
+            weeklyRegistrations={weeklyRegistrations}
+            monthlyRegistrations={monthlyRegistrations}
+            categoriesCount={stats.length}
+            loading={loading}
+            showTrends={true}
+            className="mb-8"
+          />
+
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* Daily Registrations Trend */}
                 <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center">
-                    <div className="p-3 bg-blue-100 rounded-lg">
-                      <FaUsers className="text-blue-600 text-2xl" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Total Registrations</p>
-                      <p className="text-2xl font-bold text-gray-900">{totalRegistrations}</p>
-                    </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Daily Registration Trend</h3>
+              <ChartComponent
+                type="line"
+                data={dailyData}
+                height={300}
+              />
+                </div>
+
+            {/* Category Distribution */}
+                <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Category Distribution</h3>
+              <ChartComponent
+                type="doughnut"
+                data={categoryData}
+                height={300}
+              />
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center">
-                    <div className="p-3 bg-green-100 rounded-lg">
-                      <FaChartBar className="text-green-600 text-2xl" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Today&apos;s Registrations</p>
-                      <p className="text-2xl font-bold text-gray-900">{todayRegistrations}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center">
-                    <div className="p-3 bg-purple-100 rounded-lg">
-                      <FaTrophy className="text-purple-600 text-2xl" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Categories</p>
-                      <p className="text-2xl font-bold text-gray-900">{stats.length}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center">
-                    <div className="p-3 bg-yellow-100 rounded-lg">
-                      <FaCog className="text-yellow-600 text-2xl" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Most Popular</p>
-                      <p className="text-lg font-bold text-gray-900">{topCategory}</p>
-                    </div>
-                  </div>
-                </div>
+          {/* Sub-Category Analysis */}
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Sub-Category Performance</h3>
+            <ChartComponent
+              type="bar"
+              data={subCategoryData}
+              height={400}
+              options={{
+                indexAxis: 'y',
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                },
+              }}
+            />
               </div>
 
               {/* Quick Actions */}
@@ -172,20 +231,10 @@ export default function AdminDashboard() {
                       className="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">View All Registrations</span>
+                    <span className="font-medium text-gray-900">Manage Registrations</span>
                         <span className="text-gray-500">→</span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">Browse and manage participant registrations</p>
-                    </Link>
-                    <Link
-                      href="/admin/stats"
-                      className="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">View Statistics</span>
-                        <span className="text-gray-500">→</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1">Analyze registration data and trends</p>
+                  <p className="text-sm text-gray-600 mt-1">Browse, filter, and manage participant registrations</p>
                     </Link>
                   </div>
                 </div>
@@ -200,9 +249,11 @@ export default function AdminDashboard() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Authentication</span>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Active
+                  <span className="text-sm text-gray-600">Realtime Status</span>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    isRealtimeActive ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {isRealtimeActive ? 'Active' : 'Polling'}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -211,13 +262,15 @@ export default function AdminDashboard() {
                         Open
                       </span>
                     </div>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Most Popular Category</span>
+                  <span className="text-sm font-medium text-gray-900">{topCategory}</span>
+                </div>
+              </div>
                 </div>
               </div>
             </>
           )}
-        </div>
-      </div>
-    </ProtectedRoute>
+    </AdminLayout>
   );
 }
