@@ -302,7 +302,7 @@ export default function RegisterPage() {
         </TimelineContent>
         <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
         <h1
-            className={`${orbitron.className} text-5xl md:text-7xl font-extrabold mb-6 text-black`}
+            className={`${orbitron.className} text-5xl md:text-7xl font-bold mb-6 text-black`}
         >
           REGISTER NOW
         </h1>

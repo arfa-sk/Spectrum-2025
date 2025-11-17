@@ -8,9 +8,9 @@ import { Orbitron, Space_Grotesk } from "next/font/google";
 import { TimelineContent } from "@/components/timeline-animation";
 import type React from "react";
 
-// Import Hero font
-const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+// Import Hero font - optimized with display swap
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"], display: "swap" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 export default function AboutUs() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -20,11 +20,11 @@ export default function AboutUs() {
       ref={sectionRef}
       className="relative z-10 py-28 bg-[#0f0f0f] text-white overflow-hidden min-h-[70vh]"
     >
-      {/* 3D Canvas Background */}
+      {/* 3D Canvas Background - Optimized with reduced star count and DPR */}
       <div className="absolute inset-0">
-        <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
+        <Canvas camera={{ position: [0, 0, 6], fov: 50 }} dpr={[1, 1.5]}>
           <Suspense fallback={null}>
-            <Stars radius={100} depth={50} count={5000} factor={4} fade speed={2} />
+            <Stars radius={100} depth={50} count={3000} factor={4} fade speed={2} />
             <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} />
           </Suspense>
         </Canvas>

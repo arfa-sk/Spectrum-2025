@@ -26,7 +26,9 @@ export default function HeroSection() {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const eventDate = new Date("2025-12-20T09:00:00");
+    // 📅 EDIT COUNTDOWN DATE HERE: Change the date string below (format: "YYYY-MM-DDTHH:MM:SS")
+    // Example: "2026-01-10T09:00:00" = January 10, 2026 at 9:00 AM
+    const eventDate = new Date("2026-01-10T09:00:00");
     
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -66,7 +68,7 @@ export default function HeroSection() {
         </TimelineContent>
         <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
         <h1 
-          className={`${orbitron.className} text-6xl md:text-8xl font-extrabold mb-10 animate-shimmer`}
+          className={`${orbitron.className} text-6xl md:text-8xl font-bold mb-10 text-black`}
           aria-label="Spectrum 2025 - The Ultimate Tech Fest"
         >
           SPECTRUM 2025
@@ -80,22 +82,22 @@ export default function HeroSection() {
   </p>
 
   <div className="flex items-end justify-center gap-4 md:gap-6">
-    {[
-      { label: "Days", value: countdown.days },
-      { label: "Hours", value: countdown.hours },
-      { label: "Minutes", value: countdown.minutes },
-      { label: "Seconds", value: countdown.seconds },
-    ].map((unit, i) => (
+          {[
+            { label: "Days", value: countdown.days },
+            { label: "Hours", value: countdown.hours },
+            { label: "Minutes", value: countdown.minutes },
+            { label: "Seconds", value: countdown.seconds },
+          ].map((unit, i) => (
       <TimelineContent key={i} animationNum={i} timelineRef={sectionRef} as="div" once={false} className="relative flex flex-col items-center">
         {/* Main number */}
         <span className="text-4xl md:text-6xl font-semibold leading-none text-black animate-fadeUp">
-          {unit.value.toString().padStart(2, "0")}
-        </span>
+                {unit.value.toString().padStart(2, "0")}
+              </span>
 
         {/* Label */}
         <span className="mt-1 text-[0.6rem] md:text-xs uppercase tracking-[0.25em] text-black/50">
-          {unit.label}
-        </span>
+                {unit.label}
+              </span>
 
         {/* Divider ":" */}
         {i < 3 && (
@@ -104,16 +106,16 @@ export default function HeroSection() {
           </span>
         )}
             </TimelineContent>
-    ))}
-  </div>
+          ))}
+        </div>
 </div>
 
 
-      {/* CTA BUTTON */}
+        {/* CTA BUTTON */}
       <div className="relative z-50 pointer-events-auto">
         <TimelineContent animationNum={5} timelineRef={sectionRef} once={false} as="div">
           <Link
-        href="/register"
+          href="/register"
             className={`${orbitron.className} inline-block mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110`}
       >
         Register

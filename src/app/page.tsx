@@ -1,13 +1,26 @@
 "use client";
 
-import AboutUs from "@/components/AboutUs";
-import ContactUs from "@/components/ContactUs";
+import { Suspense, lazy } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
-import Sponsors from "@/components/Sponsors";
-import Gallery from "@/components/Gallery";
 import ErrorBoundary from "@/components/ErrorBoundary";
+
+// Lazy load below-the-fold components for better initial load performance
+const AboutUs = lazy(() => import("@/components/AboutUs"));
+const SpectrumStartupArena = lazy(() => import("@/components/SpectrumStartupArena"));
+const ModulesPreview = lazy(() => import("@/components/ModulesPreview"));
+const Gallery = lazy(() => import("@/components/Gallery"));
+const Sponsors = lazy(() => import("@/components/Sponsors"));
+const Stall = lazy(() => import("@/components/Stall"));
+const ContactUs = lazy(() => import("@/components/ContactUs"));
+
+// Loading fallback component
+const SectionLoader = () => (
+  <div className="min-h-[400px] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-[#FFD700] border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 export default function Home() {
   return (
@@ -15,71 +28,49 @@ export default function Home() {
       <Navbar />
       <HeroSection />
 
-      {/* === SPONSORS HIGHLIGHT === */}
-      
+      <ErrorBoundary>
+        <Suspense fallback={<SectionLoader />}>
+          <AboutUs />
+        </Suspense>
+      </ErrorBoundary>
 
-      {/* Register CTAs removed */}
+      <ErrorBoundary>
+        <Suspense fallback={<SectionLoader />}>
+          <SpectrumStartupArena />
+        </Suspense>
+      </ErrorBoundary>
 
       <ErrorBoundary>
-        <AboutUs />
-      </ErrorBoundary>
-      
-      {/* Gallery Section */}
-      <ErrorBoundary>
-        <Gallery title="Gallery" />
+        <Suspense fallback={<SectionLoader />}>
+          <ModulesPreview />
+        </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary>
-        <Sponsors />
+        <Suspense fallback={<SectionLoader />}>
+          <Gallery title="Gallery" />
+        </Suspense>
       </ErrorBoundary>
+
       <ErrorBoundary>
-        <ContactUs />
+        <Suspense fallback={<SectionLoader />}>
+          <Sponsors />
+        </Suspense>
       </ErrorBoundary>
+
+      <ErrorBoundary>
+        <Suspense fallback={<SectionLoader />}>
+          <Stall />
+        </Suspense>
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <Suspense fallback={<SectionLoader />}>
+          <ContactUs />
+        </Suspense>
+      </ErrorBoundary>
+
       <Footer />
-
-      {/* === CUSTOM ANIMATIONS === */}
-      <style jsx>{`
-        @keyframes marquee-seamless {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-marquee-seamless {
-          display: inline-flex;
-          width: max-content;
-          animation: marquee-seamless 25s linear infinite;
-        }
-        @keyframes bounce {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
-        }
-        .animate-bounce {
-          animation: bounce 1s infinite;
-        }
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
-        }
-        .animate-shimmer {
-          background: linear-gradient(90deg, #fff, #ffd700, #fff);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer 3s linear infinite;
-        }
-      `}</style>
     </main>
   );
 }

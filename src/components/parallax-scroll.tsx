@@ -1,11 +1,11 @@
 "use client";
-import { useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef, useMemo } from "react";
+import { useScroll, useTransform } from "framer-motion";
+import { useRef, useMemo, memo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-export const ParallaxScrollSecond = ({
+export const ParallaxScrollSecond = memo(({
   images,
   className,
 }: {
@@ -14,51 +14,22 @@ export const ParallaxScrollSecond = ({
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   
-  // Ultra-smooth scroll tracking with optimized performance
+  // Optimized scroll tracking - use direct transform instead of spring for smoother performance
   const { scrollYProgress } = useScroll({
     target: gridRef,
     offset: ["start start", "end end"],
   });
 
-  // Ultra-smooth spring config for zero lag
-  const springConfig = { 
-    stiffness: 200, 
-    damping: 40, 
-    restDelta: 0.0001,
-    mass: 0.8
-  };
-  
-  // Motion values for ultra-smooth transforms with optimized range
-  const translateYFirst = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -600]),
-    springConfig
-  );
-  const translateXFirst = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -200]),
-    springConfig
-  );
-  const rotateXFirst = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -20]),
-    springConfig
-  );
+  // Simplified transforms - direct transform is faster than spring for scroll
+  const translateYFirst = useTransform(scrollYProgress, [0, 1], [0, -500]);
+  const translateXFirst = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const rotateXFirst = useTransform(scrollYProgress, [0, 1], [0, -15]);
 
-  const translateYSecond = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -300]),
-    springConfig
-  );
+  const translateYSecond = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
-  const translateYThird = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -600]),
-    springConfig
-  );
-  const translateXThird = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 200]),
-    springConfig
-  );
-  const rotateXThird = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 20]),
-    springConfig
-  );
+  const translateYThird = useTransform(scrollYProgress, [0, 1], [0, -500]);
+  const translateXThird = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const rotateXThird = useTransform(scrollYProgress, [0, 1], [0, 15]);
 
   // Memoize image splitting for better performance
   const imageParts = useMemo(() => {
@@ -78,7 +49,7 @@ export const ParallaxScrollSecond = ({
         contain: "layout style paint",
         transform: "translateZ(0)",
         backfaceVisibility: "hidden",
-        perspective: "1000px"
+        willChange: "scroll-position"
       }}
     >
       <div 
@@ -96,21 +67,12 @@ export const ParallaxScrollSecond = ({
                 y: translateYFirst,
                 x: translateXFirst,
                 rotateZ: rotateXFirst,
-                transformOrigin: "center center",
-                transformStyle: "preserve-3d"
               }}
               key={`grid-1-${idx}`}
               className="will-change-transform"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.6, 
-                delay: idx * 0.1,
-                ease: "easeOut"
-              }}
             >
               <div 
-                className="relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-700 ease-out group"
+                className="relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 group"
                 style={{
                   transform: "translateZ(0)",
                   backfaceVisibility: "hidden"
@@ -118,13 +80,14 @@ export const ParallaxScrollSecond = ({
               >
                 <Image
                   src={el}
-                  className="h-80 w-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:brightness-110"
+                  className="h-80 w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                   height="400"
                   width="400"
                   alt={`Gallery image ${idx + 1}`}
-                  priority={idx < 3}
-                  loading={idx < 3 ? "eager" : "lazy"}
-                  quality={85}
+                  priority={idx < 2}
+                  loading={idx < 2 ? "eager" : "lazy"}
+                  quality={idx < 2 ? 85 : 75}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
@@ -139,21 +102,12 @@ export const ParallaxScrollSecond = ({
             <motion.div
               style={{
                 y: translateYSecond,
-                transformOrigin: "center center",
-                transformStyle: "preserve-3d"
               }}
               key={`grid-2-${idx}`}
               className="will-change-transform"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.6, 
-                delay: idx * 0.1 + 0.2,
-                ease: "easeOut"
-              }}
             >
               <div 
-                className="relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-700 ease-out group"
+                className="relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 group"
                 style={{
                   transform: "translateZ(0)",
                   backfaceVisibility: "hidden"
@@ -161,13 +115,14 @@ export const ParallaxScrollSecond = ({
               >
                 <Image
                   src={el}
-                  className="h-80 w-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:brightness-110"
+                  className="h-80 w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                   height="400"
                   width="400"
                   alt={`Gallery image ${imageParts.first.length + idx + 1}`}
-                  priority={idx < 3}
-                  loading={idx < 3 ? "eager" : "lazy"}
-                  quality={85}
+                  priority={idx < 2}
+                  loading={idx < 2 ? "eager" : "lazy"}
+                  quality={idx < 2 ? 85 : 75}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
@@ -184,21 +139,12 @@ export const ParallaxScrollSecond = ({
                 y: translateYThird,
                 x: translateXThird,
                 rotateZ: rotateXThird,
-                transformOrigin: "center center",
-                transformStyle: "preserve-3d"
               }}
               key={`grid-3-${idx}`}
               className="will-change-transform"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.6, 
-                delay: idx * 0.1 + 0.4,
-                ease: "easeOut"
-              }}
             >
               <div 
-                className="relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-700 ease-out group"
+                className="relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 group"
                 style={{
                   transform: "translateZ(0)",
                   backfaceVisibility: "hidden"
@@ -206,13 +152,14 @@ export const ParallaxScrollSecond = ({
               >
                 <Image
                   src={el}
-                  className="h-80 w-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:brightness-110"
+                  className="h-80 w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                   height="400"
                   width="400"
                   alt={`Gallery image ${imageParts.first.length + imageParts.second.length + idx + 1}`}
-                  priority={idx < 3}
-                  loading={idx < 3 ? "eager" : "lazy"}
-                  quality={85}
+                  priority={idx < 2}
+                  loading={idx < 2 ? "eager" : "lazy"}
+                  quality={idx < 2 ? 85 : 75}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
@@ -223,4 +170,6 @@ export const ParallaxScrollSecond = ({
       </div>
     </div>
   );
-};
+});
+
+ParallaxScrollSecond.displayName = "ParallaxScrollSecond";

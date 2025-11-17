@@ -26,7 +26,7 @@ export default function Sponsors() {
     <section
       id="sponsors"
       ref={sectionRef}
-      className="relative py-28 bg-gradient-to-b from-white to-neutral-50 border-t border-black/10"
+      className="relative py-28 bg-gradient-to-b from-white to-neutral-50"
     >
       <div className="max-w-6xl mx-auto px-6 text-center overflow-hidden">
         {/* Title */}

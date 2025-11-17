@@ -2,7 +2,7 @@
 
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
-import { FaCode, FaLaptopCode, FaDatabase, FaMobileAlt, FaBug, FaSpider, FaChartLine } from "react-icons/fa";
+import { FaCode, FaLaptopCode, FaDatabase, FaBug, FaSpider, FaChartLine } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
@@ -64,16 +64,6 @@ export default function HackathonPage() {
       duration: "8 Hours",
       format: "Team (2-3)",
       prize: "Rs. 25,000",
-    },
-    {
-      title: "Mobile App Development",
-      description: "Create innovative mobile applications that solve real-world problems. Innovation meets functionality.",
-      image: "/modules/mobile-app-development.png",
-      imagePosition: "center",
-      href: "/modules/hackathon/mobile-app-development",
-      duration: "8 Hours",
-      format: "Team (2-4)",
-      prize: "Rs. 22,000",
     },
     {
       title: "Database Design",

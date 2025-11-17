@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { Orbitron } from "next/font/google";
-import { TimelineContent } from "@/components/timeline-animation";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { supabase } from "@/lib/supabaseClient";
 import type React from "react";
 
@@ -18,7 +16,6 @@ export default function ContactUs() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState("");
   const [errors, setErrors] = useState<{[key: string]: string}>({});
-  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => setIsBrowser(true), []);
 
@@ -101,7 +98,7 @@ export default function ContactUs() {
   };
 
   return (
-    <section id="contact" ref={sectionRef} className="relative z-10 py-20 md:py-28 overflow-hidden min-h-screen bg-white">
+    <section id="contact" className="relative z-10 py-20 md:py-28 overflow-hidden min-h-screen bg-white">
 
       {/* === ANIMATED BACKGROUND ELEMENTS === */}
       <div className="absolute inset-0 overflow-hidden -z-10">
@@ -127,19 +124,13 @@ export default function ContactUs() {
 
       {/* HEADER SECTION */}
       <div className="text-center mb-16 px-6">
-        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
-        <h1 className={`${orbitron.className} text-5xl md:text-6xl font-extrabold text-black mb-6`}>
+        <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black mb-6`}>
           CONNECT WITH US
         </h1>
-        </TimelineContent>
-        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
         <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
-        </TimelineContent>
-        <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
           Have questions about SPECTRUM 2025? Reach out to our team for information about events, registration, sponsorships, and more.
         </p>
-        </TimelineContent>
       </div>
 
       {/* === CONTENT === */}
@@ -148,11 +139,9 @@ export default function ContactUs() {
         {/* Left: Contact Information */}
         <div className="flex-1 space-y-10 w-full lg:w-2/5">
           <div>
-            <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
             <h2 className={`${orbitron.className} text-3xl font-bold text-black mb-6`}>
               Get In Touch
             </h2>
-            </TimelineContent>
             
             {[{
               icon: FaMapMarkerAlt,
@@ -167,8 +156,8 @@ export default function ContactUs() {
               title: "Call Us",
               text: "0309 9226663"
             }].map(({ icon: Icon, title, text }, i) => (
-              <TimelineContent key={i} animationNum={4 + i} timelineRef={sectionRef} once={false}>
               <div
+                key={i}
                 className="flex items-start gap-5 p-6 rounded-xl bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group mb-6"
                 onMouseEnter={() => setActiveField(`info-${i}`)}
                 onMouseLeave={() => setActiveField(null)}
@@ -181,7 +170,6 @@ export default function ContactUs() {
                   <p className="text-gray-600 mt-2">{text}</p>
                 </div>
               </div>
-              </TimelineContent>
             ))}
           </div>
 
@@ -190,7 +178,6 @@ export default function ContactUs() {
 
         {/* Right: Contact Form */}
         <div className="flex-1 w-full lg:w-3/5">
-          <TimelineContent animationNum={7} timelineRef={sectionRef} once={false}>
             <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
           <div className="flex items-center mb-8">
             <div className="p-3 bg-black rounded-lg mr-4">
@@ -333,24 +320,20 @@ export default function ContactUs() {
             </button>
           </form>
             </div>
-          </TimelineContent>
         </div>
       </div>
 
       {/* Bottom: Google Map */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 mt-20">
-        <TimelineContent animationNum={8} timelineRef={sectionRef} once={false}>
         <div className="mb-8 text-center">
           <h3 className={`${orbitron.className} text-3xl font-bold text-black mb-2`}>Find Us Here</h3>
           <div className="h-1 w-16 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-4"></div>
         </div>
-        </TimelineContent>
         
-        <TimelineContent animationNum={9} timelineRef={sectionRef} once={false}>
         <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
           {isBrowser && (
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.234971035021!2d67.08152407501018!3d24.831132884064562!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f1a5ed0ecfd%3A0xb276f4413a47a6b9!2sDHA%20Suffa%20University!5e0!3m2!1sen!2s!4v1689056789471!5m2!1sen!2s"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.439005624233!2d67.0773369735799!3d24.814656247092252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33c62f239e641%3A0x4e41a2d7dd487cfc!2sDHA%20Suffa%20University!5e0!3m2!1sen!2s!4v1763047640980!5m2!1sen!2s"
               width="100%"
               height="100%"
               className="border-0"
@@ -360,7 +343,6 @@ export default function ContactUs() {
           )}
           <div className="absolute inset-0 pointer-events-none border border-[#FFD700]/30 rounded-2xl"></div>
         </div>
-        </TimelineContent>
       </div>
 
       {/* Animations */}

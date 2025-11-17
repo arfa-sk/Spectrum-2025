@@ -57,7 +57,7 @@ export default function Navbar(): JSX.Element {
         visible ? "translate-y-0" : "-translate-y-full"
       )}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         <TimelineContent animationNum={0} timelineRef={navbarRef} once={false}>
           <Link href="/" className="pointer-events-auto">
             <Image
@@ -65,7 +65,7 @@ export default function Navbar(): JSX.Element {
               alt="Spectrum"
               width={160}
               height={60}
-              className="h-12 w-auto"
+              className="h-10 sm:h-12 md:h-14 w-auto"
               priority
             />
           </Link>
@@ -74,11 +74,11 @@ export default function Navbar(): JSX.Element {
         {/* Floating pill nav (bottom-right on mobile, inline on desktop) */}
         <div
           className={clsx(
-            "fixed bottom-4 right-4 z-50 w-auto sm:static sm:right-auto",
+            "fixed bottom-4 right-4 z-50 w-auto md:static md:right-auto md:bottom-auto",
             !visible && "opacity-0 pointer-events-none"
           )}
         >
-          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[#FFD700]/40 bg-white/60 px-1 py-1 backdrop-blur-md shadow-lg">
+          <div className="pointer-events-auto flex items-center gap-1 sm:gap-2 rounded-full border border-[#FFD700]/40 bg-white/95 md:bg-white/90 px-1 py-1 backdrop-blur-md shadow-lg">
             {NAV_ITEMS.map((item, idx) => {
               const Icon = item.icon;
               const activeTab = active === item.name;
@@ -88,8 +88,8 @@ export default function Navbar(): JSX.Element {
                     href={item.href}
                     onClick={() => setActive(item.name)}
                     className={clsx(
-                      "relative flex items-center gap-2 rounded-full px-4 py-2 text-sm font-sans font-semibold transition-colors",
-                      "text-black/70 hover:text-black",
+                      "relative flex items-center gap-1.5 sm:gap-2 rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm md:text-base font-sans font-semibold transition-colors",
+                      "text-black hover:text-black",
                       activeTab && "text-[#FFD700]"
                     )}
                   >
