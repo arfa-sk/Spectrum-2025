@@ -1,3 +1,6 @@
+"use client";
+
+import { memo, useMemo } from "react";
 import Link from "next/link";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { FaUtensils, FaGamepad, FaShoppingBag, FaArrowRight } from "react-icons/fa";
@@ -55,55 +58,120 @@ const includedItems = [
   "Standard branding space",
 ];
 
-export default function Stall() {
+function Stall() {
+  // Memoize included items list to prevent re-creation
+  const memoizedItems = useMemo(() => includedItems, []);
+
   return (
     <section
       id="stalls"
       className="relative py-24 overflow-hidden bg-white"
       aria-labelledby="stalls-heading"
+      style={{ 
+        contain: "layout style paint",
+        isolation: "isolate",
+        transform: "translate3d(0, 0, 0)",
+      }}
     >
-      {/* Subtle radial gold tint */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_-10%,rgba(0,0,0,0.04)_0%,transparent_55%)] pointer-events-none" />
+      {/* Subtle radial gold tint - optimized */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 70% 60% at 50% -10%, rgba(0,0,0,0.04) 0%, transparent 55%)",
+          willChange: "auto",
+          transform: "translate3d(0, 0, 0)",
+        }}
+      />
 
-      <div className="relative container mx-auto px-6">
+      <div className="relative container mx-auto px-6" style={{ contain: "layout style" }}>
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className={`${spaceGrotesk.className} text-xs uppercase tracking-[0.35em] text-black/60`}>
             Vendor Stalls
           </span>
-          <h2 className={`${orbitron.className} text-4xl md:text-5xl font-bold text-black mt-4`}>
+          <h2 id="stalls-heading" className={`${orbitron.className} text-4xl md:text-5xl font-bold text-black mt-4`}>
             Reserve Your Stall
           </h2>
           <p className={`${spaceGrotesk.className} text-base md:text-lg text-gray-600 mt-6`}>
-            Join Spectrum 2025 as a vendor. Choose your category and stall size to get started.
+            Join Spectrum 2026 as a vendor. Choose your category and stall size to get started.
           </p>
           <div className="w-32 h-1 bg-gradient-to-r from-black via-[#FFD700] to-black mx-auto mt-6"></div>
         </div>
 
-        {/* Stall Categories Grid */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {stallCategories.map((category, index) => {
+        {/* Stall Categories Grid - optimized with content-visibility */}
+        <div 
+          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          style={{ contain: "layout style" }}
+        >
+          {stallCategories.map((category) => {
             const Icon = category.icon;
             return (
               <div
                 key={category.name}
-                className="relative bg-white rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 group"
+                className="stall-card relative bg-white rounded-3xl border-2 border-black overflow-hidden"
+                style={{
+                  contain: "layout style paint",
+                  isolation: "isolate",
+                  transform: "translate3d(0, 0, 0)",
+                  backfaceVisibility: "hidden",
+                  perspective: "1000px",
+                }}
               >
-                {/* Background Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100 opacity-100 group-hover:from-gray-50 group-hover:to-gray-200 transition-all duration-500"></div>
+                {/* Background Gradient - GPU layer */}
+                <div 
+                  className="stall-bg absolute inset-0"
+                  style={{
+                    background: "linear-gradient(to bottom right, #ffffff, #f9fafb, #f3f4f6)",
+                    willChange: "opacity",
+                    transform: "translate3d(0, 0, 0)",
+                  }}
+                />
+
+                {/* Gold Glow Effect - simplified, no blur on mobile */}
+                <div 
+                  className="stall-glow absolute inset-0 rounded-3xl opacity-0 -z-10"
+                  style={{
+                    background: "linear-gradient(to right, #FFD700, #FFEC8B, #FFD700)",
+                    transform: "translate3d(0, 0, 0) scale(1.05)",
+                    willChange: "opacity",
+                  }}
+                />
 
                 {/* Content */}
-                <div className="relative z-10 p-8 flex flex-col h-full">
+                <div className="relative z-10 p-8 flex flex-col h-full" style={{ contain: "layout" }}>
                   {/* Badge */}
                   <div className={`${spaceGrotesk.className} inline-block bg-gradient-to-r from-[#FFD700] via-[#C5A100] to-[#B8860B] text-black text-xs font-bold px-4 py-2 rounded-full mb-6 shadow-lg border border-[#C5A100] w-fit`}>
                     {category.available} Available
                   </div>
 
-                  {/* Icon */}
-                  <div className="w-16 h-16 relative mb-6 group-hover:scale-110 transition-transform duration-500">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700] via-[#C5A100] to-[#B8860B] rounded-2xl blur-sm opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                    <div className="relative w-16 h-16 bg-black rounded-2xl flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-[#FFD700] group-hover:via-[#C5A100] group-hover:to-[#B8860B] group-hover:rotate-12 transition-all duration-500 border-2 border-black group-hover:border-[#C5A100] shadow-lg">
-                      <Icon className="text-[#FFD700] text-2xl group-hover:text-black group-hover:scale-110 transition-all duration-500" />
+                  {/* Icon - optimized with GPU acceleration */}
+                  <div 
+                    className="stall-icon-container w-16 h-16 relative mb-6"
+                    style={{ transform: "translate3d(0, 0, 0)" }}
+                  >
+                    <div 
+                      className="stall-icon-glow absolute inset-0 rounded-2xl opacity-60"
+                      style={{
+                        background: "linear-gradient(to bottom right, #FFD700, #C5A100, #B8860B)",
+                        filter: "blur(4px)",
+                        willChange: "opacity",
+                        transform: "translate3d(0, 0, 0)",
+                      }}
+                    />
+                    <div 
+                      className="stall-icon-box relative w-16 h-16 bg-black rounded-2xl flex items-center justify-center border-2 border-black shadow-lg"
+                      style={{
+                        willChange: "transform, background-color",
+                        transform: "translate3d(0, 0, 0)",
+                      }}
+                    >
+                      <Icon 
+                        className="stall-icon text-[#FFD700] text-2xl"
+                        style={{
+                          willChange: "transform, color",
+                          transform: "translate3d(0, 0, 0)",
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -114,7 +182,10 @@ export default function Stall() {
 
                   {/* Size & Price - Compact */}
                   <div className="mb-6 flex-grow">
-                    <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 group-hover:border-[#FFD700]/30 transition-colors">
+                    <div 
+                      className="stall-price-box p-4 rounded-xl bg-gray-50 border border-gray-200"
+                      style={{ willChange: "border-color" }}
+                    >
                       <div className="flex flex-wrap items-center gap-3 mb-2">
                         <span className={`${spaceGrotesk.className} text-sm font-semibold text-black`}>
                           8x8 ft
@@ -136,7 +207,7 @@ export default function Stall() {
                       All Stalls Include:
                     </p>
                     <ul className="space-y-2">
-                      {includedItems.map((item, itemIndex) => (
+                      {memoizedItems.map((item, itemIndex) => (
                         <li key={itemIndex} className={`${spaceGrotesk.className} text-sm text-gray-700 flex items-center gap-2`}>
                           <span className="text-[#FFD700] font-bold">•</span>
                           {item}
@@ -145,24 +216,161 @@ export default function Stall() {
                     </ul>
                   </div>
 
-                  {/* Book Now Button */}
+                  {/* Book Now Button - optimized */}
                   <Link
                     href="/#contact"
-                    className={`${orbitron.className} w-full inline-flex items-center justify-center gap-3 rounded-full border-2 border-black bg-black text-white px-6 py-4 text-sm font-semibold uppercase tracking-[0.2em] transition-all duration-500 hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#C5A100] hover:to-[#B8860B] hover:text-black hover:border-[#C5A100] group-hover:shadow-lg`}
+                    className={`stall-button ${orbitron.className} w-full inline-flex items-center justify-center gap-3 rounded-full border-2 border-black bg-black text-white px-6 py-4 text-sm font-semibold uppercase tracking-[0.2em]`}
+                    style={{
+                      willChange: "transform, background-color",
+                      transform: "translate3d(0, 0, 0)",
+                    }}
                   >
                     Book Now
-                    <FaArrowRight className="text-sm transition-transform group-hover:translate-x-1" />
+                    <FaArrowRight 
+                      className="stall-button-arrow text-sm"
+                      style={{
+                        willChange: "transform",
+                        transform: "translate3d(0, 0, 0)",
+                      }}
+                    />
                   </Link>
                 </div>
-
-                {/* Gold Glow Effect on Hover */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#FFD700] via-[#FFEC8B] to-[#FFD700] opacity-0 group-hover:opacity-100 transition-all duration-500 -z-10 blur-md group-hover:blur-lg scale-105"></div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Ultra-optimized hover styles - GPU accelerated, compositor-only properties */}
+      <style jsx>{`
+        .stall-card {
+          transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                      box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover {
+          transform: translate3d(0, -8px, 0) scale3d(1.02, 1.02, 1);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stall-bg {
+          transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-bg {
+          opacity: 1;
+        }
+        
+        .stall-glow {
+          transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-glow {
+          opacity: 0.25;
+        }
+        
+        .stall-icon-glow {
+          transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-icon-glow {
+          opacity: 0.8;
+        }
+        
+        .stall-icon-box {
+          transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-icon-box {
+          background: linear-gradient(to bottom right, #FFD700, #C5A100, #B8860B);
+          transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 12deg);
+          border-color: #C5A100;
+        }
+        
+        .stall-icon {
+          transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-icon {
+          color: black;
+          transform: translate3d(0, 0, 0) scale3d(1.1, 1.1, 1);
+        }
+        
+        .stall-price-box {
+          transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-price-box {
+          border-color: rgba(255, 215, 0, 0.3);
+        }
+        
+        .stall-button {
+          transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                      box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-button {
+          transform: translate3d(0, 0, 0) scale3d(1.02, 1.02, 1);
+          background: linear-gradient(to right, #FFD700, #C5A100, #B8860B);
+          color: black;
+          border-color: #C5A100;
+          box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+        
+        .stall-button-arrow {
+          transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stall-card:hover .stall-button-arrow {
+          transform: translate3d(4px, 0, 0);
+        }
+        
+        /* Mobile optimizations - reduce blur */
+        @media (max-width: 768px) {
+          .stall-icon-glow {
+            filter: blur(2px);
+          }
+          .stall-glow {
+            filter: blur(4px);
+          }
+        }
+        
+        /* High DPI optimizations */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+          .stall-card {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          .stall-card,
+          .stall-card * {
+            transition: none !important;
+            animation: none !important;
+          }
+          .stall-card:hover {
+            transform: none;
+          }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+          .stall-card:active {
+            transform: translate3d(0, -4px, 0) scale3d(1.01, 1.01, 1);
+          }
+        }
+      `}</style>
     </section>
   );
 }
+
+export default memo(Stall);
 

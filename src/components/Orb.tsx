@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { Renderer, Program, Mesh, Triangle, Vec3 } from 'ogl';
 
 type ColorTheme = 'gold' | 'bronze' | 'silver' | 'metallic' | 'cyan' | 'custom';
@@ -76,7 +76,8 @@ export default function Orb({
     ] : [1, 0.84, 0];
   };
 
-  const colors = getColors();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const colors = useMemo(() => getColors(), [colorTheme, customColors]);
 
   const vert = /* glsl */ `
     precision highp float;
@@ -338,6 +339,7 @@ export default function Orb({
       container.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colorTheme, customColors, hoverIntensity, rotateOnHover, forceHoverState]);
 
   return <div ref={ctnDom} className="w-full h-full" />;

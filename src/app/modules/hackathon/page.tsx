@@ -2,7 +2,7 @@
 
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
-import { FaCode, FaLaptopCode, FaDatabase, FaBug, FaSpider, FaChartLine } from "react-icons/fa";
+import { FaCode } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";

@@ -12,7 +12,7 @@ export default function Footer() {
         <p
           className={`${orbitron.className} text-sm md:text-base animate-shimmer text-white`}
         >
-          © 2025 Spectrum — DHA Suffa University
+          © 2026 Spectrum — DHA Suffa University
         </p>
         <p className="text-xs text-neutral-400 mt-1">
           Empowering Tech Innovators | Coding • Robotics • AI • Creativity

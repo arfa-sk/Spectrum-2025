@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaBell, FaTimes, FaCheck, FaExclamationTriangle } from "react-icons/fa";
 
 interface Notification {
@@ -38,19 +38,6 @@ export default function RealTimeNotification({
         return <FaExclamationTriangle className="text-red-600" />;
       default:
         return <FaBell className="text-blue-600" />;
-    }
-  };
-
-  const getBgColor = (type: Notification["type"]) => {
-    switch (type) {
-      case "success":
-        return "bg-green-50 border-green-200";
-      case "warning":
-        return "bg-yellow-50 border-yellow-200";
-      case "error":
-        return "bg-red-50 border-red-200";
-      default:
-        return "bg-blue-50 border-blue-200";
     }
   };
 

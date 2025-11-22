@@ -88,7 +88,7 @@ export default function AdminRegistrations() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `spectrum-2025-registrations-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `spectrum-2026-registrations-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };

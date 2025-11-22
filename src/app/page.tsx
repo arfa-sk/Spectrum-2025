@@ -16,8 +16,12 @@ const Stall = lazy(() => import("@/components/Stall"));
 const ContactUs = lazy(() => import("@/components/ContactUs"));
 
 // Loading fallback component
-const SectionLoader = () => (
-  <div className="min-h-[400px] flex items-center justify-center">
+interface SectionLoaderProps {
+  className?: string;
+}
+
+const SectionLoader = ({ className = "min-h-[400px]" }: SectionLoaderProps) => (
+  <div className={`${className} flex items-center justify-center`}>
     <div className="w-8 h-8 border-2 border-[#FFD700] border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -29,43 +33,43 @@ export default function Home() {
       <HeroSection />
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-[70vh]" />}>
           <AboutUs />
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-[600px]" />}>
           <SpectrumStartupArena />
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-[300px]" />}>
           <ModulesPreview />
         </Suspense>
       </ErrorBoundary>
       
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-[500px]" />}>
           <Gallery title="Gallery" />
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-[600px]" />}>
           <Sponsors />
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-[600px]" />}>
           <Stall />
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionLoader className="min-h-screen" />}>
           <ContactUs />
         </Suspense>
       </ErrorBoundary>

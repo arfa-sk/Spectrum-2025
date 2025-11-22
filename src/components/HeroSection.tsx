@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Orbitron, Rajdhani, Antonio, Space_Grotesk } from "next/font/google";
+import { Orbitron, Space_Grotesk } from "next/font/google";
 import Orb from "./Orb";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -10,8 +10,6 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type React from "react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["400", "600"] });
-const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const RobotCanvasLazy = dynamic(
@@ -28,7 +26,7 @@ export default function HeroSection() {
   useEffect(() => {
     // 📅 EDIT COUNTDOWN DATE HERE: Change the date string below (format: "YYYY-MM-DDTHH:MM:SS")
     // Example: "2026-01-10T09:00:00" = January 10, 2026 at 9:00 AM
-    const eventDate = new Date("2026-01-10T09:00:00");
+    const eventDate = new Date("2026-01-20T09:00:00");
     
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -58,7 +56,7 @@ export default function HeroSection() {
       ref={sectionRef}
       className="relative flex flex-col items-center text-center px-6 overflow-hidden bg-white"
       role="banner"
-      aria-label="Spectrum 2025 Hero Section"
+      aria-label="Spectrum 2026 Hero Section"
     >
 
       {/* HERO CONTENT */}
@@ -69,9 +67,9 @@ export default function HeroSection() {
         <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
         <h1 
           className={`${orbitron.className} text-6xl md:text-8xl font-bold mb-10 text-black`}
-          aria-label="Spectrum 2025 - The Ultimate Tech Fest"
+          aria-label="Spectrum 2026 - The Ultimate Tech Fest"
         >
-          SPECTRUM 2025
+          SPECTRUM 2026
         </h1>
         </TimelineContent>
 

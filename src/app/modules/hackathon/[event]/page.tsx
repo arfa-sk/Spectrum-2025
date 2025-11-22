@@ -4,16 +4,8 @@ import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  FaCode,
   FaUsers,
   FaClock,
-  FaTrophy,
-  FaLaptopCode,
-  FaDatabase,
-  FaMobileAlt,
-  FaBug,
-  FaSpider,
-  FaChartLine,
 } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef, use } from "react";

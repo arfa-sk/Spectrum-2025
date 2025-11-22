@@ -110,7 +110,7 @@ export function useRealtimeStats() {
       supabase.removeChannel(channel);
       clearInterval(pollInterval);
     };
-  }, []);
+  }, [isRealtimeActive]);
 
   return {
     stats,

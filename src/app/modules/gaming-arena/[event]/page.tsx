@@ -4,13 +4,8 @@ import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  FaGamepad,
-  FaTrophy,
   FaUsers,
   FaClock,
-  FaMapMarkerAlt,
-  FaCalendarAlt,
-  FaCheckCircle,
 } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef, use } from "react";
@@ -22,7 +17,7 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
-type EventKey = "valorant" | "pubg" | "tekken" | "fifa";
+type EventKey = "valorant" | "game-development" | "tekken" | "fifa";
 
 const EVENT_CONFIG: Record<
   EventKey,
@@ -64,24 +59,24 @@ const EVENT_CONFIG: Record<
     bgB: "to-orange-400",
     accent: "text-red-600",
   },
-  pubg: {
-    title: "PUBG Mobile Tournament",
+  "game-development": {
+    title: "Game Development Sprint",
     description:
-      "Drop into the battlefield where survival is the only rule. Loot, strategize, and fight your way to the top in heart-pounding matches. Only the last squad standing earns the glory — will it be yours?",
+      "Assemble your dream crew, fire up your engine of choice, and build a playable experience from scratch. Creativity, polish, and a compelling pitch will determine who ships the most exciting mini game before the buzzer.",
     date: "March 16, 2025",
-    time: "11:00 AM - 7:00 PM",
-    location: "Gaming Lab, DSU Campus",
-    format: "Squad (4 players)",
-    duration: "3 Rounds",
+    time: "9:00 AM - 3:00 PM",
+    location: "Innovation Lab, DSU Campus",
+    format: "Team (2-4)",
+    duration: "6 Hour Build + Demo",
     prize: "Rs. 10,000",
     runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 600 per person",
-    capacityLabel: "Squads Registered",
-    max: 25,
-    current: 12,
-    bgA: "from-orange-400",
-    bgB: "to-yellow-400",
-    accent: "text-orange-600",
+    registrationFee: "Rs. 800 per team",
+    capacityLabel: "Studios Registered",
+    max: 15,
+    current: 7,
+    bgA: "from-amber-400",
+    bgB: "to-lime-400",
+    accent: "text-amber-700",
   },
   tekken: {
     title: "Tekken 7 Tournament",
@@ -123,40 +118,6 @@ const EVENT_CONFIG: Record<
   },
 };
 
-const RULES: Record<EventKey, string[]> = {
-  valorant: [
-    "Teams must consist of exactly 5 players",
-    "All players must be current students",
-    "No cheating, hacking, or exploiting allowed",
-    "Matches will be played on official servers",
-    "Teams must arrive 30 minutes before their match",
-    "Decisions by tournament officials are final",
-  ],
-  pubg: [
-    "Squads must consist of exactly 4 players",
-    "All players must be current students",
-    "No cheating, hacking, or exploiting allowed",
-    "Matches will be played on official PUBG Mobile servers",
-    "Squads must arrive 30 minutes before their match",
-    "Decisions by tournament officials are final",
-  ],
-  tekken: [
-    "Individual player registration only",
-    "All players must be current students",
-    "No cheating, hacking, or exploiting allowed",
-    "Matches will be played on official Tekken 7",
-    "Players must arrive 30 minutes before their match",
-    "Decisions by tournament officials are final",
-  ],
-  fifa: [
-    "Individual player registration only",
-    "All players must be current students",
-    "No cheating, hacking, or exploiting allowed",
-    "Matches will be played on official FIFA 24",
-    "Players must arrive 30 minutes before their match",
-    "Decisions by tournament officials are final",
-  ],
-};
 
 type PageProps = { params: Promise<{ event: string }> };
 
@@ -166,8 +127,6 @@ export default function GamingArenaEventPage({ params }: PageProps) {
   const key = event as EventKey;
   const config = EVENT_CONFIG[key];
   if (!config) return notFound();
-
-  const capacityPercent = Math.min(100, Math.round((config.current / config.max) * 100));
 
   return (
     <>
@@ -219,7 +178,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                   
                   <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed mb-6`}>
-                      Step into the tactical world of Valorant, where precision, teamwork, and strategy decide your fate. Compete in intense 5v5 battles, showcase your aim, and prove your dominance across thrilling maps. Only the sharpest agents will claim victory — do you have what it takes?
+                      {config.description}
                     </p>
                   </TimelineContent>
 

@@ -133,7 +133,7 @@ export default function AdminDashboard() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `spectrum-2025-dashboard-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `spectrum-2026-dashboard-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
   return (
     <AdminLayout
       title="Admin Dashboard"
-      subtitle="Spectrum 2025 Management Panel"
+      subtitle="Spectrum 2026 Management Panel"
       showRealtimeStatus={true}
       isRealtimeActive={isRealtimeActive}
       loading={loading}

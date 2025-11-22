@@ -107,7 +107,7 @@ export function useRealtimeRegistrations() {
       supabase.removeChannel(channel);
       clearInterval(pollInterval);
     };
-  }, []);
+  }, [isRealtimeActive]);
 
   return {
     registrations,

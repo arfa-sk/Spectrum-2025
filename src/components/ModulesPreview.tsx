@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Orbitron, Space_Grotesk } from "next/font/google";
-import { FaGamepad, FaCode, FaMicrophone, FaArrowRight } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef } from "react";
 

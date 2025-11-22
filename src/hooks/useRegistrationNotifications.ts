@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { usePageVisibility } from "./usePageVisibility";
 
@@ -10,7 +10,7 @@ export function useRegistrationNotifications() {
   const [notificationCount, setNotificationCount] = useState(0);
   const isVisible = usePageVisibility();
 
-  const checkForNewRegistrations = async () => {
+  const checkForNewRegistrations = useCallback(async () => {
     try {
       const { count, error } = await supabase
         .from("registrations")
@@ -32,7 +32,7 @@ export function useRegistrationNotifications() {
     } catch (error) {
       console.error("Error checking for new registrations:", error);
     }
-  };
+  }, [lastRegistrationCount]);
 
   const clearNotifications = () => {
     setHasNewRegistrations(false);

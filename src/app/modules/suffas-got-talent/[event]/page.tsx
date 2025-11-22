@@ -4,14 +4,8 @@ import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  FaMicrophone,
   FaUsers,
   FaClock,
-  FaMusic,
-  FaTheaterMasks,
-  FaLaugh,
-  FaDrum,
-  FaGuitar,
 } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef, use } from "react";
@@ -23,7 +17,7 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
-type EventKey = "singing" | "standup-comedy" | "skit-battle" | "the-memory-pat" | "treasure-chase" | "the-floor-is-lava";
+type EventKey = "singing" | "standup-comedy" | "tug-of-war" | "the-memory-pat" | "minute-to-win-it" | "arm-wrestling";
 
 const EVENT_CONFIG: Record<
   EventKey,
@@ -84,24 +78,24 @@ const EVENT_CONFIG: Record<
     bgB: "to-orange-400",
     accent: "text-yellow-600",
   },
-  "skit-battle": {
-    title: "Skit Battle Competition",
+  "tug-of-war": {
+    title: "Tug of War",
     description:
-      "Bring stories to life through dramatic performances and creative skits. Collaborate with your teammates to create compelling narratives and engaging performances. From comedy to drama, showcase your acting skills and creativity.",
+      "Grip the rope, brace your stance, and pull in perfect sync. Tug of War pits raw power against strategy as teams battle for leverage in a best-of-three showdown.",
     date: "March 29, 2025",
     time: "5:00 PM - 8:00 PM",
-    location: "Theater Hall",
-    format: "Team (2-5)",
-    duration: "8 Minutes",
+    location: "Main Arena",
+    format: "Team (4-6)",
+    duration: "5 Minutes",
     prize: "Rs. 15,000",
     runnerUpPrize: "Rs. 7,500",
     registrationFee: "Rs. 500 per team",
     capacityLabel: "Teams",
-    max: 12,
-    current: 5,
-    bgA: "from-purple-400",
-    bgB: "to-indigo-400",
-    accent: "text-purple-600",
+    max: 10,
+    current: 4,
+    bgA: "from-amber-400",
+    bgB: "to-yellow-500",
+    accent: "text-amber-600",
   },
   "the-memory-pat": {
     title: "The Memory Pat",
@@ -122,43 +116,43 @@ const EVENT_CONFIG: Record<
     bgB: "to-indigo-400",
     accent: "text-purple-600",
   },
-  "treasure-chase": {
-    title: "Treasure Chase",
+  "minute-to-win-it": {
+    title: "Minute to Win It",
     description:
-      "Navigate through clues and puzzles to find hidden treasures. Speed, strategy, and problem-solving skills are key to victory in this exciting adventure. Work together as a team to solve riddles and uncover the ultimate prize.",
+      "Stack, toss, balance, and solve lightning-fast challenges with only sixty seconds on the clock. Each round is a new surprise that tests focus and dexterity.",
     date: "March 31, 2025",
     time: "3:00 PM - 6:00 PM",
-    location: "Outdoor Arena",
-    format: "Team (2-4)",
-    duration: "10 Minutes",
-    prize: "Rs. 12,000",
-    runnerUpPrize: "Rs. 6,000",
-    registrationFee: "Rs. 500 per team",
-    capacityLabel: "Teams",
-    max: 15,
-    current: 6,
-    bgA: "from-yellow-400",
-    bgB: "to-orange-400",
-    accent: "text-yellow-600",
-  },
-  "the-floor-is-lava": {
-    title: "The Floor is Lava",
-    description:
-      "Navigate obstacles and challenges while avoiding the &apos;lava floor&apos;. Agility, balance, and quick thinking will save you in this thrilling physical challenge. Test your reflexes and coordination in this high-energy competition.",
-    date: "April 1, 2025",
-    time: "5:00 PM - 8:00 PM",
     location: "Activity Hall",
     format: "Individual",
-    duration: "6 Minutes",
+    duration: "1 Minute",
+    prize: "Rs. 12,000",
+    runnerUpPrize: "Rs. 6,000",
+    registrationFee: "Rs. 400 per person",
+    capacityLabel: "Participants",
+    max: 25,
+    current: 10,
+    bgA: "from-sky-400",
+    bgB: "to-blue-500",
+    accent: "text-sky-600",
+  },
+  "arm-wrestling": {
+    title: "Arm Wrestling Championship",
+    description:
+      "Square up, lock hands, and unleash controlled strength in intense one-on-one bouts. Technique, endurance, and explosive power crown the arm wrestling champion.",
+    date: "April 1, 2025",
+    time: "5:00 PM - 8:00 PM",
+    location: "Strength Zone",
+    format: "Individual",
+    duration: "3 Minutes",
     prize: "Rs. 10,000",
     runnerUpPrize: "Rs. 5,000",
     registrationFee: "Rs. 400 per person",
     capacityLabel: "Participants",
-    max: 20,
-    current: 8,
-    bgA: "from-red-400",
-    bgB: "to-pink-400",
-    accent: "text-red-600",
+    max: 32,
+    current: 14,
+    bgA: "from-rose-400",
+    bgB: "to-red-500",
+    accent: "text-rose-600",
   },
 };
 

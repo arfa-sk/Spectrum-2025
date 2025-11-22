@@ -49,11 +49,12 @@ const subCategories: SubCategories = {
   "Suffa's Got Talent": [
     "Singing",
     "Standup Comedy",
-    "Skit Battle", 
+    "Tug of War",
     "The Memory Pat",
-    "Treasure Chase",
-    "The Floor is Lava"
+    "Minute to Win It",
+    "Arm Wrestling"
   ],
+  "Spectrum Startup Arena": [],
 };
 
 export default function RegisterPage() {
@@ -97,7 +98,6 @@ export default function RegisterPage() {
   };
 
   const validateForm = (): boolean => {
-    console.log("=== VALIDATE FORM DEBUG ===");
     const newErrors: Partial<FormData> = {};
 
     // Required field validation
@@ -136,29 +136,22 @@ export default function RegisterPage() {
       newErrors.mainCategory = "Please select a main category";
     }
 
-    if (!formData.subCategory) {
+    // Sub-category validation (only required if the category has sub-categories)
+    const categoriesWithSubCategories = ["Gaming Arena", "Hackathon", "Suffa's Got Talent"];
+    if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
       newErrors.subCategory = "Please select a sub-category";
     }
 
     // Team validation for team-based events
-    const teamBasedCategories = ["Gaming Arena", "Hackathon"];
-    console.log("Checking team validation for category:", formData.mainCategory);
-    console.log("Is team-based category:", teamBasedCategories.includes(formData.mainCategory));
+    const teamBasedCategories = ["Gaming Arena", "Hackathon", "Spectrum Startup Arena"];
     
     if (teamBasedCategories.includes(formData.mainCategory)) {
-      console.log("Team name value:", formData.teamName, "Trimmed:", formData.teamName?.trim());
-      console.log("Team members value:", formData.teamMembers, "Trimmed:", formData.teamMembers?.trim());
-      
       if (!formData.teamName || !formData.teamName.trim()) {
-        console.log("Adding team name error");
         newErrors.teamName = "Team name is required for team-based events";
       }
       if (!formData.teamMembers || !formData.teamMembers.trim()) {
-        console.log("Adding team members error");
         newErrors.teamMembers = "Team members are required for team-based events";
       }
-    } else {
-      console.log("Not a team-based category, skipping team validation");
     }
 
     // Terms & Conditions validation
@@ -169,10 +162,6 @@ export default function RegisterPage() {
     }
 
     setErrors(newErrors);
-    console.log("Final errors object:", newErrors);
-    console.log("Error count:", Object.keys(newErrors).length);
-    console.log("Terms accepted:", termsAccepted);
-    console.log("Validation result:", Object.keys(newErrors).length === 0 && termsAccepted);
     return Object.keys(newErrors).length === 0 && termsAccepted;
   };
 
@@ -181,21 +170,10 @@ export default function RegisterPage() {
     setSubmitStatus("idle");
     setSubmitMessage("");
 
-    // Debug logging
-    console.log("=== FORM SUBMISSION DEBUG ===");
-    console.log("Form data:", formData);
-    console.log("Main category:", formData.mainCategory);
-    console.log("Team name:", formData.teamName);
-    console.log("Team members:", formData.teamMembers);
-    console.log("Terms accepted:", termsAccepted);
-
     // Run validation
     const validationResult = validateForm();
-    console.log("Validation result:", validationResult);
-    console.log("Current errors:", errors);
 
     if (!validationResult) {
-      console.log("Validation failed, blocking submission");
       setSubmitStatus("error");
       setSubmitMessage("Please fix the errors above and try again.");
       return;
@@ -216,7 +194,7 @@ export default function RegisterPage() {
             department: formData.department || null,
             roll_number: formData.rollNumber || null,
             main_category: formData.mainCategory,
-            sub_category: formData.subCategory,
+            sub_category: formData.subCategory || null,
             team_name: formData.teamName || null,
             team_members: formData.teamMembers || null,
             terms_accepted: termsAccepted,
@@ -226,20 +204,51 @@ export default function RegisterPage() {
         .select();
 
       if (error) {
-        console.error("Registration error:", error);
+        // Extract error message safely
+        const errorMessage = error.message || error.details || error.hint || "Unknown error";
+        const errorCode = error.code || "";
         
-        // Provide user-friendly error messages
-        if (error.message.includes("row-level security policy")) {
-          throw new Error("Registration failed due to security restrictions. Please try again or contact support.");
-        } else if (error.message.includes("Invalid subcategory")) {
-          throw new Error("Please select a valid subcategory for your chosen category.");
-        } else if (error.message.includes("duplicate key")) {
-          throw new Error("This email is already registered. Please use a different email address.");
-        } else if (error.message.includes("violates check constraint")) {
-          throw new Error("Please fill in all required fields correctly.");
-        } else {
-          throw new Error(`Registration failed: ${error.message}`);
+        // Provide user-friendly error messages based on error code and message
+        let userMessage = "Registration failed. Please try again.";
+        
+        // RLS errors
+        if (errorCode === "42501" || errorMessage.includes("row-level security policy") || errorMessage.includes("RLS") || errorMessage.includes("policy")) {
+          userMessage = "Registration is currently unavailable due to security configuration. Please contact support or try again later.";
         }
+        // Duplicate email errors
+        else if (errorCode === "23505" || errorMessage.includes("duplicate key") || errorMessage.includes("already exists") || errorMessage.includes("unique constraint")) {
+          userMessage = "This email is already registered. Please use a different email address.";
+        }
+        // Invalid subcategory errors
+        else if (errorMessage.includes("Invalid subcategory") || errorMessage.includes("subcategory")) {
+          userMessage = "Please select a valid subcategory for your chosen category.";
+        }
+        // Constraint violation errors
+        else if (errorMessage.includes("violates check constraint") || errorMessage.includes("constraint")) {
+          if (errorMessage.includes("email")) {
+            userMessage = "Please enter a valid email address.";
+          } else if (errorMessage.includes("phone")) {
+            userMessage = "Please enter a valid phone number (10-11 digits).";
+          } else if (errorMessage.includes("category")) {
+            userMessage = "Please select a valid category.";
+          } else {
+            userMessage = "Please fill in all required fields correctly.";
+          }
+        }
+        // Team validation errors
+        else if (errorMessage.includes("Team name is required") || errorMessage.includes("team")) {
+          userMessage = "Team name and members are required for this category.";
+        }
+        // Required field errors
+        else if (errorMessage.includes("required") || errorMessage.includes("NOT NULL")) {
+          userMessage = "Please fill in all required fields.";
+        }
+        // Generic fallback
+        else {
+          userMessage = `Registration failed: ${errorMessage}. Please check your information and try again.`;
+        }
+        
+        throw new Error(userMessage);
       }
 
       setSubmitStatus("success");
@@ -262,12 +271,40 @@ export default function RegisterPage() {
       // Scroll to success message
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error: unknown) {
-      console.error("Error submitting form:", error);
       setSubmitStatus("error");
-      const message =
-        typeof error === "object" && error !== null && "message" in error
-          ? String((error as { message?: string }).message)
-          : "An error occurred while submitting your registration. Please try again.";
+      
+      // Extract error message safely with multiple fallbacks
+      let message = "An error occurred while submitting your registration. Please try again.";
+      
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (typeof error === "object" && error !== null) {
+        // Type guard for error object
+        interface ErrorLike {
+          message?: unknown;
+          error?: { message?: unknown };
+          details?: unknown;
+          hint?: unknown;
+          toString?: () => string;
+        }
+        const errorObj = error as ErrorLike;
+        
+        // Try multiple possible error message locations
+        if (errorObj.message) {
+          message = String(errorObj.message);
+        } else if (errorObj.error?.message) {
+          message = String(errorObj.error.message);
+        } else if (errorObj.details) {
+          message = String(errorObj.details);
+        } else if (errorObj.hint) {
+          message = String(errorObj.hint);
+        } else if (errorObj.toString && errorObj.toString() !== "[object Object]") {
+          message = errorObj.toString();
+        }
+      } else if (typeof error === "string") {
+        message = error;
+      }
+      
       setSubmitMessage(message);
     } finally {
       setIsSubmitting(false);
@@ -312,7 +349,7 @@ export default function RegisterPage() {
         </TimelineContent>
         <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
           <p className={`${spaceGrotesk.className} text-lg md:text-xl text-gray-700 max-w-2xl mx-auto`}>
-          Join Pakistan&apos;s Premier Tech Festival — Spectrum 2025
+          Join Pakistan&apos;s Premier Tech Festival — Spectrum 2026
         </p>
         </TimelineContent>
       </div>
@@ -437,7 +474,7 @@ export default function RegisterPage() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      placeholder="+92 300 1234567"
+                      placeholder="03001234567"
                       className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
                         errors.phoneNumber ? "border-red-500" : "border-gray-300"
                       }`}
@@ -543,6 +580,7 @@ export default function RegisterPage() {
                     <option value="Suffa's Got Talent">Suffa&apos;s Got Talent</option>
                     <option value="Hackathon">Hackathon</option>
                     <option value="Gaming Arena">Gaming Arena</option>
+                    <option value="Spectrum Startup Arena">Spectrum Startup Arena</option>
                   </select>
                   {errors.mainCategory && (
                     <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
@@ -553,6 +591,7 @@ export default function RegisterPage() {
                 </div>
 
                 {/* Sub Category */}
+                {formData.mainCategory && availableSubCategories.length > 0 && (
                 <div>
                   <label className="block text-sm font-bold mb-2">
                     Sub-Category <span className="text-red-500">*</span>
@@ -561,14 +600,11 @@ export default function RegisterPage() {
                     name="subCategory"
                     value={formData.subCategory}
                     onChange={handleInputChange}
-                    disabled={!formData.mainCategory}
                     className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all appearance-none bg-white cursor-pointer ${
                       errors.subCategory ? "border-red-500" : "border-gray-300"
-                    } ${!formData.mainCategory ? "opacity-50 cursor-not-allowed" : ""}`}
+                      }`}
                   >
-                    <option value="">
-                      {formData.mainCategory ? "Select a sub-category" : "Select main category first"}
-                    </option>
+                      <option value="">Select a sub-category</option>
                     {availableSubCategories.map((subCat) => (
                       <option key={subCat} value={subCat}>
                         {subCat}
@@ -582,6 +618,7 @@ export default function RegisterPage() {
                     </p>
                   )}
                 </div>
+                )}
               </div>
             </div>
 
@@ -596,7 +633,7 @@ export default function RegisterPage() {
                 <div>
                   <label className="block text-sm font-bold mb-2">
                     Team Name
-                    {["Gaming Arena", "Hackathon"].includes(formData.mainCategory) && (
+                    {["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
                       <span className="text-red-500 ml-1">*</span>
                     )}
                   </label>
@@ -606,7 +643,7 @@ export default function RegisterPage() {
                     value={formData.teamName}
                     onChange={handleInputChange}
                     placeholder={
-                      ["Gaming Arena", "Hackathon"].includes(formData.mainCategory)
+                      ["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
                         ? "Enter your team name (required)"
                         : "Enter your team name (if applicable)"
                     }
@@ -623,7 +660,7 @@ export default function RegisterPage() {
                 <div>
                   <label className="block text-sm font-bold mb-2">
                     Team Members
-                    {["Gaming Arena", "Hackathon"].includes(formData.mainCategory) && (
+                    {["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
                       <span className="text-red-500 ml-1">*</span>
                     )}
                   </label>
@@ -632,17 +669,13 @@ export default function RegisterPage() {
                     value={formData.teamMembers}
                     onChange={handleInputChange}
                     rows={4}
-                    placeholder={
-                      ["Gaming Arena", "Hackathon"].includes(formData.mainCategory)
-                        ? "List team member names (one per line) - REQUIRED&#10;Example:&#10;John Doe&#10;Jane Smith&#10;Mike Johnson"
-                        : "List team member names (one per line)&#10;Example:&#10;John Doe&#10;Jane Smith&#10;Mike Johnson"
-                    }
+                    placeholder="One name on each line"
                     className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none ${
                       errors.teamMembers ? "border-red-500" : "border-gray-300"
                     }`}
                   />
                   <p className="text-sm text-gray-500 mt-1">
-                    {["Gaming Arena", "Hackathon"].includes(formData.mainCategory)
+                    {["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
                       ? "Enter each team member's name on a new line (required for team events)"
                       : "Enter each team member's name on a new line"
                     }

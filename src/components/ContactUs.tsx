@@ -129,7 +129,7 @@ export default function ContactUs() {
         </h1>
         <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-          Have questions about SPECTRUM 2025? Reach out to our team for information about events, registration, sponsorships, and more.
+          Have questions about SPECTRUM 2026? Reach out to our team for information about events, registration, sponsorships, and more.
         </p>
       </div>
 

@@ -24,13 +24,14 @@ const NAV_ITEMS: NavItem[] = [
 export default function Navbar(): JSX.Element {
   const [active, setActive] = useState<string>(NAV_ITEMS[0].name);
   const [visible, setVisible] = useState<boolean>(true);
-  const [lastScrollY, setLastScrollY] = useState<number>(0);
+  const lastScrollYRef = useRef<number>(0);
   const navbarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
       const heroHeight = window.innerHeight;
+      const lastScrollY = lastScrollYRef.current;
 
       if (currentScrollY < 50) {
         setVisible(true);
@@ -40,14 +41,17 @@ export default function Navbar(): JSX.Element {
         setVisible(true);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
+    
+    // Initial call to set visibility based on current scroll position
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [lastScrollY]);
+  }, []); // Empty dependency array - effect only runs once on mount
 
   return (
     <header

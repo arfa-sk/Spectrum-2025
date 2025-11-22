@@ -2,7 +2,7 @@
 
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
-import { FaMicrophone, FaMusic, FaTheaterMasks, FaLaugh, FaDrum, FaGuitar } from "react-icons/fa";
+import { FaMicrophone } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
@@ -36,13 +36,13 @@ export default function SuffasGotTalentPage() {
       prize: "Rs. 10,000",
     },
     {
-      title: "Skit Battle",
-      description: "Bring stories to life through dramatic performances and creative skits. Team up and showcase your acting skills and creativity.",
+      title: "Tug of War",
+      description: "Lock into formation and pull with everything you have. Strategy, timing, and raw strength decide the victors in this crowd-favorite showdown.",
       image: "/modules/skit-battle.png",
       imagePosition: "center",
-      href: "/modules/suffas-got-talent/skit-battle",
-      duration: "8 Minutes",
-      format: "Team (2-5)",
+      href: "/modules/suffas-got-talent/tug-of-war",
+      duration: "5 Minutes",
+      format: "Team (4-6)",
       prize: "Rs. 15,000",
     },
     {
@@ -56,22 +56,22 @@ export default function SuffasGotTalentPage() {
       prize: "Rs. 8,000",
     },
     {
-      title: "Treasure Chase",
-      description: "Navigate through clues and puzzles to find hidden treasures. Speed, strategy, and problem-solving are key to victory.",
+      title: "Minute to Win It",
+      description: "Race against the clock in high-pressure micro challenges. Precision under pressure earns the win when every second matters.",
       image: "/modules/treasure-chase.png",
       imagePosition: "center 20%",
-      href: "/modules/suffas-got-talent/treasure-chase",
-      duration: "10 Minutes",
-      format: "Team (2-4)",
+      href: "/modules/suffas-got-talent/minute-to-win-it",
+      duration: "1 Minute",
+      format: "Individual",
       prize: "Rs. 12,000",
     },
     {
-      title: "The Floor is Lava",
-      description: "Navigate obstacles and challenges while avoiding the 'lava floor'. Agility, balance, and quick thinking will save you.",
+      title: "Arm Wrestling",
+      description: "Test pure strength and technique in head-to-head bouts. Stay composed, lock your grip, and slam to victory.",
       image: "/modules/the-floor-is-lava.png",
       imagePosition: "center 30%",
-      href: "/modules/suffas-got-talent/the-floor-is-lava",
-      duration: "6 Minutes",
+      href: "/modules/suffas-got-talent/arm-wrestling",
+      duration: "3 Minutes",
       format: "Individual",
       prize: "Rs. 10,000",
     },

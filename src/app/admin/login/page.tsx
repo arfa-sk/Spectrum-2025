@@ -47,7 +47,7 @@ export default function AdminLogin() {
           <h1 className={`${orbitron.className} text-4xl font-bold text-white mb-2`}>
             Admin Login
           </h1>
-          <p className="text-gray-400">Spectrum 2025 Management</p>
+          <p className="text-gray-400">Spectrum 2026 Management</p>
         </div>
 
         {/* Login Form */}
@@ -130,7 +130,7 @@ export default function AdminLogin() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-gray-500 text-sm">
-            © 2025 Spectrum — DHA Suffa University
+            © 2026 Spectrum — DHA Suffa University
           </p>
         </div>
       </div>
