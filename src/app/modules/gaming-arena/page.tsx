@@ -16,11 +16,11 @@ export default function GamingArenaPage() {
 
   const games = [
     {
-      title: "Valorant",
+      title: "Counter Strike",
       description: "Tactical FPS tournament featuring intense 5v5 matches. Show your strategic skills and aim precision.",
       image: "/modules/valorant.png",
       imagePosition: "center", // center, center top, center 20%, etc.
-      href: "/modules/gaming-arena/valorant",
+      href: "/modules/gaming-arena/counter-strike",
       players: "5v5",
       duration: "Best of 3",
       prize: "₹50,000",
@@ -78,7 +78,7 @@ export default function GamingArenaPage() {
               <div className="flex items-center justify-center mb-6">
                 <FaGamepad className="text-4xl text-black mr-4" />
                 <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black`}>
-                  Gaming Arena
+                  DevPlay
                 </h1>
               </div>
             </TimelineContent>

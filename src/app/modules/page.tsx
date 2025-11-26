@@ -16,8 +16,8 @@ export default function ModulesPage() {
 
   const modules = [
     {
-      title: "Gaming Arena",
-      description: "Enter the battleground where legends are born. Valorant, PUBG, Tekken, FIFA - choose your weapon.",
+      title: "DevPlay",
+      description: "Enter the battleground: Counter Strike, PUBG, Tekken, FIFA, & Game Dev.",
       icon: FaGamepad,
       href: "/modules/gaming-arena",
       badge: "4 Tournaments",

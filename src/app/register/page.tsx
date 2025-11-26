@@ -31,8 +31,8 @@ interface SubCategories {
 }
 
 const subCategories: SubCategories = {
-  "Gaming Arena": [
-    "Valorant",
+  "DevPlay": [
+    "Counter Strike",
     "PUBG Mobile", 
     "Tekken 7",
     "FIFA 24"
@@ -137,13 +137,13 @@ export default function RegisterPage() {
     }
 
     // Sub-category validation (only required if the category has sub-categories)
-    const categoriesWithSubCategories = ["Gaming Arena", "Hackathon", "Suffa's Got Talent"];
+    const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Suffa's Got Talent"];
     if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
       newErrors.subCategory = "Please select a sub-category";
     }
 
     // Team validation for team-based events
-    const teamBasedCategories = ["Gaming Arena", "Hackathon", "Spectrum Startup Arena"];
+    const teamBasedCategories = ["DevPlay", "Hackathon", "Spectrum Startup Arena"];
     
     if (teamBasedCategories.includes(formData.mainCategory)) {
       if (!formData.teamName || !formData.teamName.trim()) {
@@ -579,7 +579,7 @@ export default function RegisterPage() {
                     <option value="">Select a category</option>
                     <option value="Suffa's Got Talent">Suffa&apos;s Got Talent</option>
                     <option value="Hackathon">Hackathon</option>
-                    <option value="Gaming Arena">Gaming Arena</option>
+                    <option value="DevPlay">DevPlay</option>
                     <option value="Spectrum Startup Arena">Spectrum Startup Arena</option>
                   </select>
                   {errors.mainCategory && (
@@ -633,7 +633,7 @@ export default function RegisterPage() {
                 <div>
                   <label className="block text-sm font-bold mb-2">
                     Team Name
-                    {["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
+                    {["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
                       <span className="text-red-500 ml-1">*</span>
                     )}
                   </label>
@@ -643,7 +643,7 @@ export default function RegisterPage() {
                     value={formData.teamName}
                     onChange={handleInputChange}
                     placeholder={
-                      ["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
+                      ["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
                         ? "Enter your team name (required)"
                         : "Enter your team name (if applicable)"
                     }
@@ -660,7 +660,7 @@ export default function RegisterPage() {
                 <div>
                   <label className="block text-sm font-bold mb-2">
                     Team Members
-                    {["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
+                    {["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
                       <span className="text-red-500 ml-1">*</span>
                     )}
                   </label>
@@ -675,7 +675,7 @@ export default function RegisterPage() {
                     }`}
                   />
                   <p className="text-sm text-gray-500 mt-1">
-                    {["Gaming Arena", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
+                    {["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
                       ? "Enter each team member's name on a new line (required for team events)"
                       : "Enter each team member's name on a new line"
                     }

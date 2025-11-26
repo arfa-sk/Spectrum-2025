@@ -17,7 +17,7 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
-type EventKey = "valorant" | "game-development" | "tekken" | "fifa";
+type EventKey = "counter-strike" | "game-development" | "tekken" | "fifa";
 
 const EVENT_CONFIG: Record<
   EventKey,
@@ -40,10 +40,10 @@ const EVENT_CONFIG: Record<
     accent: string; // text color for prize
   }
 > = {
-  valorant: {
-    title: "Valorant Tournament",
+  "counter-strike": {
+    title: "Counter Strike Tournament",
     description:
-      "Step into the tactical world of Valorant, where precision, teamwork, and strategy decide your fate. Compete in intense 5v5 battles, showcase your aim, and prove your dominance across thrilling maps. Only the sharpest agents will claim victory — do you have what it takes?",
+      "Step into the tactical world of Counter Strike, where precision, teamwork, and strategy decide your fate. Compete in intense 5v5 battles, showcase your aim, and prove your dominance across thrilling maps. Only the sharpest players will claim victory — do you have what it takes?",
     date: "March 15, 2025",
     time: "10:00 AM - 6:00 PM",
     location: "Gaming Lab, DSU Campus",
@@ -152,7 +152,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                 href="/modules/gaming-arena"
                 className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8`}
               >
-                ← Back to Gaming Arena
+                ← Back to DevPlay
               </Link>
             </TimelineContent>
 
