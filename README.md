@@ -9,7 +9,7 @@ Pakistan's Premier Tech Festival featuring Hackathons, Gaming Competitions, and 
 - ✨ **Beautiful Landing Page** with 3D animations and effects
 - 📝 **Registration System** with Supabase integration
 - 🎨 **Dynamic Forms** with real-time validation
-- 🎯 **Event Categories**: Hackathon, Gaming Arena, Suffa's Got Talent
+- 🎯 **Event Categories**: Hackathon, Gaming Arena, Play To Win
 - 🌟 **3D Star Field** background using Three.js
 - ⏱️ **Live Countdown Timer** to event date
 - 🎨 **Mouse Tracking Effects** and interactive animations
@@ -103,7 +103,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 - FIFA
 - Tekken
 
-### Suffa's Got Talent (TBA)
+### Play To Win (TBA)
 - Singing
 - Dance
 - Stand-up Comedy
@@ -164,8 +164,8 @@ The project uses:
 
 ## 📞 Contact
 
-- **Email:** dsuspectrum@gmail.com
-- **Phone:** 0309 9226663
+- **Email:** spectrum2026.dsu@gmail.com
+- **Phone:** 03334445182
 - **Location:** DHA Suffa University, Karachi
 - **Social:** [@acmatdsu](https://instagram.com/acmatdsu)
 
@@ -175,7 +175,7 @@ Spectrum 2025 is organized by the ACM Chapter at DHA Suffa University, Karachi's
 
 ## 📅 Event Date
 
-**December 20, 2025** | 9:00 AM onwards
+**April 9, 2026** | 9:00 AM onwards
 
 ## 🏆 Total Prize Pool
 

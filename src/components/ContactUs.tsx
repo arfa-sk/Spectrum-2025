@@ -15,7 +15,7 @@ export default function ContactUs() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState("");
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => setIsBrowser(true), []);
 
@@ -29,7 +29,7 @@ export default function ContactUs() {
   };
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
+    const newErrors: { [key: string]: string } = {};
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
@@ -111,12 +111,12 @@ export default function ContactUs() {
             <div key={i} className="absolute top-0 left-0 h-full w-px bg-gray-800" style={{ left: `${i * 5}%` }}></div>
           ))}
         </div>
-        
+
         {/* Floating elements */}
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full border border-[#FFD700]/10 animate-float-slow"></div>
         <div className="absolute bottom-1/3 right-1/4 w-48 h-48 border border-[#FFD700]/10 rotate-45 animate-float-medium"></div>
         <div className="absolute top-2/3 left-1/5 w-32 h-32 border border-[#FFD700]/10 rounded-full animate-float-fast"></div>
-        
+
         {/* Scroll progress indicator removed as requested */}
       </div>
 
@@ -142,7 +142,7 @@ export default function ContactUs() {
             <h2 className={`${orbitron.className} text-3xl font-bold text-black mb-6`}>
               Get In Touch
             </h2>
-            
+
             {[{
               icon: FaMapMarkerAlt,
               title: "Event Address",
@@ -150,11 +150,11 @@ export default function ContactUs() {
             }, {
               icon: FaEnvelope,
               title: "Email Us",
-              text: "dsuspectrum@gmail.com"
+              text: "spectrum2026.dsu@gmail.com"
             }, {
               icon: FaPhoneAlt,
               title: "Call Us",
-              text: "0309 9226663"
+              text: "03334445182"
             }].map(({ icon: Icon, title, text }, i) => (
               <div
                 key={i}
@@ -178,148 +178,143 @@ export default function ContactUs() {
 
         {/* Right: Contact Form */}
         <div className="flex-1 w-full lg:w-3/5">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
-          <div className="flex items-center mb-8">
-            <div className="p-3 bg-black rounded-lg mr-4">
-              <FaPaperPlane className="text-xl text-[#FFD700]" />
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
+            <div className="flex items-center mb-8">
+              <div className="p-3 bg-black rounded-lg mr-4">
+                <FaPaperPlane className="text-xl text-[#FFD700]" />
+              </div>
+              <h3 className={`${orbitron.className} text-2xl font-bold text-black`}>Reach Out Directly</h3>
             </div>
-            <h3 className={`${orbitron.className} text-2xl font-bold text-black`}>Reach Out Directly</h3>
-          </div>
-          
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Success/Error Messages */}
-            {submitStatus === "success" && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                <FaCheckCircle className="text-green-600 text-xl" />
-                <p className="text-green-800 font-medium">{submitMessage}</p>
-              </div>
-            )}
-            
-            {submitStatus === "error" && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                <FaExclamationCircle className="text-red-600 text-xl" />
-                <p className="text-red-800 font-medium">{submitMessage}</p>
-              </div>
-            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Success/Error Messages */}
+              {submitStatus === "success" && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
+                  <FaCheckCircle className="text-green-600 text-xl" />
+                  <p className="text-green-800 font-medium">{submitMessage}</p>
+                </div>
+              )}
+
+              {submitStatus === "error" && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                  <FaExclamationCircle className="text-red-600 text-xl" />
+                  <p className="text-red-800 font-medium">{submitMessage}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Name"
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.name ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                    onFocus={() => setActiveField('name')}
+                    onBlur={() => setActiveField(null)}
+                    required
+                  />
+                  {activeField === 'name' && (
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
+                  )}
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Your Email"
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.email ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                    onFocus={() => setActiveField('email')}
+                    onBlur={() => setActiveField(null)}
+                    required
+                  />
+                  {activeField === 'email' && (
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
+                  )}
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
+                </div>
+              </div>
+
               <div className="relative">
-                <input 
-                  type="text" 
-                  name="name"
-                  value={formData.name}
+                <input
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
                   onChange={handleInputChange}
-                  placeholder="Your Name" 
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
-                    errors.name ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  onFocus={() => setActiveField('name')}
+                  placeholder="Subject"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.subject ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  onFocus={() => setActiveField('subject')}
                   onBlur={() => setActiveField(null)}
                   required
                 />
-                {activeField === 'name' && (
+                {activeField === 'subject' && (
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
                 )}
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                {errors.subject && (
+                  <p className="text-red-500 text-sm mt-1">{errors.subject}</p>
                 )}
               </div>
-              
+
               <div className="relative">
-                <input 
-                  type="email" 
-                  name="email"
-                  value={formData.email}
+                <textarea
+                  name="message"
+                  value={formData.message}
                   onChange={handleInputChange}
-                  placeholder="Your Email" 
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  onFocus={() => setActiveField('email')}
+                  placeholder="Your Message"
+                  rows={5}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none ${errors.message ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  onFocus={() => setActiveField('message')}
                   onBlur={() => setActiveField(null)}
                   required
-                />
-                {activeField === 'email' && (
+                ></textarea>
+                {activeField === 'message' && (
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
                 )}
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                {errors.message && (
+                  <p className="text-red-500 text-sm mt-1">{errors.message}</p>
                 )}
               </div>
-            </div>
-            
-            <div className="relative">
-              <input 
-                type="text" 
-                name="subject"
-                value={formData.subject}
-                onChange={handleInputChange}
-                placeholder="Subject" 
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${
-                  errors.subject ? 'border-red-300' : 'border-gray-300'
-                }`}
-                onFocus={() => setActiveField('subject')}
-                onBlur={() => setActiveField(null)}
-                required
-              />
-              {activeField === 'subject' && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
-              )}
-              {errors.subject && (
-                <p className="text-red-500 text-sm mt-1">{errors.subject}</p>
-              )}
-            </div>
-            
-            <div className="relative">
-              <textarea 
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                placeholder="Your Message" 
-                rows={5}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none ${
-                  errors.message ? 'border-red-300' : 'border-gray-300'
-                }`}
-                onFocus={() => setActiveField('message')}
-                onBlur={() => setActiveField(null)}
-                required
-              ></textarea>
-              {activeField === 'message' && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FFD700] to-black animate-line-expand"></div>
-              )}
-              {errors.message && (
-                <p className="text-red-500 text-sm mt-1">{errors.message}</p>
-              )}
-            </div>
-            
-            <button 
-              type="submit"
-              disabled={isSubmitting}
-              className={`group relative w-full font-medium py-3 px-6 rounded-lg overflow-hidden transition-all duration-300 ${
-                isSubmitting 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-black text-white hover:bg-gray-900'
-              }`}
-            >
-              <span className="relative z-10 flex items-center justify-center">
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    Send Message
-                    <FaPaperPlane className="ml-2 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`group relative w-full font-medium py-3 px-6 rounded-lg overflow-hidden transition-all duration-300 ${isSubmitting
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-900'
+                  }`}
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <FaPaperPlane className="ml-2 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </>
+                  )}
+                </span>
+                {!isSubmitting && (
+                  <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                 )}
-              </span>
-              {!isSubmitting && (
-                <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-              )}
-            </button>
-          </form>
-            </div>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -329,7 +324,7 @@ export default function ContactUs() {
           <h3 className={`${orbitron.className} text-3xl font-bold text-black mb-2`}>Find Us Here</h3>
           <div className="h-1 w-16 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-4"></div>
         </div>
-        
+
         <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
           {isBrowser && (
             <iframe

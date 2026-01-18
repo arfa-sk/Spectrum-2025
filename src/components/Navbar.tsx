@@ -16,7 +16,7 @@ type NavItem = { name: string; href: string; icon: React.FC<any> };
 const NAV_ITEMS: NavItem[] = [
   { name: "About Us", href: "/#about", icon: Briefcase },
   { name: "Modules", href: "/modules", icon: Info },
-  { name: "Register", href: "/register", icon: Wrench },
+
   { name: "Sponsors", href: "/#sponsors", icon: Info },
   { name: "Contact", href: "/#contact", icon: Mail },
 ];
@@ -43,10 +43,10 @@ export default function Navbar(): JSX.Element {
 
       lastScrollYRef.current = currentScrollY;
     };
-    
+
     // Initial call to set visibility based on current scroll position
     onScroll();
-    
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -90,11 +90,18 @@ export default function Navbar(): JSX.Element {
                 <TimelineContent key={item.name} animationNum={idx + 1} timelineRef={navbarRef} once={false}>
                   <Link
                     href={item.href}
-                    onClick={() => setActive(item.name)}
+                    onClick={(e) => {
+                      if (item.name === "Coming Soon") {
+                        e.preventDefault();
+                      } else {
+                        setActive(item.name);
+                      }
+                    }}
                     className={clsx(
                       "relative flex items-center gap-1.5 sm:gap-2 rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm md:text-base font-sans font-semibold transition-colors",
                       "text-black hover:text-black",
-                      activeTab && "text-[#FFD700]"
+                      activeTab && "text-[#FFD700]",
+                      item.name === "Coming Soon" && "opacity-60 cursor-not-allowed"
                     )}
                   >
                     <span className="hidden md:inline">{item.name}</span>

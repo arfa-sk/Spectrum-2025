@@ -49,9 +49,9 @@ const EVENT_CONFIG: Record<
     location: "Gaming Lab, DSU Campus",
     format: "5v5 Team-based",
     duration: "Best of 3 Maps",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 600 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Teams Registered",
     max: 32,
     current: 18,
@@ -68,9 +68,9 @@ const EVENT_CONFIG: Record<
     location: "Innovation Lab, DSU Campus",
     format: "Team (2-4)",
     duration: "6 Hour Build + Demo",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 800 per team",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Studios Registered",
     max: 15,
     current: 7,
@@ -87,9 +87,9 @@ const EVENT_CONFIG: Record<
     location: "Gaming Lab, DSU Campus",
     format: "1v1 Single Elimination",
     duration: "Double Elimination",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 600 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Players Registered",
     max: 64,
     current: 28,
@@ -106,9 +106,9 @@ const EVENT_CONFIG: Record<
     location: "Gaming Lab, DSU Campus",
     format: "1v1 Single Elimination",
     duration: "Knockout Tournament",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 600 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Players Registered",
     max: 32,
     current: 15,
@@ -134,9 +134,9 @@ export default function GamingArenaEventPage({ params }: PageProps) {
         {/* Logo */}
         <div className="absolute top-6 left-6 z-50">
           <Link href="/" className="flex items-center">
-            <Image 
+            <Image
               src="/sponsors/Logo Spectrum.png"
-              alt="Spectrum Logo" 
+              alt="Spectrum Logo"
               width={48}
               height={48}
               className="h-12 w-auto"
@@ -175,7 +175,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                 <div className="rounded-2xl p-8 bg-white shadow-inner">
                   <h2 className={`${orbitron.className} text-2xl font-bold text-black mb-3`}>Event Information</h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#C5A100] mb-6"></div>
-                  
+
                   <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed mb-6`}>
                       {config.description}
@@ -229,7 +229,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                         <span className={`${orbitron.className} text-2xl font-bold text-black`}>{config.prize}</span>
                       </div>
                     </TimelineContent>
-                    
+
                     {config.runnerUpPrize && (
                       <TimelineContent animationNum={21} timelineRef={sectionRef} once={true} as="div">
                         <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
@@ -249,13 +249,13 @@ export default function GamingArenaEventPage({ params }: PageProps) {
 
                   <TimelineContent animationNum={23} timelineRef={sectionRef} once={true} as="div">
                     <Link
-                      href="/register"
-                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform hover:scale-105 hover:opacity-90`}
+                      href="#"
+                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform cursor-not-allowed pointer-events-none`}
                     >
-                      Register Now
+                      Coming Soon
                     </Link>
                   </TimelineContent>
-                  
+
                   <TimelineContent animationNum={24} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-xs text-black/60 text-center mt-4`}>
                       Registration closes 24 hours before the event

@@ -86,8 +86,8 @@ export default function SuffasGotTalentPage() {
           {/* Header */}
           <div className="text-center mb-16">
             <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
-              <Link 
-                href="/modules" 
+              <Link
+                href="/modules"
                 className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8`}
               >
                 ← Back to Modules
@@ -98,7 +98,7 @@ export default function SuffasGotTalentPage() {
               <div className="flex items-center justify-center mb-6">
                 <FaMicrophone className="text-4xl text-black mr-4" />
                 <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black`}>
-                  Suffa&apos;s Got Talent
+                  Play To Win
                 </h1>
               </div>
             </TimelineContent>
@@ -117,17 +117,17 @@ export default function SuffasGotTalentPage() {
           {/* Talents Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {talents.map((talent, index) => (
-              <TimelineContent 
-                key={talent.title} 
-                animationNum={5 + index} 
-                timelineRef={sectionRef} 
-                once={true} 
+              <TimelineContent
+                key={talent.title}
+                animationNum={5 + index}
+                timelineRef={sectionRef}
+                once={true}
                 as="div"
               >
                 <Link href={talent.href} className="group block">
                   <div className="relative bg-white rounded-2xl p-8 border border-gray-200 overflow-hidden transition-transform duration-300 hover:scale-105">
                     {/* Background Image Overlay */}
-                    <div 
+                    <div
                       className="absolute inset-0 bg-cover bg-no-repeat opacity-90"
                       style={{
                         backgroundImage: `url('${talent.image}')`,
@@ -135,24 +135,24 @@ export default function SuffasGotTalentPage() {
                         backgroundPosition: talent.imagePosition
                       }}
                     ></div>
-                    
+
                     {/* Content */}
                     <div className="relative z-10 flex flex-col justify-between h-full min-h-[200px]">
-                      <TimelineContent 
-                        animationNum={10 + index} 
-                        timelineRef={sectionRef} 
-                        once={true} 
+                      <TimelineContent
+                        animationNum={10 + index}
+                        timelineRef={sectionRef}
+                        once={true}
                         as="h3"
                       >
                         <h3 className={`${orbitron.className} text-2xl font-bold text-white mb-4 drop-shadow-lg`}>
                           {talent.title}
                         </h3>
                       </TimelineContent>
-                      
-                      <TimelineContent 
-                        animationNum={15 + index} 
-                        timelineRef={sectionRef} 
-                        once={true} 
+
+                      <TimelineContent
+                        animationNum={15 + index}
+                        timelineRef={sectionRef}
+                        once={true}
                         as="div"
                       >
                         <div className="flex items-center justify-center">

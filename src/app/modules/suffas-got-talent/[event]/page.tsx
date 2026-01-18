@@ -49,9 +49,9 @@ const EVENT_CONFIG: Record<
     location: "Main Auditorium",
     format: "Individual",
     duration: "3 Minutes",
-    prize: "Rs. 8,000",
-    runnerUpPrize: "Rs. 4,000",
-    registrationFee: "Rs. 300 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 30,
     current: 12,
@@ -68,9 +68,9 @@ const EVENT_CONFIG: Record<
     location: "Comedy Club",
     format: "Individual",
     duration: "5 Minutes",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 400 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 20,
     current: 8,
@@ -87,9 +87,9 @@ const EVENT_CONFIG: Record<
     location: "Main Arena",
     format: "Team (4-6)",
     duration: "5 Minutes",
-    prize: "Rs. 15,000",
-    runnerUpPrize: "Rs. 7,500",
-    registrationFee: "Rs. 500 per team",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Teams",
     max: 10,
     current: 4,
@@ -106,9 +106,9 @@ const EVENT_CONFIG: Record<
     location: "Game Room",
     format: "Individual",
     duration: "5 Minutes",
-    prize: "Rs. 8,000",
-    runnerUpPrize: "Rs. 4,000",
-    registrationFee: "Rs. 300 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 30,
     current: 12,
@@ -125,9 +125,9 @@ const EVENT_CONFIG: Record<
     location: "Activity Hall",
     format: "Individual",
     duration: "1 Minute",
-    prize: "Rs. 12,000",
-    runnerUpPrize: "Rs. 6,000",
-    registrationFee: "Rs. 400 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 25,
     current: 10,
@@ -144,9 +144,9 @@ const EVENT_CONFIG: Record<
     location: "Strength Zone",
     format: "Individual",
     duration: "3 Minutes",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 400 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 32,
     current: 14,
@@ -172,9 +172,9 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
       <main ref={sectionRef} className="relative min-h-screen bg-white text-black">
         {/* Logo */}
         <div className="absolute top-6 left-6 z-50">
-          <Image 
-            src="/sponsors/Logo Spectrum.png" 
-            alt="Spectrum Logo" 
+          <Image
+            src="/sponsors/Logo Spectrum.png"
+            alt="Spectrum Logo"
             width={48}
             height={48}
             className="h-12 w-auto"
@@ -189,7 +189,7 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
                 href="/modules/suffas-got-talent"
                 className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8`}
               >
-                ← Back to Suffa&apos;s Got Talent
+                ← Back to Play To Win
               </Link>
             </TimelineContent>
 
@@ -212,7 +212,7 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
                 <div className="rounded-2xl p-8 bg-white shadow-inner">
                   <h2 className={`${orbitron.className} text-2xl font-bold text-black mb-3`}>Event Information</h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#C5A100] mb-6"></div>
-                  
+
                   <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed mb-6`}>
                       {config.description}
@@ -266,7 +266,7 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
                         <span className={`${orbitron.className} text-2xl font-bold text-black`}>{config.prize}</span>
                       </div>
                     </TimelineContent>
-                    
+
                     {config.runnerUpPrize && (
                       <TimelineContent animationNum={11} timelineRef={sectionRef} once={true} as="div">
                         <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
@@ -286,13 +286,13 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
 
                   <TimelineContent animationNum={13} timelineRef={sectionRef} once={true} as="div">
                     <Link
-                      href="/register"
-                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform hover:scale-105 hover:opacity-90`}
+                      href="#"
+                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform cursor-not-allowed pointer-events-none`}
                     >
-                      Register Now
+                      Coming Soon
                     </Link>
                   </TimelineContent>
-                  
+
                   <TimelineContent animationNum={14} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-xs text-black/60 text-center mt-4`}>
                       Registration closes 24 hours before the event

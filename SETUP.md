@@ -71,7 +71,7 @@ npm start
 
 ## Registration Categories
 
-### Suffa's Got Talent
+### Play To Win
 - Singing
 - Dance
 - Stand-up Comedy

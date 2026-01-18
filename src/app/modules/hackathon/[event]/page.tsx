@@ -49,9 +49,9 @@ const EVENT_CONFIG: Record<
     location: "Computer Lab 1",
     format: "Individual",
     duration: "2 Hours",
-    prize: "Rs. 8,000",
-    runnerUpPrize: "Rs. 4,000",
-    registrationFee: "Rs. 300 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 50,
     current: 23,
@@ -68,9 +68,9 @@ const EVENT_CONFIG: Record<
     location: "Computer Lab 2",
     format: "Individual",
     duration: "3 Hours",
-    prize: "Rs. 10,000",
-    runnerUpPrize: "Rs. 5,000",
-    registrationFee: "Rs. 400 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 40,
     current: 18,
@@ -87,9 +87,9 @@ const EVENT_CONFIG: Record<
     location: "Computer Lab 3",
     format: "Team (2-3)",
     duration: "4 Hours",
-    prize: "Rs. 15,000",
-    runnerUpPrize: "Rs. 7,500",
-    registrationFee: "Rs. 500 per team",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Teams",
     max: 20,
     current: 8,
@@ -106,9 +106,9 @@ const EVENT_CONFIG: Record<
     location: "Main Auditorium",
     format: "Team (2-4)",
     duration: "6 Hours",
-    prize: "Rs. 20,000",
-    runnerUpPrize: "Rs. 10,000",
-    registrationFee: "Rs. 600 per team",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Teams",
     max: 15,
     current: 6,
@@ -125,9 +125,9 @@ const EVENT_CONFIG: Record<
     location: "Data Science Lab",
     format: "Team (2-3)",
     duration: "8 Hours",
-    prize: "Rs. 25,000",
-    runnerUpPrize: "Rs. 12,500",
-    registrationFee: "Rs. 800 per team",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Teams",
     max: 12,
     current: 4,
@@ -144,9 +144,9 @@ const EVENT_CONFIG: Record<
     location: "Mobile Dev Lab",
     format: "Team (2-4)",
     duration: "8 Hours",
-    prize: "Rs. 22,000",
-    runnerUpPrize: "Rs. 11,000",
-    registrationFee: "Rs. 700 per team",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1500 per team",
     capacityLabel: "Teams",
     max: 10,
     current: 3,
@@ -163,9 +163,9 @@ const EVENT_CONFIG: Record<
     location: "Database Lab",
     format: "Individual",
     duration: "4 Hours",
-    prize: "Rs. 12,000",
-    runnerUpPrize: "Rs. 6,000",
-    registrationFee: "Rs. 400 per person",
+    prize: "Rs. 50,000",
+    runnerUpPrize: "Rs. 40,000",
+    registrationFee: "Rs. 1000 per person",
     capacityLabel: "Participants",
     max: 30,
     current: 12,
@@ -191,9 +191,9 @@ export default function HackathonEventPage({ params }: PageProps) {
       <main ref={sectionRef} className="relative min-h-screen bg-white text-black">
         {/* Logo */}
         <div className="absolute top-6 left-6 z-50">
-          <Image 
-            src="/sponsors/Logo Spectrum.png" 
-            alt="Spectrum Logo" 
+          <Image
+            src="/sponsors/Logo Spectrum.png"
+            alt="Spectrum Logo"
             width={48}
             height={48}
             className="h-12 w-auto"
@@ -231,7 +231,7 @@ export default function HackathonEventPage({ params }: PageProps) {
                 <div className="rounded-2xl p-8 bg-white shadow-inner">
                   <h2 className={`${orbitron.className} text-2xl font-bold text-black mb-3`}>Event Information</h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#C5A100] mb-6"></div>
-                  
+
                   <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed mb-6`}>
                       {config.description}
@@ -285,7 +285,7 @@ export default function HackathonEventPage({ params }: PageProps) {
                         <span className={`${orbitron.className} text-2xl font-bold text-black`}>{config.prize}</span>
                       </div>
                     </TimelineContent>
-                    
+
                     {config.runnerUpPrize && (
                       <TimelineContent animationNum={11} timelineRef={sectionRef} once={true} as="div">
                         <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
@@ -305,13 +305,13 @@ export default function HackathonEventPage({ params }: PageProps) {
 
                   <TimelineContent animationNum={13} timelineRef={sectionRef} once={true} as="div">
                     <Link
-                      href="/register"
-                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform hover:scale-105 hover:opacity-90`}
+                      href="#"
+                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform cursor-not-allowed pointer-events-none`}
                     >
-                      Register Now
+                      Coming Soon
                     </Link>
                   </TimelineContent>
-                  
+
                   <TimelineContent animationNum={14} timelineRef={sectionRef} once={true} as="p">
                     <p className={`${spaceGrotesk.className} text-xs text-black/60 text-center mt-4`}>
                       Registration closes 24 hours before the event

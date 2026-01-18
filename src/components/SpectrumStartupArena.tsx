@@ -64,10 +64,10 @@ export default function SpectrumStartupArena() {
           {/* CTA Button - Pure Black */}
           <TimelineContent animationNum={5} timelineRef={sectionRef} once={false} as="div" className="mt-4">
             <Link
-              href="/register"
-              className={`${orbitron.className} group relative inline-flex items-center gap-3 rounded-full border-2 border-black bg-black px-8 py-4 text-xs font-bold uppercase tracking-[0.4em] text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/50 focus-visible:scale-105`}
+              href="#"
+              className={`${orbitron.className} group relative inline-flex items-center gap-3 rounded-full border-2 border-black bg-black px-8 py-4 text-xs font-bold uppercase tracking-[0.4em] text-white transition-all duration-300 cursor-not-allowed pointer-events-none`}
             >
-              <span className="relative z-10">APPLY TO PITCH</span>
+              <span className="relative z-10">COMING SOON</span>
               <FaArrowRight className="text-sm relative z-10 transition-transform group-hover:translate-x-1" />
               <div className="absolute inset-0 rounded-full bg-black opacity-0 group-hover:opacity-100 transition-opacity blur-md"></div>
             </Link>          </TimelineContent>
