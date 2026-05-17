@@ -61,30 +61,39 @@ export default function AdminRegistrations() {
   const goLast = () => setPage(totalPages);
 
   const handleExport = () => {
+    // Helper function to safely escape CSV fields (handles quotes, commas, and newlines)
+    const escapeCsv = (val: any) => {
+      if (val === null || val === undefined) return '""';
+      const str = String(val).replace(/"/g, '""'); // Escape double quotes
+      return `"${str}"`; // Wrap in quotes
+    };
+
     const csvContent = [
       [
         "ID", "Full Name", "Email", "Phone", "University", "Department", "Roll Number",
-        "Main Category", "Sub Category", "Team Name", "Team Members",
-        "Terms Accepted", "Created At"
-      ],
+        "Main Category", "Sub Category", "Team Name", "Team Logo URL", "Team Members",
+        "Terms Accepted", "Created At", "Updated At"
+      ].map(escapeCsv).join(","),
       ...filteredRegistrations.map(reg => [
         reg.id,
         reg.full_name,
         reg.email,
         reg.phone_number,
         reg.university,
-        reg.department || "",
-        reg.roll_number || "",
+        reg.department,
+        reg.roll_number,
         reg.main_category,
         reg.sub_category,
-        reg.team_name || "",
-        reg.team_members || "",
+        reg.team_name,
+        reg.team_logo_url || "",
+        reg.team_members,
         reg.terms_accepted ? "Yes" : "No",
-        new Date(reg.created_at).toLocaleString()
-      ])
-    ].map(row => row.map(field => `"${field}"`).join(",")).join("\n");
+        new Date(reg.created_at).toLocaleString(),
+        new Date(reg.updated_at).toLocaleString()
+      ].map(escapeCsv).join(","))
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

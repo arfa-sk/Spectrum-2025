@@ -113,10 +113,10 @@ export default function HeroSection() {
         <div className="relative z-50 pointer-events-auto">
           <TimelineContent animationNum={5} timelineRef={sectionRef} once={false} as="div">
             <Link
-              href="#"
-              className={`${orbitron.className} inline-block mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110 cursor-not-allowed pointer-events-none`}
+              href="/register"
+              className={`${orbitron.className} inline-block mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#C5A100] hover:to-[#B8860B] hover:text-black`}
             >
-              Coming Soon
+              Register Now
             </Link>
           </TimelineContent>
         </div>

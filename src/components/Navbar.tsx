@@ -7,17 +7,19 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { TimelineContent } from "@/components/timeline-animation";
 import clsx from "clsx";
-import { Briefcase, Wrench, Info, Mail } from "lucide-react";
+import { Home, User, LayoutGrid, Briefcase, Tag, FileText, Mail } from "lucide-react";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type NavItem = { name: string; href: string; icon: React.FC<any> };
 
-// Adjusted to site sections and original headings
+// Configured for Spectrum Tech Event Platform V1
 const NAV_ITEMS: NavItem[] = [
-  { name: "About Us", href: "/#about", icon: Briefcase },
-  { name: "Modules", href: "/modules", icon: Info },
-
-  { name: "Sponsors", href: "/#sponsors", icon: Info },
+  { name: "Home", href: "/", icon: Home },
+  { name: "About", href: "/#about", icon: User },
+  { name: "Modules", href: "/#modules", icon: LayoutGrid },
+  { name: "Sponsors", href: "/#sponsors", icon: Briefcase },
+  { name: "Special Deals", href: "/#deals", icon: Tag },
+  { name: "Register", href: "/register", icon: FileText },
   { name: "Contact", href: "/#contact", icon: Mail },
 ];
 
@@ -90,18 +92,13 @@ export default function Navbar(): JSX.Element {
                 <TimelineContent key={item.name} animationNum={idx + 1} timelineRef={navbarRef} once={false}>
                   <Link
                     href={item.href}
-                    onClick={(e) => {
-                      if (item.name === "Coming Soon") {
-                        e.preventDefault();
-                      } else {
-                        setActive(item.name);
-                      }
+                    onClick={() => {
+                      setActive(item.name);
                     }}
                     className={clsx(
                       "relative flex items-center gap-1.5 sm:gap-2 rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm md:text-base font-sans font-semibold transition-colors",
                       "text-black hover:text-black",
-                      activeTab && "text-[#FFD700]",
-                      item.name === "Coming Soon" && "opacity-60 cursor-not-allowed"
+                      activeTab && "text-[#FFD700]"
                     )}
                   >
                     <span className="hidden md:inline">{item.name}</span>

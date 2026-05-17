@@ -12,6 +12,7 @@ export interface Registration {
   sub_category: string;
   team_name: string | null;
   team_members: string | null;
+  team_logo_url?: string | null;
   terms_accepted: boolean;
   created_at: string;
   updated_at: string;

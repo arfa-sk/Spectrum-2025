@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
-interface Registration {
+export interface Registration {
   id: string;
   full_name: string;
   email: string;
@@ -15,8 +14,8 @@ interface Registration {
   main_category: string;
   sub_category: string;
   team_name: string | null;
+  team_logo_url?: string | null;
   team_members: string | null;
-  message: string | null;
   terms_accepted: boolean;
   created_at: string;
   updated_at: string;
@@ -39,6 +38,7 @@ export function useRealtimeRegistrations() {
         .order("created_at", { ascending: false });
 
       if (fetchError) throw fetchError;
+      
       setRegistrations(data || []);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to fetch registrations");
@@ -64,12 +64,12 @@ export function useRealtimeRegistrations() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "registrations" },
-        (payload: RealtimePostgresChangesPayload<Registration>) => {
+        (payload) => {
           setIsRealtimeActive(true);
           clearInterval(pollInterval);
-          const newReg = payload.new as unknown as Registration;
+          
+          const newReg = payload.new as Registration;
           setRegistrations((prev) => {
-            // Add to top, avoid duplicates
             const without = prev.filter((r) => r.id !== newReg.id);
             return [newReg, ...without].sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
           });
@@ -78,21 +78,21 @@ export function useRealtimeRegistrations() {
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "registrations" },
-        (payload: RealtimePostgresChangesPayload<Registration>) => {
+        (payload) => {
           setIsRealtimeActive(true);
           clearInterval(pollInterval);
-          const updated = payload.new as unknown as Registration;
-          setRegistrations((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+          
+          const updatedReg = payload.new as Registration;
+          setRegistrations((prev) => prev.map((r) => (r.id === updatedReg.id ? updatedReg : r)));
         }
       )
       .on(
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "registrations" },
-        (payload: RealtimePostgresChangesPayload<Registration>) => {
+        (payload) => {
           setIsRealtimeActive(true);
           clearInterval(pollInterval);
-          const removed = payload.old as unknown as Registration;
-          setRegistrations((prev) => prev.filter((r) => r.id !== removed.id));
+          setRegistrations((prev) => prev.filter((r) => r.id !== payload.old.id));
         }
       )
       .subscribe((status) => {

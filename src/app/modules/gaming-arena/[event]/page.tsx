@@ -3,10 +3,7 @@
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  FaUsers,
-  FaClock,
-} from "react-icons/fa";
+import { FaUsers, FaClock, FaTrophy, FaCoins } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef, use } from "react";
 import { notFound } from "next/navigation";
@@ -17,7 +14,7 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
-type EventKey = "counter-strike" | "game-development" | "tekken" | "fifa";
+type EventKey = "fifa" | "tekken" | "pubg" | "freefire" | "counterstrike" | "valorant";
 
 const EVENT_CONFIG: Record<
   EventKey,
@@ -32,92 +29,123 @@ const EVENT_CONFIG: Record<
     prize: string;
     runnerUpPrize?: string;
     registrationFee: string;
-    capacityLabel: string; // Teams/Squads/Players label
+    capacityLabel: string;
     max: number;
     current: number;
     bgA: string;
     bgB: string;
-    accent: string; // text color for prize
+    accent: string;
   }
 > = {
-  "counter-strike": {
-    title: "Counter Strike Tournament",
+  fifa: {
+    title: "FIFA 26 Tournament",
     description:
-      "Step into the tactical world of Counter Strike, where precision, teamwork, and strategy decide your fate. Compete in intense 5v5 battles, showcase your aim, and prove your dominance across thrilling maps. Only the sharpest players will claim victory — do you have what it takes?",
-    date: "March 15, 2025",
+      "Step onto the virtual pitch and dominate in FIFA 26. Face off against the city's finest players in a high-stakes, single-elimination tournament where only the most clinical finishes and tactical setups will lead to absolute glory.",
+    date: "April 9, 2026",
     time: "10:00 AM - 6:00 PM",
-    location: "Gaming Lab, DSU Campus",
-    format: "5v5 Team-based",
-    duration: "Best of 3 Maps",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1500 per team",
-    capacityLabel: "Teams Registered",
-    max: 32,
-    current: 18,
-    bgA: "from-red-400",
-    bgB: "to-orange-400",
-    accent: "text-red-600",
-  },
-  "game-development": {
-    title: "Game Development Sprint",
-    description:
-      "Assemble your dream crew, fire up your engine of choice, and build a playable experience from scratch. Creativity, polish, and a compelling pitch will determine who ships the most exciting mini game before the buzzer.",
-    date: "March 16, 2025",
-    time: "9:00 AM - 3:00 PM",
-    location: "Innovation Lab, DSU Campus",
-    format: "Team (2-4)",
-    duration: "6 Hour Build + Demo",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1500 per team",
-    capacityLabel: "Studios Registered",
-    max: 15,
-    current: 7,
-    bgA: "from-amber-400",
-    bgB: "to-lime-400",
-    accent: "text-amber-700",
-  },
-  tekken: {
-    title: "Tekken 7 Tournament",
-    description:
-      "Enter the arena where every punch counts. Unleash your combos, master your fighter, and dominate the competition in electrifying one-on-one battles. The king of iron fists awaits — are you ready?",
-    date: "March 17, 2025",
-    time: "12:00 PM - 8:00 PM",
-    location: "Gaming Lab, DSU Campus",
-    format: "1v1 Single Elimination",
-    duration: "Double Elimination",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
+    location: "Gaming Arena, DSU Campus",
+    format: "1v1 (Solo)",
+    duration: "Single Elimination",
+    prize: "Trophies & Medals",
+    registrationFee: "Rs. 500 per player",
     capacityLabel: "Players Registered",
     max: 64,
     current: 28,
-    bgA: "from-purple-400",
-    bgB: "to-pink-400",
-    accent: "text-purple-600",
-  },
-  fifa: {
-    title: "FIFA 24 Tournament",
-    description:
-      "Experience the thrill of football like never before. Outsmart your rivals with perfect passes, stunning goals, and elite control. Every match is a stage — every move defines your legacy.",
-    date: "March 18, 2025",
-    time: "1:00 PM - 9:00 PM",
-    location: "Gaming Lab, DSU Campus",
-    format: "1v1 Single Elimination",
-    duration: "Knockout Tournament",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
-    capacityLabel: "Players Registered",
-    max: 32,
-    current: 15,
     bgA: "from-green-400",
     bgB: "to-blue-400",
     accent: "text-green-600",
   },
+  tekken: {
+    title: "Tekken 8 Tournament",
+    description:
+      "Enter the King of Iron Fist Tournament in Tekken 8. Pick your fighter, perfect your combos, and engage in pulse-pounding, frame-perfect 1v1 matches. Double-elimination format ensures only the most skilled champion claims the final trophy.",
+    date: "April 9, 2026",
+    time: "12:00 PM - 8:00 PM",
+    location: "Gaming Arena, DSU Campus",
+    format: "1v1 (Solo)",
+    duration: "Double Elimination",
+    prize: "Trophies & Medals",
+    registrationFee: "Rs. 500 per player",
+    capacityLabel: "Players Registered",
+    max: 64,
+    current: 31,
+    bgA: "from-purple-400",
+    bgB: "to-pink-400",
+    accent: "text-purple-600",
+  },
+  pubg: {
+    title: "PUBG Mobile Championship",
+    description:
+      "Drop, loot, survive. Compete in our high-stakes PUBG Mobile championship. Assemble your 4-player squad and outmaneuver rival teams across multiple maps to secure the ultimate chicken dinner under custom competitive settings.",
+    date: "April 9, 2026",
+    time: "10:00 AM - 5:00 PM",
+    location: "Gaming Arena, DSU Campus",
+    format: "4v4 Squad (Team)",
+    duration: "Map Bracket Matches",
+    prize: "Trophies & Medals",
+    registrationFee: "Rs. 2000 per team",
+    capacityLabel: "Squads Registered",
+    max: 32,
+    current: 12,
+    bgA: "from-amber-400",
+    bgB: "to-red-400",
+    accent: "text-amber-600",
+  },
+  freefire: {
+    title: "Free Fire Arena Series",
+    description:
+      "Jump into the fast-paced, high-octane battlegrounds of Free Fire. Put your squad's quick-thinking and survival tactics to the test in this premier squad battle royale series, featuring maximum competitiveness.",
+    date: "April 9, 2026",
+    time: "11:00 AM - 6:00 PM",
+    location: "Gaming Arena, DSU Campus",
+    format: "4v4 Squad (Team)",
+    duration: "Bracket Knockouts",
+    prize: "Trophies & Medals",
+    registrationFee: "Rs. 2000 per team",
+    capacityLabel: "Squads Registered",
+    max: 32,
+    current: 15,
+    bgA: "from-red-400",
+    bgB: "to-orange-400",
+    accent: "text-red-600",
+  },
+  counterstrike: {
+    title: "Counter-Strike 2 Showdown",
+    description:
+      "Tactical shooting reaches its peak in Counter-Strike 2. Perfect your smoke executes, coordinate site takes, and showcase absolute precision aiming. Compete under official competitive guidelines in a 4-player squad.",
+    date: "April 9, 2026",
+    time: "10:00 AM - 7:00 PM",
+    location: "PC Gaming Lab, DSU Campus",
+    format: "4v4 Squad (Team)",
+    duration: "Best of 3 Brackets",
+    prize: "Trophies & Medals",
+    registrationFee: "Rs. 2000 per team",
+    capacityLabel: "Squads Registered",
+    max: 16,
+    current: 8,
+    bgA: "from-yellow-400",
+    bgB: "to-orange-500",
+    accent: "text-amber-700",
+  },
+  valorant: {
+    title: "Valorant Spike Clash",
+    description:
+      "Defy limits and claim your radiant rank. Valorant at Spectrum V1 brings intense tactical FPS action where mechanical skill meets tactical agency. Coordinate utility and execute perfect strategies with your 4-player team.",
+    date: "April 9, 2026",
+    time: "9:00 AM - 8:00 PM",
+    location: "PC Gaming Lab, DSU Campus",
+    format: "4v4 Squad (Team)",
+    duration: "Best of 3 Finals",
+    prize: "Trophies & Medals",
+    registrationFee: "Rs. 2000 per team",
+    capacityLabel: "Squads Registered",
+    max: 16,
+    current: 10,
+    bgA: "from-cyan-400",
+    bgB: "to-blue-500",
+    accent: "text-cyan-600",
+  },
 };
-
 
 type PageProps = { params: Promise<{ event: string }> };
 
@@ -226,18 +254,9 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                     <TimelineContent animationNum={20} timelineRef={sectionRef} once={true} as="div">
                       <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
                         <span className={`${spaceGrotesk.className} text-black/70`}>Prize Pool</span>
-                        <span className={`${orbitron.className} text-2xl font-bold text-black`}>{config.prize}</span>
+                        <span className={`${orbitron.className} text-xl font-bold text-black`}>{config.prize}</span>
                       </div>
                     </TimelineContent>
-
-                    {config.runnerUpPrize && (
-                      <TimelineContent animationNum={21} timelineRef={sectionRef} once={true} as="div">
-                        <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
-                          <span className={`${spaceGrotesk.className} text-black/70`}>Runner Up</span>
-                          <span className={`${spaceGrotesk.className} text-lg font-semibold text-black`}>{config.runnerUpPrize}</span>
-                        </div>
-                      </TimelineContent>
-                    )}
 
                     <TimelineContent animationNum={22} timelineRef={sectionRef} once={true} as="div">
                       <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
@@ -249,10 +268,10 @@ export default function GamingArenaEventPage({ params }: PageProps) {
 
                   <TimelineContent animationNum={23} timelineRef={sectionRef} once={true} as="div">
                     <Link
-                      href="#"
-                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform cursor-not-allowed pointer-events-none`}
+                      href={`/register?category=DevPlay&game=${encodeURIComponent(config.title.replace(" Tournament", "").replace(" Championship", "").replace(" Showdown", "").replace(" Spike Clash", ""))}`}
+                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 font-bold rounded-full transition transform hover:scale-105 shadow-lg`}
                     >
-                      Coming Soon
+                      Register Now
                     </Link>
                   </TimelineContent>
 
@@ -270,4 +289,3 @@ export default function GamingArenaEventPage({ params }: PageProps) {
     </>
   );
 }
-

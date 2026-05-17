@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
@@ -12,6 +13,11 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // Type definitions
+interface TeamMember {
+  name: string;
+  phoneNumber: string;
+}
+
 interface FormData {
   fullName: string;
   email: string;
@@ -22,7 +28,7 @@ interface FormData {
   mainCategory: string;
   subCategory: string;
   teamName: string;
-  teamMembers: string;
+  teamMembersDetails: TeamMember[];
 }
 
 interface SubCategories {
@@ -31,10 +37,12 @@ interface SubCategories {
 
 const subCategories: SubCategories = {
   "DevPlay": [
-    "Counter Strike",
-    "PUBG Mobile",
-    "Tekken 7",
-    "FIFA 24"
+    "FIFA 26",
+    "Tekken 8",
+    "PUBG",
+    "Free Fire",
+    "Counter-Strike 2",
+    "Valorant"
   ],
   "Hackathon": [
     "Speed Debugging",
@@ -57,6 +65,7 @@ const subCategories: SubCategories = {
 };
 
 export default function RegisterPage() {
+  const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
@@ -68,13 +77,19 @@ export default function RegisterPage() {
     mainCategory: "",
     subCategory: "",
     teamName: "",
-    teamMembers: "",
+    inGameUid: "",
+    teamMembersDetails: [
+      { name: "", phoneNumber: "" },
+      { name: "", phoneNumber: "" },
+      { name: "", phoneNumber: "" }
+    ],
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [teamLogo, setTeamLogo] = useState<File | null>(null);
   const [termsError, setTermsError] = useState<string | null>(null);
 
   // Phase 1: Scalability improvements
@@ -84,8 +99,29 @@ export default function RegisterPage() {
   const retryAttemptRef = useRef<number>(0);
 
 
-  // Reset sub-category when main category changes
+  // Pre-populate mainCategory and subCategory from URL parameters
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get("category");
+      const game = params.get("game");
+      if (category && subCategories[category]) {
+        setFormData(prev => ({
+          ...prev,
+          mainCategory: category,
+          subCategory: game && subCategories[category].includes(game) ? game : ""
+        }));
+      }
+    }
+  }, []);
+
+  // Reset sub-category when main category changes (skipping first render to protect pre-populated state)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (formData.mainCategory) {
       setFormData((prev) => ({ ...prev, subCategory: "" }));
     }
@@ -102,24 +138,24 @@ export default function RegisterPage() {
     }
 
     try {
+      const submitData = new FormData();
+      submitData.append("fullName", formData.fullName);
+      submitData.append("email", formData.email);
+      submitData.append("phoneNumber", formData.phoneNumber);
+
+      submitData.append("university", formData.university);
+      if (formData.department) submitData.append("department", formData.department);
+      if (formData.rollNumber) submitData.append("rollNumber", formData.rollNumber);
+      submitData.append("mainCategory", formData.mainCategory);
+      if (formData.subCategory) submitData.append("subCategory", formData.subCategory);
+      if (formData.teamName) submitData.append("teamName", formData.teamName);
+      submitData.append("teamMembersDetails", JSON.stringify(formData.teamMembersDetails));
+      submitData.append("termsAccepted", String(termsAccepted));
+      if (teamLogo) submitData.append("teamLogo", teamLogo);
+
       const response = await fetch("/api/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          email: formData.email,
-          phoneNumber: formData.phoneNumber,
-          university: formData.university,
-          department: formData.department || undefined,
-          rollNumber: formData.rollNumber || undefined,
-          mainCategory: formData.mainCategory,
-          subCategory: formData.subCategory || undefined,
-          teamName: formData.teamName || undefined,
-          teamMembers: formData.teamMembers || undefined,
-          termsAccepted: termsAccepted,
-        }),
+        body: submitData,
       });
 
       const data = await response.json();
@@ -226,15 +262,31 @@ export default function RegisterPage() {
       newErrors.subCategory = "Please select a sub-category";
     }
 
-    // Team validation for team-based events
-    const teamBasedCategories = ["DevPlay", "Hackathon", "Spectrum Startup Arena"];
 
-    if (teamBasedCategories.includes(formData.mainCategory)) {
+
+    // Team validation
+    const teamBasedCategories = ["Hackathon", "Spectrum Startup Arena"];
+    const teamDevPlayGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
+    
+    const isTeamEvent = teamBasedCategories.includes(formData.mainCategory) || 
+                       (formData.mainCategory === "DevPlay" && teamDevPlayGames.includes(formData.subCategory));
+
+    if (isTeamEvent) {
       if (!formData.teamName || !formData.teamName.trim()) {
         newErrors.teamName = "Team name is required for team-based events";
       }
-      if (!formData.teamMembers || !formData.teamMembers.trim()) {
-        newErrors.teamMembers = "Team members are required for team-based events";
+      
+      // Check if any member field is empty
+      let hasIncompleteMember = false;
+      formData.teamMembersDetails.forEach(member => {
+        if (!member.name.trim() || !member.phoneNumber.trim()) {
+          hasIncompleteMember = true;
+        }
+
+      });
+      
+      if (hasIncompleteMember) {
+        newErrors.teamName = "Teams require exactly 4 members. If you have fewer members, contact Team Spectrum for further guidelines: Phone 03141349607 | Email spectrum2026.dsu@gmail.com. We'll get back to you soon.";
       }
     }
 
@@ -289,7 +341,11 @@ export default function RegisterPage() {
       const result = await submitViaAPI(0);
 
       setSubmitStatus("success");
-      setSubmitMessage(result.message || "Registration successful! We'll contact you soon.");
+      setSubmitMessage(result.message || "Registration successful! Redirecting to confirmation page...");
+      
+      setTimeout(() => {
+        router.push("/register/success");
+      }, 1000);
 
       // Reset form
       setFormData({
@@ -302,7 +358,12 @@ export default function RegisterPage() {
         mainCategory: "",
         subCategory: "",
         teamName: "",
-        teamMembers: "",
+        inGameUid: "",
+        teamMembersDetails: [
+          { name: "", phoneNumber: "" },
+          { name: "", phoneNumber: "" },
+          { name: "", phoneNumber: "" }
+        ],
       });
 
       // Scroll to success message
@@ -567,6 +628,8 @@ export default function RegisterPage() {
                         </p>
                       )}
                     </div>
+
+
                   </div>
                 </div>
 
@@ -699,67 +762,88 @@ export default function RegisterPage() {
                 </div>
 
                 {/* Team Information Section */}
+                {((["Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)) || 
+                  (formData.mainCategory === "DevPlay" && ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"].includes(formData.subCategory))) && (
                 <div className="pt-6 border-t-2 border-gray-200">
                   <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
                     <FaUsers className="text-[#FFD700]" />
                     Team Information
                   </h2>
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     {/* Team Name */}
                     <div>
                       <label className="block text-sm font-bold mb-2">
-                        Team Name
-                        {["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
-                          <span className="text-red-500 ml-1">*</span>
-                        )}
+                        Team Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="teamName"
                         value={formData.teamName}
                         onChange={handleInputChange}
-                        placeholder={
-                          ["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
-                            ? "Enter your team name (required)"
-                            : "Enter your team name (if applicable)"
-                        }
-                        className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.teamName ? "border-red-500" : "border-gray-300"
-                          }`}
+                        placeholder="Enter your team name"
+                        className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.teamName ? "border-red-500" : "border-gray-300"}`}
                       />
                       {errors.teamName && (
                         <p className="text-red-500 text-sm mt-1">{errors.teamName}</p>
                       )}
                     </div>
 
+                    {/* Team Logo */}
+                    <div>
+                      <label className="block text-sm font-bold mb-2">Team Logo (Optional)</label>
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setTeamLogo(e.target.files[0]);
+                          }
+                        }}
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                      />
+                    </div>
+
                     {/* Team Members */}
                     <div>
-                      <label className="block text-sm font-bold mb-2">
-                        Team Members
-                        {["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory) && (
-                          <span className="text-red-500 ml-1">*</span>
-                        )}
-                      </label>
-                      <textarea
-                        name="teamMembers"
-                        value={formData.teamMembers}
-                        onChange={handleInputChange}
-                        rows={4}
-                        placeholder="One name on each line"
-                        className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all resize-none ${errors.teamMembers ? "border-red-500" : "border-gray-300"
-                          }`}
-                      />
-                      <p className="text-sm text-gray-500 mt-1">
-                        {["DevPlay", "Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)
-                          ? "Enter each team member's name on a new line (required for team events)"
-                          : "Enter each team member's name on a new line"
-                        }
-                      </p>
-                      {errors.teamMembers && (
-                        <p className="text-red-500 text-sm mt-1">{errors.teamMembers}</p>
-                      )}
+                      <h3 className="text-lg font-bold mb-4">Team Members Details</h3>
+                      <p className="text-sm text-gray-600 mb-4">Leader is Player 1. Please provide details for the remaining 3 members.</p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {[0, 1, 2].map((index) => (
+                          <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                            <h4 className="font-bold text-sm mb-3 text-[#FFD700] bg-black inline-block px-3 py-1 rounded">Member {index + 2}</h4>
+                            <div className="space-y-3">
+                              <input
+                                type="text"
+                                placeholder="Full Name *"
+                                value={formData.teamMembersDetails[index].name}
+                                onChange={(e) => {
+                                  const newDetails = [...formData.teamMembersDetails];
+                                  newDetails[index].name = e.target.value;
+                                  setFormData({ ...formData, teamMembersDetails: newDetails });
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#FFD700] outline-none text-sm"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Phone Number *"
+                                value={formData.teamMembersDetails[index].phoneNumber}
+                                onChange={(e) => {
+                                  const newDetails = [...formData.teamMembersDetails];
+                                  newDetails[index].phoneNumber = e.target.value;
+                                  setFormData({ ...formData, teamMembersDetails: newDetails });
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#FFD700] outline-none text-sm"
+                              />
+
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
+                )}
 
                 {/* Consent & Submission */}
                 <div className="pt-6 border-t-2 border-gray-200">

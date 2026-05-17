@@ -8,10 +8,10 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load below-the-fold components for better initial load performance
 const AboutUs = lazy(() => import("@/components/AboutUs"));
-const SpectrumStartupArena = lazy(() => import("@/components/SpectrumStartupArena"));
 const ModulesPreview = lazy(() => import("@/components/ModulesPreview"));
 const Gallery = lazy(() => import("@/components/Gallery"));
 const Sponsors = lazy(() => import("@/components/Sponsors"));
+const SpecialDeals = lazy(() => import("@/components/SpecialDeals"));
 const Stall = lazy(() => import("@/components/Stall"));
 const ContactUs = lazy(() => import("@/components/ContactUs"));
 
@@ -39,12 +39,6 @@ export default function Home() {
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader className="min-h-[600px]" />}>
-          <SpectrumStartupArena />
-        </Suspense>
-      </ErrorBoundary>
-
-      <ErrorBoundary>
         <Suspense fallback={<SectionLoader className="min-h-[300px]" />}>
           <ModulesPreview />
         </Suspense>
@@ -59,6 +53,12 @@ export default function Home() {
       <ErrorBoundary>
         <Suspense fallback={<SectionLoader className="min-h-[600px]" />}>
           <Sponsors />
+        </Suspense>
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <Suspense fallback={<SectionLoader className="min-h-[500px]" />}>
+          <SpecialDeals />
         </Suspense>
       </ErrorBoundary>
 
