@@ -50,7 +50,7 @@ export const TimelineContent = ({
   const isInView = useInView(timelineRef, {
     once,
     margin: "-5% 0px -5% 0px",
-    amount: 0.15,
+    amount: 0.02,
   });
 
   const MotionComponent = motion.div;

@@ -58,8 +58,10 @@ function validateRegistration(data: Partial<RegistrationRequest>): {
 
   const teamBasedCategories = ["Hackathon", "Spectrum Startup Arena"];
   const teamDevPlayGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
-  const isTeamEvent = teamBasedCategories.includes(data.mainCategory || "") || 
-                     (data.mainCategory === "DevPlay" && teamDevPlayGames.includes(data.subCategory || ""));
+  const isTeamEvent = 
+    (data.mainCategory === "Hackathon" && data.subCategory !== "Speed Programming Challenge") ||
+    data.mainCategory === "Spectrum Startup Arena" ||
+    (data.mainCategory === "DevPlay" && teamDevPlayGames.includes(data.subCategory || ""));
 
   if (isTeamEvent) {
     if (!data.teamName || !data.teamName.trim()) {
@@ -112,9 +114,11 @@ export async function POST(request: NextRequest) {
     // Parse FormData
     let body: Partial<RegistrationRequest> = {};
     let teamLogoFile: File | null = null;
+    let rawFormData: any = null;
     
     try {
       const formData = await request.formData();
+      rawFormData = formData;
       body = {
         fullName: formData.get("fullName") as string,
         email: formData.get("email") as string,
@@ -174,13 +178,36 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 2. Format Team Members into a clean text string
+    // 2. Format Team Members into a clean text string and serialize Hackathon Innovation fields
     let teamMembersText = null;
     if (body.teamMembersDetails && body.teamMembersDetails.length > 0) {
       teamMembersText = body.teamMembersDetails
         .filter(m => m.name && m.name.trim().length > 0)
         .map(m => `${m.name.trim()} (${m.phoneNumber.trim()})`)
         .join(" | ");
+    }
+
+    if (body.mainCategory === "Hackathon" && rawFormData) {
+      const parts: string[] = [];
+      if (teamMembersText) {
+        parts.push(teamMembersText);
+      }
+      
+      const projectIdea = rawFormData.get("projectIdea") as string;
+      const githubLink = rawFormData.get("githubLink") as string;
+      const techStack = rawFormData.get("techStack") as string;
+      const problemStatement = rawFormData.get("problemStatement") as string;
+      const teamRoles = rawFormData.get("teamRoles") as string;
+
+      if (projectIdea && projectIdea.trim()) parts.push(`IDEA: ${projectIdea.trim()}`);
+      if (githubLink && githubLink.trim()) parts.push(`GITHUB: ${githubLink.trim()}`);
+      if (techStack && techStack.trim()) parts.push(`TECH: ${techStack.trim()}`);
+      if (problemStatement && problemStatement.trim()) parts.push(`PROBLEM: ${problemStatement.trim()}`);
+      if (teamRoles && teamRoles.trim() && body.subCategory !== "Speed Programming Challenge") parts.push(`ROLES: ${teamRoles.trim()}`);
+
+      if (parts.length > 0) {
+        teamMembersText = parts.join(" || ");
+      }
     }
 
     // 3. Perform a SINGLE flat insert directly into registrations table!

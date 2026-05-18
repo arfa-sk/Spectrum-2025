@@ -6,12 +6,16 @@ import { useRegistrationNotifications } from "@/hooks/useRegistrationNotificatio
 import AdminLayout from "@/components/admin/AdminLayout";
 import { FaSearch, FaEye } from "react-icons/fa";
 import { Registration } from "@/types/admin";
+import { Orbitron } from "next/font/google";
+
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 
 export default function AdminRegistrations() {
   const { registrations, loading, error, refetch, isRealtimeActive } = useRealtimeRegistrations();
   const { hasNewRegistrations, notificationCount, clearNotifications } = useRegistrationNotifications();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
@@ -30,7 +34,8 @@ export default function AdminRegistrations() {
         reg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.main_category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        reg.sub_category.toLowerCase().includes(searchTerm.toLowerCase());
+        reg.sub_category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (reg.team_members && reg.team_members.toLowerCase().includes(searchTerm.toLowerCase()));
       
       const matchesCategory = !categoryFilter || reg.main_category === categoryFilter;
       
@@ -258,7 +263,10 @@ export default function AdminRegistrations() {
                           {new Date(reg.created_at).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-[#FFD700] hover:text-yellow-600 transition-colors">
+                          <button 
+                            onClick={() => setSelectedReg(reg)}
+                            className="text-[#FFD700] hover:text-yellow-600 transition-colors"
+                          >
                             <FaEye />
                           </button>
                         </td>
@@ -290,6 +298,198 @@ export default function AdminRegistrations() {
           )}
         </div>
       )}
+
+      {/* Sleek Detail Modal */}
+      {selectedReg && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setSelectedReg(null)}
+        >
+          <div 
+            className="bg-white border-2 border-[#FFD700]/30 rounded-3xl shadow-[0_0_50px_rgba(255,215,0,0.15)] max-w-2xl w-full max-h-[85vh] overflow-y-auto p-8 relative text-black"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button 
+              onClick={() => setSelectedReg(null)}
+              className="absolute top-5 right-5 text-gray-400 hover:text-black text-2xl font-bold transition-colors"
+            >
+              ×
+            </button>
+
+            <h3 className={`${orbitron.className} text-xl font-bold mb-6 text-black border-b pb-4 flex items-center gap-2 uppercase tracking-widest`}>
+              Registration Dossier
+            </h3>
+
+            <div className="space-y-6">
+              {/* Section: Applicant Core */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Full Name</p>
+                  <p className="font-semibold text-sm">{selectedReg.full_name}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Email Address</p>
+                  <p className="font-semibold text-sm">{selectedReg.email}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Phone Number</p>
+                  <p className="font-semibold text-sm">{selectedReg.phone_number}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Registration Date</p>
+                  <p className="font-semibold text-sm">{new Date(selectedReg.created_at).toLocaleString()}</p>
+                </div>
+              </div>
+
+              {/* Section: Academic */}
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-150 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">University / Institute</p>
+                  <p className="font-semibold text-sm">{selectedReg.university}</p>
+                </div>
+                {selectedReg.department && (
+                  <div>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Department</p>
+                    <p className="font-semibold text-sm">{selectedReg.department}</p>
+                  </div>
+                )}
+                {selectedReg.roll_number && (
+                  <div>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Roll / ID Number</p>
+                    <p className="font-semibold text-sm">{selectedReg.roll_number}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Section: Event Track */}
+              <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Category</p>
+                  <span className="inline-block mt-1 px-3 py-1 rounded bg-[#FFD700]/10 border border-[#FFD700]/30 text-xs font-bold text-yellow-800">
+                    {selectedReg.main_category}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Sub-Track</p>
+                  <p className="font-bold text-xs text-white bg-black inline-block px-3 py-1 rounded mt-1">
+                    {selectedReg.sub_category}
+                  </p>
+                </div>
+              </div>
+
+              {/* Section: Team Detail */}
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-150 space-y-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Team Setup</p>
+                    <p className="font-bold text-sm text-black">{selectedReg.team_name || "Individual Solo Slot"}</p>
+                  </div>
+                  {selectedReg.team_logo_url && (
+                    <a href={selectedReg.team_logo_url} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline font-bold">
+                      View Logo Link
+                    </a>
+                  )}
+                </div>
+
+                {/* Parse and list members */}
+                {(() => {
+                  const parsed = parseTeamMembers(selectedReg.team_members);
+                  return (
+                    <>
+                      {parsed.members.length > 0 && (
+                        <div>
+                          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1.5">Additional Registered Members</p>
+                          <div className="space-y-1">
+                            {parsed.members.map((m, idx) => (
+                              <p key={idx} className="text-xs text-gray-700">• {m}</p>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Custom Hackathon Profile Dossier */}
+                      {parsed.hackathon && (
+                        <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+                          <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">// Innovation Dossier Data</p>
+                          
+                          {parsed.hackathon.IDEA && (
+                            <div>
+                              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Project Concept</p>
+                              <p className="text-xs text-gray-700 leading-relaxed italic">"{parsed.hackathon.IDEA}"</p>
+                            </div>
+                          )}
+
+                          {parsed.hackathon.PROBLEM && (
+                            <div>
+                              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Problem Statement</p>
+                              <p className="text-xs text-gray-700 leading-relaxed font-medium">{parsed.hackathon.PROBLEM}</p>
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {parsed.hackathon.TECH && (
+                              <div>
+                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Tech Stack</p>
+                                <p className="text-xs font-bold text-black">{parsed.hackathon.TECH}</p>
+                              </div>
+                            )}
+                            {parsed.hackathon.GITHUB && (
+                              <div>
+                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Repository Link</p>
+                                <a 
+                                  href={parsed.hackathon.GITHUB.startsWith("http") ? parsed.hackathon.GITHUB : `https://${parsed.hackathon.GITHUB}`} 
+                                  target="_blank" 
+                                  rel="noreferrer" 
+                                  className="text-xs font-bold text-blue-600 hover:underline break-all"
+                                >
+                                  {parsed.hackathon.GITHUB}
+                                </a>
+                              </div>
+                            )}
+                          </div>
+
+                          {parsed.hackathon.ROLES && (
+                            <div>
+                              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Roles Mapping</p>
+                              <p className="text-xs text-gray-700">{parsed.hackathon.ROLES}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   );
 }
+
+// Helper to parse serialized team members and innovation fields
+const parseTeamMembers = (membersStr: string | null) => {
+  if (!membersStr) return { members: [], hackathon: null };
+  
+  const mainParts = membersStr.split(" || ");
+  const membersList = mainParts[0] ? mainParts[0].split(" | ") : [];
+  
+  const hackathonData: Record<string, string> = {};
+  for (let i = 1; i < mainParts.length; i++) {
+    const part = mainParts[i];
+    const colonIdx = part.indexOf(": ");
+    if (colonIdx !== -1) {
+      const key = part.slice(0, colonIdx);
+      const value = part.slice(colonIdx + 2);
+      hackathonData[key] = value;
+    }
+  }
+  
+  return {
+    members: membersList,
+    hackathon: Object.keys(hackathonData).length > 0 ? hackathonData : null
+  };
+};
