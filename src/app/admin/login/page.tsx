@@ -19,7 +19,7 @@ export default function AdminLogin() {
 
   // Redirect if already logged in
   if (user) {
-    router.push("/admin/stats");
+    router.push("/admin");
     return null;
   }
 
@@ -33,7 +33,7 @@ export default function AdminLogin() {
     if (error) {
       setError(error instanceof Error ? error.message : "Login failed");
     } else {
-      router.push("/admin/stats");
+      router.push("/admin");
     }
 
     setLoading(false);

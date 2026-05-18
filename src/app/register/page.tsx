@@ -77,7 +77,6 @@ export default function RegisterPage() {
     mainCategory: "",
     subCategory: "",
     teamName: "",
-    inGameUid: "",
     teamMembersDetails: [
       { name: "", phoneNumber: "" },
       { name: "", phoneNumber: "" },
@@ -358,7 +357,6 @@ export default function RegisterPage() {
         mainCategory: "",
         subCategory: "",
         teamName: "",
-        inGameUid: "",
         teamMembersDetails: [
           { name: "", phoneNumber: "" },
           { name: "", phoneNumber: "" },

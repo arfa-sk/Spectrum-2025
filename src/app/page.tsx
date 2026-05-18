@@ -56,11 +56,11 @@ export default function Home() {
         </Suspense>
       </ErrorBoundary>
 
-      <ErrorBoundary>
+      {/* <ErrorBoundary>
         <Suspense fallback={<SectionLoader className="min-h-[500px]" />}>
           <SpecialDeals />
         </Suspense>
-      </ErrorBoundary>
+      </ErrorBoundary> */}
 
       <ErrorBoundary>
         <Suspense fallback={<SectionLoader className="min-h-[600px]" />}>

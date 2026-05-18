@@ -54,7 +54,7 @@ export default function GamingArenaPage() {
       teamSize: "4 Players (Team)",
       vibe: "Tactical battle royale squads. Communication, map control, survival instincts.",
       description: "Drop, loot, survive. Compete in our high-stakes PUBG Mobile championship. Assemble your 4-player squad and outmaneuver rival teams across multiple maps to secure the ultimate chicken dinner under custom competitive settings.",
-      image: "/modules/web-development.png",
+      image: "/modules/pubg.png",
       imagePosition: "center 20%",
     },
     {
@@ -64,7 +64,7 @@ export default function GamingArenaPage() {
       teamSize: "4 Players (Team)",
       vibe: "Fast-paced battle royale squad fights. Quick reflexes, close combat mastery.",
       description: "Jump into the fast-paced, high-octane battlegrounds of Free Fire. Put your squad's quick-thinking and survival tactics to the test in this premier squad battle royale series, featuring maximum competitiveness.",
-      image: "/modules/valorant.png",
+      image: "/modules/free-fire.png",
       imagePosition: "center",
     },
     {
@@ -74,7 +74,7 @@ export default function GamingArenaPage() {
       teamSize: "4 Players (Team)",
       vibe: "Tactical tactical shooter. Team cohesion, strategic executions, aim control.",
       description: "Tactical shooting reaches its peak in Counter-Strike 2. Perfect your smoke executes, coordinate site takes, and showcase absolute precision aiming. Compete under official competitive guidelines in a 4-player squad.",
-      image: "/modules/valorant.png",
+      image: "/modules/cs-2.png",
       imagePosition: "center",
     },
     {
@@ -111,11 +111,9 @@ export default function GamingArenaPage() {
 
             <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
               <div className="flex items-center justify-center mb-6">
-                <div className="p-3 bg-black rounded-2xl mr-4 shadow-lg">
-                  <FaGamepad className="text-4xl text-[#FFD700] animate-pulse" />
-                </div>
-                <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black`}>
-                  DevPlay Arena
+                <FaGamepad className="text-5xl text-black mr-4" />
+                <h1 className={`${orbitron.className} text-5xl md:text-6xl font-extrabold text-black tracking-tight`}>
+                  DevPlay
                 </h1>
               </div>
             </TimelineContent>
@@ -132,7 +130,7 @@ export default function GamingArenaPage() {
           </div>
 
           {/* Games Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[85rem] mx-auto px-4">
             {games.map((game, index) => (
               <TimelineContent 
                 key={game.title} 
@@ -143,49 +141,33 @@ export default function GamingArenaPage() {
               >
                 <div 
                   onClick={() => setActiveGame(game)}
-                  className="group relative cursor-pointer bg-white rounded-3xl p-8 border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 h-72"
+                  className="group relative cursor-pointer bg-neutral-950 rounded-[2rem] border border-neutral-800/80 overflow-hidden transition-all duration-500 hover:shadow-[0_30px_70px_rgba(0,0,0,0.4)] hover:border-white/40 hover:-translate-y-3 hover:scale-[1.02] h-72 sm:h-80 md:h-[22rem] lg:h-[24rem] shadow-2xl"
                 >
-                  {/* Background Image Overlay */}
+                  {/* Full Bleed Background Image with full opacity and smooth zoom */}
                   <div 
-                    className="absolute inset-0 bg-cover bg-no-repeat opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+                    className="absolute inset-0 bg-cover bg-no-repeat opacity-100 transition-all duration-700 ease-out group-hover:scale-105"
                     style={{
                       backgroundImage: `url('${game.image}')`,
-                      backgroundSize: "cover",
-                      backgroundPosition: game.imagePosition
+                      backgroundPosition: game.imagePosition || "center"
                     }}
                   ></div>
 
-                  {/* Gradient bottom slide */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100 opacity-100 -z-10"></div>
+                  {/* Elegant Gradient Overlay - Minimal & bright to let beautiful game art pop */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/35 transition-all duration-300 group-hover:from-black/85 group-hover:to-black/45"></div>
                   
-                  {/* Content */}
-                  <div className="relative z-10 flex flex-col justify-between h-full">
-                    <div>
-                      {/* Game Mode Badge */}
-                      <span className={`${spaceGrotesk.className} inline-block px-3 py-1 text-xs font-bold bg-black text-[#FFD700] rounded-full mb-4 border border-[#FFD700]/30`}>
-                        {game.type} Mode
-                      </span>
-                      
-                      <h3 className={`${orbitron.className} text-3xl font-extrabold text-black mb-2 group-hover:text-amber-600 transition-colors`}>
-                        {game.title}
-                      </h3>
-                      <p className={`${spaceGrotesk.className} text-xs text-gray-500 line-clamp-2`}>
-                        {game.vibe}
-                      </p>
-                    </div>
-                    
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                      <span className={`${spaceGrotesk.className} text-sm font-bold text-black`}>
-                        {game.pricing}
-                      </span>
-                      <span className={`${spaceGrotesk.className} text-xs font-bold text-gray-400 group-hover:text-[#FFD700] transition-colors`}>
-                        View Details →
-                      </span>
-                    </div>
+                  {/* Card Content - Title at top left */}
+                  <div className="absolute top-6 left-6 right-6">
+                    <h3 className={`${orbitron.className} text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-wider leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]`}>
+                      {game.title}
+                    </h3>
                   </div>
 
-                  {/* Cyber glow boundary on hover */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#FFD700] to-[#C5A100] opacity-0 group-hover:opacity-100 transition-all duration-500 -z-20 blur-md scale-105"></div>
+                  {/* Centered Pill Button at the Bottom */}
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+                    <span className={`${spaceGrotesk.className} px-6 py-2.5 bg-black text-white text-xs sm:text-sm font-bold rounded-full tracking-wider uppercase shadow-xl transition-all duration-300 border border-neutral-800/50 group-hover:bg-white group-hover:text-black group-hover:scale-105 inline-block whitespace-nowrap`}>
+                      View Details
+                    </span>
+                  </div>
                 </div>
               </TimelineContent>
             ))}

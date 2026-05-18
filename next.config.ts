@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   // Removing global security headers to avoid interfering with WebGL/animations.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

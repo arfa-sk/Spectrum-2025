@@ -26,7 +26,7 @@ export default function HeroSection() {
   useEffect(() => {
     // 📅 EDIT COUNTDOWN DATE HERE: Change the date string below (format: "YYYY-MM-DDTHH:MM:SS")
     // Example: "2026-01-10T09:00:00" = January 10, 2026 at 9:00 AM
-    const eventDate = new Date("2026-04-09T09:00:00");
+    const eventDate = new Date("2026-06-08T09:00:00");
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -60,9 +60,14 @@ export default function HeroSection() {
     >
 
       {/* HERO CONTENT */}
-      <div className="relative z-20 min-h-[110vh] flex flex-col items-center justify-start pt-20 md:pt-28">
-        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false} as="div">
-          <p className={`${spaceGrotesk.className} text-xl md:text-2xl text-neutral-800 tracking-[0.22em] mb-4 uppercase`}>DHA Suffa University Presents</p>
+      <div className="relative z-20 min-h-[110vh] flex flex-col items-center justify-start pt-16 md:pt-20">
+        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false} as="div" className="flex flex-col items-center mb-4">
+          <img 
+            src="/sponsors/Suffa Logo.png" 
+            alt="DHA Suffa University Logo" 
+            className="h-20 md:h-24 w-auto object-contain mb-4 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+          />
+          <p className={`${spaceGrotesk.className} text-xl md:text-2xl text-neutral-800 tracking-[0.22em] uppercase`}>DHA Suffa University Presents</p>
         </TimelineContent>
         <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
           <h1

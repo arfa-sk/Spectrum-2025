@@ -14,11 +14,8 @@ type NavItem = { name: string; href: string; icon: React.FC<any> };
 
 // Configured for Spectrum Tech Event Platform V1
 const NAV_ITEMS: NavItem[] = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "About", href: "/#about", icon: User },
   { name: "Modules", href: "/#modules", icon: LayoutGrid },
   { name: "Sponsors", href: "/#sponsors", icon: Briefcase },
-  { name: "Special Deals", href: "/#deals", icon: Tag },
   { name: "Register", href: "/register", icon: FileText },
   { name: "Contact", href: "/#contact", icon: Mail },
 ];
