@@ -52,6 +52,16 @@ export default function HackathonPage() {
           <div className="max-w-6xl mx-auto text-center relative z-10">
             
 
+            <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center border-2 border-[#C5A100] shadow-lg relative group transition-transform duration-500 hover:rotate-12">
+                  {/* Glow */}
+                  <div className="absolute inset-0 bg-[#FFD700] rounded-2xl blur-md opacity-25"></div>
+                  <FaCode className="text-[#FFD700] text-3xl relative z-10" />
+                </div>
+              </div>
+            </TimelineContent>
+
             <TimelineContent animationNum={3} timelineRef={sectionRef} once={false} as="h1">
               <h1 className={`${orbitron.className} text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 text-black`}>
                 SPECTRUM <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-[#C5A100] to-[#B8860B]">HACKATHON</span>
@@ -117,7 +127,7 @@ export default function HackathonPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
             {Object.values(HACKATHON_CONFIG).map((track, index) => (
               <TimelineContent
                 key={track.id}
@@ -127,7 +137,7 @@ export default function HackathonPage() {
                 as="div"
               >
                 <Link href={`/modules/hackathon/${track.id}`} className="group block">
-                  <div className="relative bg-white h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105 group-hover:-translate-y-2">
+                  <div className="relative h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2">
                     
                     {/* Background Image with Zoom Effect */}
                     <div 
