@@ -166,17 +166,26 @@ export default function HackathonPage() {
 
                       {/* Bottom Panel: Clean, Glassmorphic Text Card for Perfect Contrast */}
                       <div className="backdrop-blur-md bg-black/60 border border-white/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-black/75 group-hover:border-[#FFD700]/30 shadow-lg">
-                        <h3 className={`${orbitron.className} text-base md:text-lg font-bold text-[#FFD700] transition-colors duration-300 group-hover:text-white leading-snug drop-shadow-md`}>
+                        <h3 className={`${orbitron.className} text-sm md:text-base font-bold text-[#FFD700] transition-colors duration-300 group-hover:text-white leading-snug drop-shadow-md`}>
                           {track.title}
                         </h3>
-                        <p className={`${spaceGrotesk.className} text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-semibold`}>
-                          {track.tagline}
-                        </p>
+                        
+                        {/* Mini Prize/Fee Metadata Row (Extremely Clean) */}
+                        <div className="grid grid-cols-2 gap-4 mt-2.5 pt-2.5 border-t border-white/10 text-left">
+                          <div>
+                            <p className="text-[8px] text-gray-400 uppercase tracking-widest font-bold">Winning Prize</p>
+                            <p className="text-xs font-bold text-white mt-0.5">{track.prizePool}</p>
+                          </div>
+                          <div>
+                            <p className="text-[8px] text-gray-400 uppercase tracking-widest font-bold">Reg Fee</p>
+                            <p className="text-xs font-bold text-[#FFD700] mt-0.5">{track.entryFee}</p>
+                          </div>
+                        </div>
                         
                         {/* Explore CTA Row */}
                         <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                          <span className={`${spaceGrotesk.className} text-[11px] font-bold uppercase tracking-wider text-white group-hover:text-[#FFD700] transition-colors`}>
-                            Explore Specifications
+                          <span className={`${spaceGrotesk.className} text-[10px] font-bold uppercase tracking-wider text-white group-hover:text-[#FFD700] transition-colors`}>
+                            Explore Track
                           </span>
                           <FaArrowRight className="text-[#FFD700] group-hover:translate-x-1 transition-transform duration-300 text-xs" />
                         </div>
