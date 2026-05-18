@@ -117,7 +117,7 @@ export default function HackathonPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {Object.values(HACKATHON_CONFIG).map((track, index) => (
               <TimelineContent
                 key={track.id}
@@ -127,7 +127,7 @@ export default function HackathonPage() {
                 as="div"
               >
                 <Link href={`/modules/hackathon/${track.id}`} className="group block">
-                  <div className="relative h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2">
+                  <div className="relative bg-white h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105 group-hover:-translate-y-2">
                     
                     {/* Background Image with Zoom Effect */}
                     <div 
