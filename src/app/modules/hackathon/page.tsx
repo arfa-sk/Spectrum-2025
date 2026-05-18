@@ -137,66 +137,48 @@ export default function HackathonPage() {
                 as="div"
               >
                 <Link href={`/modules/hackathon/${track.id}`} className="group block">
-                  <div className="relative h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2">
+                  <div className="relative h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 bg-black">
                     
                     {/* Background Image with Zoom Effect */}
                     <div 
-                      className="absolute inset-0 bg-cover bg-no-repeat transition-transform duration-700 group-hover:scale-110"
+                      className="absolute inset-0 bg-cover bg-no-repeat transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-85"
                       style={{
                         backgroundImage: `url('${track.image}')`,
                         backgroundPosition: track.imagePosition || "center"
                       }}
                     ></div>
                     
-                    {/* Sleek Black Gradient Overlay for High Readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/10 opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
+                    {/* Sleek Dark Gradient Overlay for Maximum Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/10 transition-opacity duration-300"></div>
 
                     {/* Content Container */}
-                    <div className="relative z-10 h-full flex flex-col justify-between p-8 text-white">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-6 text-white">
                       
-                      {/* Top Row: Format & Status */}
-                      <div className="flex justify-between items-start">
-                        <span className={`${spaceGrotesk.className} inline-block bg-gradient-to-r from-[#FFD700] via-[#C5A100] to-[#B8860B] text-black text-[10px] font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-md`}>
+                      {/* Top Row: Format & Sprint Duration Badge */}
+                      <div className="flex justify-between items-center gap-2">
+                        <span className={`${spaceGrotesk.className} inline-block bg-[#FFD700] text-black text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm`}>
                           {track.format}
                         </span>
-                        <div className="text-right text-[10px] text-gray-300 uppercase tracking-widest font-bold bg-black/45 px-3 py-1 rounded-md border border-white/10">
-                          {track.duration} Sprint
-                        </div>
+                        <span className={`${spaceGrotesk.className} inline-block bg-black/75 border border-white/20 text-white text-[9px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider`}>
+                          {track.duration}
+                        </span>
                       </div>
 
-                      {/* Middle: Title & Tagline */}
-                      <div>
-                        <h3 className={`${orbitron.className} text-2xl font-bold text-[#FFD700] drop-shadow-md group-hover:text-white transition-colors duration-300`}>
+                      {/* Bottom Panel: Clean, Glassmorphic Text Card for Perfect Contrast */}
+                      <div className="backdrop-blur-md bg-black/60 border border-white/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-black/75 group-hover:border-[#FFD700]/30 shadow-lg">
+                        <h3 className={`${orbitron.className} text-base md:text-lg font-bold text-[#FFD700] transition-colors duration-300 group-hover:text-white leading-snug drop-shadow-md`}>
                           {track.title}
                         </h3>
-                        <p className={`${spaceGrotesk.className} text-xs font-semibold text-gray-200 mt-1.5 uppercase tracking-widest`}>
+                        <p className={`${spaceGrotesk.className} text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-semibold`}>
                           {track.tagline}
                         </p>
-                        <p className={`${spaceGrotesk.className} text-xs text-gray-300 mt-3 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity`}>
-                          {track.description.length > 120 ? `${track.description.slice(0, 120)}...` : track.description}
-                        </p>
-                      </div>
-
-                      {/* Bottom: Specs Row & CTA */}
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-2 border-t border-white/20 pt-4 text-left">
-                          <div>
-                            <p className="text-[9px] text-gray-400 uppercase tracking-widest">Grand Cash Prize</p>
-                            <p className="text-sm font-bold text-[#FFD700]">{track.prizePool}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] text-gray-400 uppercase tracking-widest">Entry Fee</p>
-                            <p className="text-sm font-bold text-white">{track.entryFee}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-2">
-                          <span className={`${spaceGrotesk.className} text-xs font-bold uppercase tracking-wider group-hover:translate-x-1.5 transition-transform duration-300`}>
+                        
+                        {/* Explore CTA Row */}
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+                          <span className={`${spaceGrotesk.className} text-[11px] font-bold uppercase tracking-wider text-white group-hover:text-[#FFD700] transition-colors`}>
                             Explore Specifications
                           </span>
-                          <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center border-2 border-black group-hover:border-[#C5A100] group-hover:bg-gradient-to-br group-hover:from-[#FFD700] group-hover:to-[#B8860B] transition-all duration-300 shadow-md">
-                            <FaArrowRight className="text-[#FFD700] group-hover:text-black text-sm transition-colors duration-300" />
-                          </div>
+                          <FaArrowRight className="text-[#FFD700] group-hover:translate-x-1 transition-transform duration-300 text-xs" />
                         </div>
                       </div>
 
