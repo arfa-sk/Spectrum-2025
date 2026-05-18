@@ -32,20 +32,19 @@ export default function SpecialDeals() {
       pricing: (
         <div className="space-y-2">
           <div className="flex justify-between items-center text-sm border-b border-white/10 pb-2">
-            <span className="text-neutral-400">DSU Students:</span>
-            <span className="font-bold text-white text-lg">Rs 500</span>
+            <span className="text-neutral-400">Regular Entry:</span>
+            <span className="line-through text-neutral-500 mr-2 font-semibold">Rs 800</span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-neutral-400">External Pass:</span>
+            <span className="text-neutral-400">Bundle Price:</span>
             <span>
-              <span className="line-through text-neutral-500 mr-2 font-semibold">Rs 1000</span>
               <span className="text-[#FFD700] font-black text-xl">Rs 700</span>
             </span>
           </div>
         </div>
       ),
       details: ["Standard Gate Access", "DSU Campus Entry", "Live Qawali Performance"],
-      link: "/register?category=Qawali",
+      link: "/register?category=Special%20Deals&deal=qawali-pass",
     },
     {
       badge: "DEAL 02",
@@ -66,7 +65,7 @@ export default function SpecialDeals() {
         </div>
       ),
       details: ["Full Hackathon Access", "VIP Qawali Pass Included", "Refreshments & Certificates"],
-      link: "/register?category=Hackathon&addon=Qawali",
+      link: "/register?category=Special%20Deals&deal=hackathon-bundle",
     },
     {
       badge: "DEAL 03",
@@ -86,7 +85,7 @@ export default function SpecialDeals() {
         </div>
       ),
       details: ["Any DevPlay Arena Entry", "VIP Qawali Pass Included", "Standard Console Access"],
-      link: "/register?category=DevPlay&addon=Qawali",
+      link: "/register?category=Special%20Deals&deal=gaming-bundle",
     },
   ];
 

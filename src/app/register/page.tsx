@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Orbitron, Space_Grotesk } from "next/font/google";
-import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle, FaCogs } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle, FaCogs, FaTicketAlt } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -65,6 +65,15 @@ const subCategories: SubCategories = {
     "Arm Wrestling"
   ],
   "Spectrum Startup Arena": [],
+  "Qawali Night": [
+    "Standard Ticket - Rs. 800",
+    "DSU Student Ticket - Rs. 700"
+  ],
+  "Special Deals": [
+    "Qawali Night Pass - Rs. 700",
+    "Hackathon + Qawali Bundle - Rs. 800",
+    "Gaming + Qawali Bundle - Rs. 800"
+  ]
 };
 
 export default function RegisterPage() {
@@ -115,6 +124,8 @@ export default function RegisterPage() {
       const category = params.get("category");
       const game = params.get("game");
       const track = params.get("track");
+      const ticket = params.get("ticket");
+      const deal = params.get("deal");
 
       const trackMap: Record<string, string> = {
         "speed-programming": "Speed Programming Challenge",
@@ -123,7 +134,24 @@ export default function RegisterPage() {
         "cybersecurity": "Cybersecurity Warfare (CTF)"
       };
 
-      if (category && subCategories[category]) {
+      if (category === "Qawali") {
+        setFormData(prev => ({
+          ...prev,
+          mainCategory: "Qawali Night",
+          subCategory: ticket === "student" ? "DSU Student Ticket - Rs. 700" : "Standard Ticket - Rs. 800"
+        }));
+      } else if (category === "Special Deals" || category === "Special%20Deals") {
+        let mappedDeal = "";
+        if (deal === "qawali-pass") mappedDeal = "Qawali Night Pass - Rs. 700";
+        else if (deal === "hackathon-bundle") mappedDeal = "Hackathon + Qawali Bundle - Rs. 800";
+        else if (deal === "gaming-bundle") mappedDeal = "Gaming + Qawali Bundle - Rs. 800";
+
+        setFormData(prev => ({
+          ...prev,
+          mainCategory: "Special Deals",
+          subCategory: mappedDeal
+        }));
+      } else if (category && subCategories[category]) {
         const subParam = track || game;
         const mappedSub = subParam ? (trackMap[subParam] || subParam) : "";
         setFormData(prev => ({
@@ -282,7 +310,7 @@ export default function RegisterPage() {
     }
 
     // Sub-category validation (only required if the category has sub-categories)
-    const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Play To Win"];
+    const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Play To Win", "Qawali Night", "Special Deals"];
     if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
       newErrors.subCategory = "Please select a sub-category";
     }
@@ -589,6 +617,53 @@ export default function RegisterPage() {
           >
             <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
               <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Immersive V3 Visual Checkout Banner */}
+                {(formData.mainCategory === "Qawali Night" || formData.mainCategory === "Special Deals") && (
+                  <div className="backdrop-blur-md bg-neutral-950 text-white rounded-2xl border-2 border-[#FFD700]/40 p-6 md:p-8 space-y-4 shadow-[0_0_30px_rgba(255,215,0,0.15)] animate-slide-down">
+                    <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+                      <div className="w-10 h-10 bg-neutral-900 border border-[#FFD700]/30 rounded-xl flex items-center justify-center">
+                        <FaTicketAlt className="text-[#FFD700] text-lg animate-pulse" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">// Checkout Summary</p>
+                        <h4 className={`${orbitron.className} text-base md:text-lg font-bold text-[#FFD700]`}>
+                          {formData.mainCategory}
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <p className="text-gray-400 font-semibold">Selected Ticket/Package:</p>
+                        <p className="text-white font-bold mt-1 text-sm">{formData.subCategory || "None Selected"}</p>
+                      </div>
+                      <div className="sm:text-right">
+                        <p className="text-gray-400 font-semibold">Payable Amount:</p>
+                        <p className={`${orbitron.className} text-xl font-black text-[#FFD700] mt-0.5`}>
+                          {formData.subCategory?.includes("Rs. 800") ? "Rs. 800" : formData.subCategory?.includes("Rs. 700") ? "Rs. 700" : "Select below"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-neutral-900/60 border border-white/5 rounded-xl p-4 text-[11px] text-gray-300 space-y-2">
+                      <p className="font-bold text-white uppercase tracking-wider text-[9px]">Included in Pass:</p>
+                      {formData.mainCategory === "Qawali Night" ? (
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li>Standard open lawn access under the stars</li>
+                          <li>Full Sufi Qawali performances admission</li>
+                          <li>DSU campus visitor clearance certificate</li>
+                        </ul>
+                      ) : (
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li>Exclusive combo package access (music + arena entry)</li>
+                          <li>VIP priority seating passes included</li>
+                          <li>Free snack refreshments & certificates</li>
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Personal Information Section */}
                 <div>
                   <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
@@ -760,6 +835,8 @@ export default function RegisterPage() {
                         <option value="Hackathon">Hackathon</option>
                         <option value="DevPlay">DevPlay</option>
                         <option value="Spectrum Startup Arena">Spectrum Startup Arena</option>
+                        <option value="Qawali Night">Qawali Night</option>
+                        <option value="Special Deals">Special Deals</option>
                       </select>
                       {errors.mainCategory && (
                         <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
