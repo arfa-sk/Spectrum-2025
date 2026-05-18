@@ -50,20 +50,7 @@ export default function HackathonPage() {
         {/* 1. Cinematic Hero Section */}
         <div className="relative pt-32 pb-20 px-6">
           <div className="max-w-6xl mx-auto text-center relative z-10">
-            <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
-              <Link 
-                href="/modules" 
-                className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8 border-2 border-black px-4 py-1.5 rounded-full bg-white shadow-md`}
-              >
-                ← Back to Arenas
-              </Link>
-            </TimelineContent>
-
-            <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
-              <div className="inline-flex items-center gap-2 px-3 py-1 border-2 border-black rounded-full bg-[#FFD700]/20 text-black text-xs uppercase tracking-widest font-bold mb-6 shadow-sm">
-                <FaCogs className="animate-spin text-sm" style={{ animationDuration: '6s' }} /> Spectrum V2 Operational Core
-              </div>
-            </TimelineContent>
+            
 
             <TimelineContent animationNum={3} timelineRef={sectionRef} once={false} as="h1">
               <h1 className={`${orbitron.className} text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 text-black`}>
