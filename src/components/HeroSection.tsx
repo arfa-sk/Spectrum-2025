@@ -60,7 +60,7 @@ export default function HeroSection() {
     >
 
       {/* HERO CONTENT */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col items-center justify-center py-20 md:py-24">
+      <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col items-center justify-center py-32 md:py-36">
         <TimelineContent animationNum={0} timelineRef={sectionRef} once={false} as="div" className="flex flex-col items-center mb-6">
           <img 
             src="/sponsors/tapshop.png" 
@@ -80,8 +80,18 @@ export default function HeroSection() {
           </h1>
           <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-3">
             <span className={`${spaceGrotesk.className} text-xs md:text-sm font-black uppercase tracking-[0.3em] text-black`}>
-              Organised by FCIT
+              Organised by
             </span>
+            <div className="flex items-center justify-center gap-2">
+              <img
+                src="/sponsors/Genz-Logo.png"
+                alt="GenZ Sports Logo"
+                className="h-5 w-auto object-contain select-none pointer-events-none"
+              />
+              <span className={`${spaceGrotesk.className} text-xs md:text-sm font-black uppercase tracking-[0.3em] text-black`}>
+                GenZ Sports & FCIT
+              </span>
+            </div>
             <span className="text-black text-xs md:text-sm font-bold">|</span>
             <div className="flex items-center justify-center gap-2">
               <img 
@@ -132,20 +142,9 @@ export default function HeroSection() {
         </div>
 
 
-        {/* CTA BUTTON */}
-        <div className="relative z-50 pointer-events-auto">
-          <TimelineContent animationNum={5} timelineRef={sectionRef} once={false} as="div">
-            <Link
-              href="/register"
-              className={`${orbitron.className} inline-block mt-12 px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#C5A100] hover:to-[#B8860B] hover:text-black`}
-            >
-              Register Now
-            </Link>
-          </TimelineContent>
-        </div>
       </div>
 
-      {/* 3D Robot - constrained to left side so it never covers CTA */}
+      {/* 3D Robot - constrained to left side so it never covers primary content */}
       <div className="hidden md:block absolute left-0 top-[58%] -translate-y-1/2 z-10 h-[380px] w-[46vw] pointer-events-none">
         <div className="w-full h-full">
           {!reduceMotion && <RobotCanvasLazy amplitudeMultiplier={0.78} speed={0.22} scale={0.26} />}

@@ -43,8 +43,8 @@ function validateRegistration(data: Partial<RegistrationRequest>): {
     errors.push("Invalid phone number format");
   }
 
-  if (!data.university || !data.university.trim()) {
-    errors.push("University is required");
+  if (data.university && data.university.trim() && !/^[a-zA-Z\s&.,'-]+$/.test(data.university.trim())) {
+    errors.push("University name should only contain letters, spaces, and common punctuation");
   }
 
   if (!data.mainCategory) {
@@ -59,7 +59,7 @@ function validateRegistration(data: Partial<RegistrationRequest>): {
   const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
   const isHackathonTeam = 
     data.mainCategory === "Hackathon" && 
-    (data.subCategory === "AI & Data Science Hackathon" || data.subCategory === "Build & Pitch Hackathon");
+    (data.subCategory === "AI & DS Hackathon" || data.subCategory === "Build & Pitch Hackathon");
 
   const isTeamEvent = 
     isHackathonTeam ||
@@ -221,7 +221,7 @@ export async function POST(request: NextRequest) {
         full_name: body.fullName!.trim(),
         email: body.email!.toLowerCase().trim(),
         phone_number: body.phoneNumber!.trim(),
-        university: body.university!.trim(),
+        university: body.university?.trim() || null,
         department: body.department?.trim() || null,
         roll_number: body.rollNumber?.trim() || null,
         main_category: body.mainCategory!,

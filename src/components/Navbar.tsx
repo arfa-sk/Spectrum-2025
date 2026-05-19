@@ -16,6 +16,7 @@ type NavItem = { name: string; href: string; icon: React.FC<any> };
 const NAV_ITEMS: NavItem[] = [
   { name: "Modules", href: "/#modules", icon: LayoutGrid },
   { name: "Sponsors", href: "/#sponsors", icon: Briefcase },
+  { name: "Special Deals", href: "/#deals", icon: Tag },
   { name: "Register", href: "/register", icon: FileText },
   { name: "Contact", href: "/#contact", icon: Mail },
 ];
@@ -64,7 +65,7 @@ export default function Navbar(): JSX.Element {
         <TimelineContent animationNum={0} timelineRef={navbarRef} once={false}>
           <Link href="/" className="pointer-events-auto">
             <Image
-              src="/sponsors/Logo%20Spectrum.png"
+              src="/sponsors/Logo%20Spectrum1.png"
               alt="Spectrum"
               width={160}
               height={60}

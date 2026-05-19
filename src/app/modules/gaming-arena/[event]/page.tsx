@@ -38,15 +38,15 @@ const EVENT_CONFIG: Record<
   }
 > = {
   fifa: {
-    title: "FIFA 26 Tournament",
+    title: "FC 26 Tournament",
     description:
-      "Step onto the virtual pitch and dominate in FIFA 26. Face off against the city's finest players in a high-stakes, single-elimination tournament where only the most clinical finishes and tactical setups will lead to absolute glory.",
+      "Step onto the virtual pitch and dominate in FC 26. Face off against the city's finest players in a high-stakes, single-elimination tournament where only the most clinical finishes and tactical setups will lead to absolute glory.",
     date: "April 9, 2026",
     time: "10:00 AM - 6:00 PM",
     location: "Gaming Arena, DSU Campus",
     format: "1v1 (Solo)",
     duration: "Single Elimination",
-    prize: "Trophies & Medals",
+    prize: "Rs 120K",
     registrationFee: "Rs. 500 per player",
     capacityLabel: "Players Registered",
     max: 64,
@@ -64,7 +64,7 @@ const EVENT_CONFIG: Record<
     location: "Gaming Arena, DSU Campus",
     format: "1v1 (Solo)",
     duration: "Double Elimination",
-    prize: "Trophies & Medals",
+    prize: "Rs 120K",
     registrationFee: "Rs. 500 per player",
     capacityLabel: "Players Registered",
     max: 64,
@@ -82,7 +82,7 @@ const EVENT_CONFIG: Record<
     location: "Gaming Arena, DSU Campus",
     format: "4v4 Squad (Team)",
     duration: "Map Bracket Matches",
-    prize: "Trophies & Medals",
+    prize: "Rs 120K",
     registrationFee: "Rs. 2000 per team",
     capacityLabel: "Squads Registered",
     max: 32,

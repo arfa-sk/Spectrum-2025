@@ -43,7 +43,7 @@ interface SubCategories {
 
 const subCategories: SubCategories = {
   "E-Sports": [
-    "FIFA 26",
+    "FC 26",
     "Tekken 8",
     "PUBG",
     "Free Fire",
@@ -52,7 +52,7 @@ const subCategories: SubCategories = {
   ],
   "Hackathon": [
     "Competitive Programming",
-    "AI & Data Science Hackathon",
+    "AI & DS Hackathon",
     "Build & Pitch Hackathon"
   ],
   "Play To Win": [
@@ -124,12 +124,12 @@ export default function RegisterPage() {
       const track = params.get("track");
       const ticket = params.get("ticket");
       const deal = params.get("deal");
+      const subCategoryParam = params.get("subCategory");
 
       const trackMap: Record<string, string> = {
-        "speed-programming": "Speed Programming Challenge",
-        "ai-agents": "AI Agentic Systems Arena",
-        "startup-innovation": "Startup Innovation Challenge",
-        "cybersecurity": "Cybersecurity Warfare (CTF)"
+        "competitive-programming": "Competitive Programming",
+        "ai-ds-hackathon": "AI & DS Hackathon",
+        "vibe-and-pitch": "Build & Pitch Hackathon"
       };
 
       if (category === "Qawali") {
@@ -150,8 +150,8 @@ export default function RegisterPage() {
           subCategory: mappedDeal
         }));
       } else if (category && subCategories[category]) {
-        const subParam = track || game;
-        const mappedSub = subParam ? (trackMap[subParam] || subParam) : "";
+        const rawSub = subCategoryParam || track || game;
+        const mappedSub = rawSub ? (trackMap[rawSub] || rawSub) : "";
         setFormData(prev => ({
           ...prev,
           mainCategory: category,
@@ -160,17 +160,6 @@ export default function RegisterPage() {
       }
     }
   }, []);
-
-  // Reset sub-category when main category changes (skipping first render to protect pre-populated state)
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    if (formData.mainCategory) {
-      setFormData((prev) => ({ ...prev, subCategory: "" }));
-    }
-  }, [formData.mainCategory]);
 
   // Phase 2: Submit via API route with retry logic
   const submitViaAPI = async (attempt: number = 0): Promise<{ success: boolean; message: string }> => {
@@ -261,7 +250,11 @@ export default function RegisterPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "mainCategory" ? { subCategory: "" } : {})
+    }));
     // Clear error for this field when user starts typing
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -290,10 +283,8 @@ export default function RegisterPage() {
       newErrors.phoneNumber = "Please enter a valid phone number";
     }
 
-    // University validation
-    if (!formData.university.trim()) {
-      newErrors.university = "University/Institute name is required";
-    } else if (!/^[a-zA-Z\s&.,'-]+$/.test(formData.university.trim())) {
+    // University validation (optional)
+    if (formData.university.trim() && !/^[a-zA-Z\s&.,'-]+$/.test(formData.university.trim())) {
       newErrors.university = "University/Institute name should only contain letters, spaces, and common punctuation";
     }
 
@@ -318,7 +309,7 @@ export default function RegisterPage() {
     
     const isHackathonTeam = 
       formData.mainCategory === "Hackathon" && 
-      (formData.subCategory === "AI & Data Science Hackathon" || formData.subCategory === "Build & Pitch Hackathon");
+      (formData.subCategory === "AI & DS Hackathon" || formData.subCategory === "Build & Pitch Hackathon");
 
     const isTeamEvent = 
       isHackathonTeam ||
@@ -406,6 +397,14 @@ export default function RegisterPage() {
       setSubmitMessage(result.message || "Registration successful! Redirecting to confirmation page...");
       
       setTimeout(() => {
+        try {
+          // Save last registration category/subcategory to sessionStorage so the success page
+          // can display context-aware contact info (e.g., gaming vs hackathon support).
+          sessionStorage.setItem("lastRegistrationCategory", formData.mainCategory || "");
+          sessionStorage.setItem("lastRegistrationSub", formData.subCategory || "");
+        } catch (e) {
+          // ignore storage errors (e.g., SSR or private mode)
+        }
         router.push("/register/success");
       }, 1000);
 
@@ -756,7 +755,7 @@ export default function RegisterPage() {
                     {/* University */}
                     <div className="md:col-span-2">
                       <label className="block text-sm font-bold mb-2">
-                        University / Institute Name <span className="text-red-500">*</span>
+                        University / Institute Name <span className="font-normal text-sm text-gray-500">(Optional)</span>
                       </label>
                       <input
                         type="text"
@@ -830,11 +829,8 @@ export default function RegisterPage() {
                           }`}
                       >
                         <option value="">Select a category</option>
-                        <option value="Play To Win">Play To Win</option>
                         <option value="Hackathon">Hackathon</option>
                         <option value="E-Sports">E-Sports</option>
-                        <option value="Spectrum Startup Arena">Spectrum Startup Arena</option>
-                        <option value="Qawali Night">Qawali Night</option>
                         <option value="Special Deals">Special Deals</option>
                       </select>
                       {errors.mainCategory && (
@@ -962,86 +958,6 @@ export default function RegisterPage() {
                     </div>
                   </div>
                 </div>
-                )}
-
-                {/* Hackathon Innovation Profile Section (Optional) */}
-                {formData.mainCategory === "Hackathon" && (
-                  <div className="pt-6 border-t-2 border-gray-200">
-                    <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3 text-black`}>
-                      <FaCogs className="text-[#FFD700]" />
-                      Hackathon Innovation Profile <span className="text-xs text-gray-500 font-normal tracking-normal">(Optional)</span>
-                    </h2>
-                    <div className="space-y-6">
-                      {/* Project Idea */}
-                      <div>
-                        <label className="block text-sm font-bold mb-2">Project Idea / Concept</label>
-                        <textarea
-                          name="projectIdea"
-                          value={formData.projectIdea || ""}
-                          onChange={handleInputChange}
-                          placeholder="Briefly describe your proposed product idea, system design or what you plan to engineer..."
-                          rows={3}
-                          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm resize-none"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* GitHub Link */}
-                        <div>
-                          <label className="block text-sm font-bold mb-2">GitHub Profile / Repository Link</label>
-                          <input
-                            type="url"
-                            name="githubLink"
-                            value={formData.githubLink || ""}
-                            onChange={handleInputChange}
-                            placeholder="https://github.com/yourusername"
-                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
-                          />
-                        </div>
-
-                        {/* Tech Stack */}
-                        <div>
-                          <label className="block text-sm font-bold mb-2">Proposed Tech Stack</label>
-                          <input
-                            type="text"
-                            name="techStack"
-                            value={formData.techStack || ""}
-                            onChange={handleInputChange}
-                            placeholder="e.g., Next.js, Python, OpenAI API, Supabase"
-                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
-                          />
-                        </div>
-
-                        {/* Problem Statement */}
-                        <div className="md:col-span-2">
-                          <label className="block text-sm font-bold mb-2">Problem Statement</label>
-                          <input
-                            type="text"
-                            name="problemStatement"
-                            value={formData.problemStatement || ""}
-                            onChange={handleInputChange}
-                            placeholder="What real-world problem does your startup or system tackle?"
-                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
-                          />
-                        </div>
-
-                        {/* Team Roles */}
-                        {formData.subCategory !== "Speed Programming Challenge" && (
-                          <div className="md:col-span-2">
-                            <label className="block text-sm font-bold mb-2">Team Roles Distribution</label>
-                            <input
-                              type="text"
-                              name="teamRoles"
-                              value={formData.teamRoles || ""}
-                              onChange={handleInputChange}
-                              placeholder="e.g., Lead Developer: Arfa, UI/UX Designer: Sarah, Backend Dev: Ali"
-                              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
                 )}
 
                 {/* Consent & Submission */}
