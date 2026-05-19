@@ -19,175 +19,181 @@ export interface HackathonTrack {
   rules: string[];
   judgingCriteria: { metric: string; weight: string; description: string }[];
   timeline: { time: string; event: string }[];
+  
+  // Custom rich details
+  eventConcept?: string;
+  toolsAllowed?: string;
+  pitchFormat?: { duration: string; label: string; description: string }[];
+  integrityPolicy?: string[];
+  competitionTracks?: { title: string; description: string }[];
+  datasetDetails?: string;
+  logisticNotes?: string[];
+  prizeSplitDetails?: { place: string; prize: string }[];
+  mentorSetup?: string[];
 }
 
 export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
-  "speed-programming": {
-    id: "speed-programming",
-    title: "Speed Programming Challenge",
-    tagline: "Unleash algorithmic precision under absolute temporal pressure.",
-    description: "Race against the clock to solve complex algorithmic puzzles, optimize data structures, and debug under extreme pressure. This is a pure test of speed, logic, and syntax proficiency where only the most rapid developers will survive.",
-    prizePool: "Rs. 50,000",
-    entryFee: "Rs. 1,000",
-    format: "Individual",
-    duration: "3 Hours",
-    teamSize: "1 Member",
-    location: "Software Engineering Lab",
-    date: "May 25, 2026",
-    time: "10:00 AM - 01:00 PM",
+  "competitive-programming": {
+    id: "competitive-programming",
+    title: "Competitive Programming",
+    tagline: "Spectrum 26 · DHA Suffa University · 2-Day Event",
+    description: "Compete in solving algorithmic puzzles under tight time limits. Platform: HackerRank / VJudge. Qualifier Threshold: Top 40% advances from Day 1 to Day 2.",
+    prizePool: "Rs. 30,000",
+    entryFee: "Solo: Rs. 500 | Duo: Rs. 750 | Triplet: Rs. 1,000",
+    format: "Solo, Duo, or Triplet",
+    duration: "2-Day Event",
+    teamSize: "1 – 3 participants",
+    location: "DHA Suffa Computer Labs 4 – 5",
+    date: "May 25-26, 2026",
+    time: "09:00 AM",
     iconName: "FaCode",
     bgGradient: "from-blue-950 via-slate-900 to-black",
-    accentColor: "#3B82F6", // Blue
+    accentColor: "#3B82F6",
     image: "/modules/speed-programming.png",
     imagePosition: "center",
+    eventConcept: "All registered teams compete simultaneously across 4–5 computer labs to solve problems spanning coding efficiency, mathematical logic, greedy choices, and complex data structures. Scoring is automated, and submissions are analyzed for plagiarism.",
+    toolsAllowed: "No AI tools, ChatGPT, or external search allowed during the contest. Standard IDE compilers for C++, Python, and Java are pre-configured.",
     rules: [
-      "No external IDE extensions, plugins, or AI generation assistants (ChatGPT, Copilot) are allowed.",
-      "Plagiarism checks will be automatically run on all submitted solutions; matches >15% trigger immediate DQ.",
-      "The scoring metric heavily weights execution speed and successful test case passes.",
-      "Decisions of the technical scoring committee are final and absolute."
-    ],
-    judgingCriteria: [
-      { metric: "Test Case Accuracy", weight: "50%", description: "Number of standard and hidden test cases passed successfully." },
-      { metric: "Time Complexity", weight: "25%", description: "Efficiency and algorithmic complexity of the submitted solution." },
-      { metric: "Code Cleanliness", weight: "15%", description: "Structured indentation, semantic variable naming, and readability." },
-      { metric: "Submission Speed", weight: "10%", description: "Timestamp of final operational submission." }
+      "No plagiarism or code sharing between teams at any point.",
+      "No AI code generation tools (ChatGPT, Copilot, Claude, etc.) permitted.",
+      "No external collaboration or communication outside the registered team.",
+      "Violation at any stage will result in immediate disqualification with no refund."
     ],
     timeline: [
-      { time: "09:30 AM", event: "Reporting & Seating Allotment" },
-      { time: "10:00 AM", event: "Problem Sets Release & Hacking Begins" },
-      { time: "11:30 AM", event: "Mid-Session Leaderboard Freeze" },
-      { time: "01:00 PM", event: "Hacking Stops & Automated Submission Grader Runs" }
+      { time: "Day 1 — Preliminary", event: "90 min round. Breadth of topics from easy to medium. Top 40% advance to Day 2." },
+      { time: "Shortlist Announcement", event: "Manual review of top submissions for plagiarism and similarity patterns using diff tools." },
+      { time: "Day 2 — Grand Final", event: "60 min final round. Medium to hard problems (graphs, DP, advanced DS)." },
+      { time: "Results & Distribution", event: "Prize distribution immediately after final integrity audit clears." }
+    ],
+    judgingCriteria: [
+      { metric: "Automatic Scoring", weight: "100%", description: "Score computed by HackerRank/VJudge based on difficulty weight and passed test cases." },
+      { metric: "Tie-breaking", weight: "Manual", description: "Lowest cumulative submission time wins when scores are equal." },
+      { metric: "Integrity Review", weight: "Pass/Fail", description: "Manual review of top code for plagiarism and AI-generated code detection." }
+    ],
+    prizeSplitDetails: [
+      { place: "Winner", prize: "Rs. 20,000 + DSU Certificate" },
+      { place: "Runner-up", prize: "Rs. 10,000 + DSU Certificate" }
+    ],
+    logisticNotes: [
+      "4-5 labs pre-configured with browser access restricted to the platform domain only.",
+      "Internet restricted at the network level; all other web traffic is blocked.",
+      "3-4 proctors per lab; Competition Head holds final disqualification authority."
     ]
   },
-  "ai-agents": {
-    id: "ai-agents",
-    title: "AI Agentic Systems Arena",
-    tagline: "Build the autonomous workflows and cognitive machines of tomorrow.",
-    description: "Architect operational multi-agent networks, self-correcting coding copilots, or autonomous RAG engines. Leverage modern LLMs, orchestrators, and custom tools to construct a fully autonomous agentic worker that operates without human intervention.",
-    prizePool: "Rs. 50,000",
-    entryFee: "Rs. 1,500",
-    format: "Team (2-4 members)",
-    duration: "12 Hours",
-    teamSize: "2 to 4 Members",
-    location: "Artificial Intelligence Lab",
-    date: "May 26, 2026",
-    time: "09:00 AM - 09:00 PM",
+  "ai-ds-hackathon": {
+    id: "ai-ds-hackathon",
+    title: "AI & Data Science Hackathon",
+    tagline: "DHA Suffa University · Dept. of Information Technology",
+    description: "Explore, clean, model, and analyze real-world datasets. Day 1: 9-hour build & notebook freeze. Day 2: Notebook walkthrough & judge defense.",
+    prizePool: "Exciting Cash Awards + Certificates",
+    entryFee: "Rs. 500 per team",
+    format: "Duo or Triplet only",
+    duration: "2-Day Event",
+    teamSize: "2 – 3 participants per team",
+    location: "DHA Suffa University IT Labs",
+    date: "May 25-26, 2026",
+    time: "09:00 AM",
     iconName: "FaMicrochip",
     bgGradient: "from-purple-950 via-slate-900 to-black",
-    accentColor: "#A855F7", // Purple
+    accentColor: "#A855F7",
     image: "/modules/data-science.png",
     imagePosition: "center 30%",
+    eventConcept: "Teams are given a real-world dataset on the morning of Day 1. They spend the day exploring, cleaning, analysing, and building a machine learning or data analysis solution. On Day 2 they present their findings, methodology, and results. Judging is focused on data understanding, analytical depth, and the quality of insights.",
+    toolsAllowed: "Python (Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn), Jupyter Notebook / Google Colab, Power BI / Tableau. Any public pre-trained model or API is allowed.",
     rules: [
-      "All API integrations must utilize approved models (OpenAI, Gemini, Claude, or local open-source models).",
-      "Open-source libraries (LangChain, LlamaIndex, CrewAI) are highly encouraged; baseline starter templates are allowed.",
-      "Teams must construct a functional demo dashboard or CLI interface to demonstrate live autonomy during judging.",
-      "All codebase commits must be actively updated to their declared GitHub repository during the 12-hour sprint."
-    ],
-    judgingCriteria: [
-      { metric: "Autonomy & Agent Loop", weight: "35%", description: "How effectively the agent handles failure, loops, tool calls, and self-corrects." },
-      { metric: "Innovation & Scope", weight: "30%", description: "Complexity of the workflow engineered and real-world value of the autonomous task." },
-      { metric: "Technical Architecture", weight: "20%", description: "Code elegance, state management, security considerations, and latency optimization." },
-      { metric: "Live Demonstration", weight: "15%", description: "Confidence of presentation and successful live execution of the agent loop." }
+      "Dataset distributed at 9 AM on Day 1 — no prior access allowed.",
+      "All analysis must be performed during official hours on Day 1.",
+      "Notebooks must be fully re-runnable from top to bottom with visible outputs.",
+      "Use of public pre-trained models and AI APIs is allowed, but must be cited.",
+      "Live walkthrough of notebook is mandatory on Day 2 — slides-only pitches won't score on methodology."
     ],
     timeline: [
-      { time: "08:30 AM", event: "Breakfast & Tech Environment Setup" },
-      { time: "09:00 AM", event: "Hacking Officially Begins & APIs Activated" },
-      { time: "02:00 PM", event: "Mentoring Rounds & Architecture Reviews" },
-      { time: "08:00 PM", event: "Final Code Push & Repository Freeze" },
-      { time: "08:30 PM", event: "Pitch & Live Demo to Venture Judges" }
+      { time: "1 Week Before", event: "Broad domain released (e.g. healthcare, agriculture) for background research." },
+      { time: "Day 1 — 9 AM", event: "Dataset released. Data cleaning, modeling, and exploratory analysis." },
+      { time: "Day 1 — 6 PM", event: "Hard notebook freeze. Submit .ipynb file, summary, and 5-slide deck by midnight." },
+      { time: "Day 2 — Morning", event: "All teams pitch to a panel of faculty & industry judges in randomized order." },
+      { time: "Day 2 — Afternoon", event: "Winners announced. Judges provide one minute of public feedback to every team." }
+    ],
+    pitchFormat: [
+      { duration: "5 Min", label: "Results Walkthrough", description: "Walk through the notebook and showcase key findings" },
+      { duration: "3 Min", label: "Judge Q&A", description: "Defend data choices, methodology, and assumptions" },
+      { duration: "2 Min", label: "Transition Buffer", description: "Score recording and setup for the next team" }
+    ],
+    judgingCriteria: [
+      { metric: "Problem & EDA", weight: "30%", description: "Clearly defined target variable or question; thorough correlation & outlier checks." },
+      { metric: "Methodology", weight: "25%", description: "Justified choice of algorithms, correct validation splits, and appropriate evaluation metrics." },
+      { metric: "Quality of Insights", weight: "25%", description: "Results interpreted in plain language; real-world impact & limitations acknowledged honestly." },
+      { metric: "Communication", weight: "20%", description: "Commented, reproducible notebook, clean visualizations, and confident Q&A." }
+    ],
+    competitionTracks: [
+      { title: "Track A — Predictive Modelling", description: "Build a supervised learning model on the dataset. Focuses on predictive validation and model behavior analysis." },
+      { title: "Track B — Exploratory Analysis & Viz", description: "Deep exploratory analysis (patterns, anomalies, correlations) without a model. Focuses on narrative and viz." }
+    ],
+    datasetDetails: "Real-world tabular dataset (min 5,000 rows) from South Asian context (Healthcare, Education, Agriculture, Finance, or Urban planning).",
+    mentorSetup: [
+      "2-3 mentors with DS experience circulate the venue to help teams with data bottlenecks.",
+      "Mentors may not write code, select features, or choose models.",
+      "Optional 30-minute mid-day check-in is available for quick approach gut-check."
+    ],
+    prizeSplitDetails: [
+      { place: "1st Place", prize: "Cash Prize + DSU Certificate" },
+      { place: "2nd Place", prize: "Cash Prize + DSU Certificate" },
+      { place: "3rd Place", prize: "DSU Certificate + Goodies" },
+      { place: "Best Insight", prize: "Special Judge Award + LinkedIn Feature" }
     ]
   },
-  "startup-innovation": {
-    id: "startup-innovation",
-    title: "Startup Innovation Challenge",
-    tagline: "From blueprint to structural MVP—build products that scale.",
-    description: "Conceive, design, and prototype a disruptive digital startup MVP targeting modern problems in SaaS, Fintech, Edtech, or Healthtech. Build a production-ready application layout, model its growth roadmap, and pitch it before leading venture capitalists.",
-    prizePool: "Rs. 50,000",
-    entryFee: "Rs. 1,500",
-    format: "Team (2-4 members)",
-    duration: "12 Hours",
-    teamSize: "2 to 4 Members",
-    location: "Main Exhibition Auditorium",
-    date: "May 27, 2026",
-    time: "09:00 AM - 09:00 PM",
+  "vibe-and-pitch": {
+    id: "vibe-and-pitch",
+    title: "Build & Pitch Hackathon",
+    tagline: "Spectrum 26 · DHA Suffa University · 2-Day Event",
+    description: "Identify a real problem, build a product using any software/AI/no-code tool, and pitch it like a pre-seed startup. Focus is purely on product-market fit and business sense.",
+    prizePool: "Exciting Cash Awards + Startup Incubation",
+    entryFee: "Rs. 1,500 per team",
+    format: "Duo or Triplet only",
+    duration: "2-Day Event",
+    teamSize: "2 – 3 participants per team",
+    location: "DHA Suffa University Campus",
+    date: "May 25-26, 2026",
+    time: "09:00 AM",
     iconName: "FaRocket",
     bgGradient: "from-amber-950 via-slate-900 to-black",
-    accentColor: "#F59E0B", // Gold/Amber
+    accentColor: "#F59E0B",
     image: "/modules/web-development.png",
     imagePosition: "center",
+    eventConcept: "Teams identify a real problem, build a working product using any tools they want — AI, no-code, full-stack, whatever gets it shipped — then pitch it to a panel of industry judges as if they're raising a pre-seed round. The judging is entirely product and business focused. How they built it is irrelevant. What they built, who it's for, and whether it makes sense as a business — that's everything.",
+    toolsAllowed: "All AI. Cursor, Lovable, Claude Code, v0, Bubble, Webflow, React, Supabase, n8n, Zapier, APIs — no restrictions.",
     rules: [
-      "Teams must present both a functional, deployed software prototype and a detailed product pitch deck.",
-      "The business model must address a clear target addressable market (TAM) with concrete monetization routes.",
-      "Pre-existing codebase components are permitted, but all core features must be heavily refactored or built live.",
-      "Pitch times are strictly capped at 5 minutes, followed by a 3-minute technical Q&A session."
-    ],
-    judgingCriteria: [
-      { metric: "Product MVP Execution", weight: "40%", description: "Completeness, code quality, and responsive UX design of the live product prototype." },
-      { metric: "Market Fit & Business Model", weight: "25%", description: "Feasibility of business scale, user retention strategy, and clarity of monetization." },
-      { metric: "Innovation & Novelty", weight: "20%", description: "Unique value proposition and structural differentiation from current competitors." },
-      { metric: "Pitch Quality & Defense", weight: "15%", description: "Clarity of communication, slide design, and defense during the Q&A session." }
+      "Any tool, framework, AI model, or platform is permitted.",
+      "Solo entries not accepted; teams of 2 or 3 only.",
+      "All building must occur on Day 1 during official hours; pre-built projects are disqualified.",
+      "Live demo is mandatory on Day 2; video recordings or slide-only pitches won't score.",
+      "Teams may not share code, designs, or ideas with other teams during build day."
     ],
     timeline: [
-      { time: "08:30 AM", event: "Auditorium Setup & Pitch Deck Submissions" },
-      { time: "09:00 AM", event: "Pitch Sprint Commences" },
-      { time: "01:00 PM", event: "Business Model Stress Testing (Mentors)" },
-      { time: "07:30 PM", event: "Product Deployments & Deck Freezes" },
-      { time: "08:00 PM", event: "Venture Board Pitching & Q&A Panel" }
-    ]
-  },
-  "cybersecurity": {
-    id: "cybersecurity",
-    title: "Cybersecurity Warfare (CTF)",
-    tagline: "Breach defenses, extract flags, and secure the digital perimeter.",
-    description: "Enter an immersive, high-stakes cybersecurity combat zone. Put your penetration testing, reverse engineering, web exploitation, binary analysis, and cryptography skills to the test in a multi-stage Capture-The-Flag challenge designed by cybersecurity specialists.",
-    prizePool: "Rs. 50,000",
-    entryFee: "Rs. 1,500",
-    format: "Team (2-3 members)",
-    duration: "6 Hours",
-    teamSize: "2 to 3 Members",
-    location: "Cyber Defense Command Lab",
-    date: "May 28, 2026",
-    time: "01:00 PM - 07:00 PM",
-    iconName: "FaShieldAlt",
-    bgGradient: "from-emerald-950 via-slate-900 to-black",
-    accentColor: "#10B981", // Green/Emerald
-    image: "/modules/dark-spider.png",
-    imagePosition: "center 20%",
-    rules: [
-      "Any DDOS, brute forcing of grading infrastructure, or attacking opposing teams will result in immediate disqualification.",
-      "Flags must be obtained legitimately through targeted exploitation; flag sharing is strictly prohibited.",
-      "Internet access is fully permitted, but external collaborations are monitored and banned.",
-      "Write-ups may be requested for high-tier flags to verify legitimate exploitation methods."
+      { time: "1 Week Before", event: "Broad vertical announced (e.g. local services, education) to think about problems." },
+      { time: "Day 1 — Build", event: "9:00 AM - 6:00 PM. Hard code freeze. Submit URL/Github/APK and problem statement before midnight." },
+      { time: "Day 2 — Pitch", event: "Morning onwards. Live pitching in randomized order to industry judges panel." },
+      { time: "Day 2 — Afternoon", event: "Winners announced. Public judge feedback session for all teams." }
+    ],
+    pitchFormat: [
+      { duration: "5 Min", label: "Live Demo + Pitch", description: "Show the product running live (no videos; slides optional, demo mandatory)" },
+      { duration: "3 Min", label: "Judge Q&A", description: "Judges probe use case, market size, business model, and edge cases" },
+      { duration: "2 Min", label: "Transition Buffer", description: "Reset, score recording, next team sets up" }
     ],
     judgingCriteria: [
-      { metric: "Dynamic Flag Capture Score", weight: "70%", description: "Cumulative points accrued from successfully submitting valid flags." },
-      { metric: "Difficulty Rating", weight: "20%", description: "Percentage of advanced/expert flags solved successfully by the team." },
-      { metric: "Exploitation Write-ups", weight: "10%", description: "Technical elegance and documentation of advanced exploits if audited." }
+      { metric: "Problem & Use Case", weight: "30%", description: "Is this a real problem? Specific target user? Evidence the problem exists?" },
+      { metric: "Product-Market Fit", weight: "25%", description: "Credible estimate of who pays, clear timing value prop, differentiation from alternatives." },
+      { metric: "Product & Usability", weight: "25%", description: "Core flow works live. Coherent UX. Demonstrates value directly without handholding." },
+      { metric: "Scalability & Sense", weight: "20%", description: "Coherent monetization, thoughts beyond the demo, response to operational limitations." }
     ],
-    timeline: [
-      { time: "12:30 PM", event: "VPN Configurations & Keys Allocation" },
-      { time: "01:00 PM", event: "Command Center Arena Online & Targets Unlocked" },
-      { time: "04:00 PM", event: "High-value Cryptography Targets Released" },
-      { time: "07:00 PM", event: "CTF Portal Shutdown & Flag Audit Processing" }
+    mentorSetup: [
+      "2-3 mentors (founders, product leads, alumni) circulate to help unblock tech or business framing.",
+      "Mentors may not write code, design screens, or make product decisions.",
+      "Optional 30-minute mid-day check-in available to any team that requests it."
+    ],
+    prizeSplitDetails: [
+      { place: "Top Teams", prize: "Cash Rewards pool share + Certificate" },
+      { place: "Incubation", prize: "VC Incubation opportunities & mentor credits" }
     ]
   }
 };
-
-export const HACKATHON_FAQS = [
-  {
-    question: "Can individuals register for team-based events?",
-    answer: "For 'AI Agentic Systems' and 'Startup Innovation', you must form a team of 2 to 4 members. 'Cybersecurity Warfare' allows teams of 2 to 3. Only the 'Speed Programming Challenge' is strictly an individual track."
-  },
-  {
-    question: "What is the registration process for external students?",
-    answer: "External participants can easily register using our central registration portal. Simply select the 'Hackathon' category, choose your preferred track, input your team details, and make the secure payment. Feel free to contact our support lines for immediate manual assistance."
-  },
-  {
-    question: "Are pre-built solutions or baseline code permitted?",
-    answer: "For hackathons, baseline starter libraries and open-source boilerplates (like LangChain, Next.js templates) are completely fine! However, the core features and functional business logic of your MVP must be engineered live during the sprint."
-  },
-  {
-    question: "How will payment verification take place?",
-    answer: "After submiting the online form, you will receive a digital ticket instruction detailing our verification. Our support desks will process a brief call to instantly activate your ticket."
-  }
-];

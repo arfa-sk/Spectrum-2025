@@ -33,14 +33,14 @@ export default function Home() {
       <HeroSection />
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader className="min-h-[70vh]" />}>
-          <AboutUs />
+        <Suspense fallback={<SectionLoader className="min-h-[300px]" />}>
+          <ModulesPreview />
         </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Suspense fallback={<SectionLoader className="min-h-[300px]" />}>
-          <ModulesPreview />
+        <Suspense fallback={<SectionLoader className="min-h-[70vh]" />}>
+          <AboutUs />
         </Suspense>
       </ErrorBoundary>
       

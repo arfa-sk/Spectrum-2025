@@ -51,17 +51,21 @@ function validateRegistration(data: Partial<RegistrationRequest>): {
     errors.push("Main category is required");
   }
 
-  const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Play To Win"];
+  const categoriesWithSubCategories = ["E-Sports", "Hackathon", "Play To Win"];
   if (categoriesWithSubCategories.includes(data.mainCategory || "") && !data.subCategory) {
     errors.push("Sub-category is required for this category");
   }
 
-  const teamBasedCategories = ["Hackathon", "Spectrum Startup Arena"];
-  const teamDevPlayGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
+  const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
+  const isHackathonTeam = 
+    data.mainCategory === "Hackathon" && 
+    (data.subCategory === "AI & Data Science Hackathon" || data.subCategory === "Build & Pitch Hackathon");
+
   const isTeamEvent = 
-    (data.mainCategory === "Hackathon" && data.subCategory !== "Speed Programming Challenge") ||
+    isHackathonTeam ||
     data.mainCategory === "Spectrum Startup Arena" ||
-    (data.mainCategory === "DevPlay" && teamDevPlayGames.includes(data.subCategory || ""));
+    (data.mainCategory === "E-Sports" && teamESportsGames.includes(data.subCategory || "")) ||
+    (data.mainCategory === "Hackathon" && data.subCategory === "Competitive Programming" && (data.teamName || (data.teamMembersDetails && data.teamMembersDetails[0]?.name?.trim())));
 
   if (isTeamEvent) {
     if (!data.teamName || !data.teamName.trim()) {
@@ -203,7 +207,7 @@ export async function POST(request: NextRequest) {
       if (githubLink && githubLink.trim()) parts.push(`GITHUB: ${githubLink.trim()}`);
       if (techStack && techStack.trim()) parts.push(`TECH: ${techStack.trim()}`);
       if (problemStatement && problemStatement.trim()) parts.push(`PROBLEM: ${problemStatement.trim()}`);
-      if (teamRoles && teamRoles.trim() && body.subCategory !== "Speed Programming Challenge") parts.push(`ROLES: ${teamRoles.trim()}`);
+      if (teamRoles && teamRoles.trim() && body.subCategory !== "Competitive Programming") parts.push(`ROLES: ${teamRoles.trim()}`);
 
       if (parts.length > 0) {
         teamMembersText = parts.join(" || ");

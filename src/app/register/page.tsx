@@ -42,7 +42,7 @@ interface SubCategories {
 }
 
 const subCategories: SubCategories = {
-  "DevPlay": [
+  "E-Sports": [
     "FIFA 26",
     "Tekken 8",
     "PUBG",
@@ -51,10 +51,9 @@ const subCategories: SubCategories = {
     "Valorant"
   ],
   "Hackathon": [
-    "Speed Programming Challenge",
-    "AI Agentic Systems Arena",
-    "Startup Innovation Challenge",
-    "Cybersecurity Warfare (CTF)"
+    "Competitive Programming",
+    "AI & Data Science Hackathon",
+    "Build & Pitch Hackathon"
   ],
   "Play To Win": [
     "Singing",
@@ -309,21 +308,23 @@ export default function RegisterPage() {
     }
 
     // Sub-category validation (only required if the category has sub-categories)
-    const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Play To Win", "Qawali Night", "Special Deals"];
+    const categoriesWithSubCategories = ["E-Sports", "Hackathon", "Play To Win", "Qawali Night", "Special Deals"];
     if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
       newErrors.subCategory = "Please select a sub-category";
     }
 
-
-
     // Team validation
-    const teamBasedCategories = ["Hackathon", "Spectrum Startup Arena"];
-    const teamDevPlayGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
+    const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
     
+    const isHackathonTeam = 
+      formData.mainCategory === "Hackathon" && 
+      (formData.subCategory === "AI & Data Science Hackathon" || formData.subCategory === "Build & Pitch Hackathon");
+
     const isTeamEvent = 
-      (formData.mainCategory === "Hackathon" && formData.subCategory !== "Speed Programming Challenge") ||
+      isHackathonTeam ||
       formData.mainCategory === "Spectrum Startup Arena" ||
-      (formData.mainCategory === "DevPlay" && teamDevPlayGames.includes(formData.subCategory));
+      (formData.mainCategory === "E-Sports" && teamESportsGames.includes(formData.subCategory)) ||
+      (formData.mainCategory === "Hackathon" && formData.subCategory === "Competitive Programming" && (formData.teamName || formData.teamMembersDetails[0].name.trim() || formData.teamMembersDetails[1].name.trim()));
 
     if (isTeamEvent) {
       if (!formData.teamName || !formData.teamName.trim()) {
@@ -337,7 +338,7 @@ export default function RegisterPage() {
           newErrors.teamName = "Teams require at least 2 members. Please fill in details for Member 2.";
         }
       } else {
-        // Check if any member field is empty (for non-hackathon DevPlay team events)
+        // Check if any member field is empty (for non-hackathon E-Sports team events)
         let hasIncompleteMember = false;
         formData.teamMembersDetails.forEach(member => {
           if (!member.name.trim() || !member.phoneNumber.trim()) {
@@ -831,7 +832,7 @@ export default function RegisterPage() {
                         <option value="">Select a category</option>
                         <option value="Play To Win">Play To Win</option>
                         <option value="Hackathon">Hackathon</option>
-                        <option value="DevPlay">DevPlay</option>
+                        <option value="E-Sports">E-Sports</option>
                         <option value="Spectrum Startup Arena">Spectrum Startup Arena</option>
                         <option value="Qawali Night">Qawali Night</option>
                         <option value="Special Deals">Special Deals</option>
@@ -875,62 +876,66 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                {/* Team Information Section */}
-                {((["Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)) || 
-                  (formData.mainCategory === "DevPlay" && ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"].includes(formData.subCategory))) && (
-                <div className="pt-6 border-t-2 border-gray-200">
-                  <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
-                    <FaUsers className="text-[#FFD700]" />
-                    Team Information
-                  </h2>
-                  <div className="space-y-8">
-                    {/* Team Name */}
-                    <div>
-                      <label className="block text-sm font-bold mb-2">
-                        Team Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="teamName"
-                        value={formData.teamName}
-                        onChange={handleInputChange}
-                        placeholder="Enter your team name"
-                        className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.teamName ? "border-red-500" : "border-gray-300"}`}
-                      />
-                      {errors.teamName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.teamName}</p>
-                      )}
-                    </div>
-
-                    {/* Team Logo */}
-                    <div>
-                      <label className="block text-sm font-bold mb-2">Team Logo (Optional)</label>
-                      <input
-                        type="file"
-                        accept="image/png, image/jpeg, image/jpg"
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            setTeamLogo(e.target.files[0]);
-                          }
-                        }}
-                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
-                      />
-                    </div>
-
-                    {/* Team Members */}
-                    <div>
-                      <h3 className="text-lg font-bold mb-4">Team Members Details</h3>
-                      <p className="text-sm text-gray-600 mb-4">Leader is Player 1. Please provide details for the remaining 3 members.</p>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {[0, 1, 2].map((index) => (
-                          <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-                            <h4 className="font-bold text-sm mb-3 text-[#FFD700] bg-black inline-block px-3 py-1 rounded">Member {index + 2}</h4>
-                            <div className="space-y-3">
-                              <input
-                                type="text"
-                                placeholder="Full Name *"
-                                value={formData.teamMembersDetails[index].name}
+                 {/* Team Information Section */}
+                 {((["Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)) || 
+                   (formData.mainCategory === "E-Sports" && ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"].includes(formData.subCategory))) && (
+                 <div className="pt-6 border-t-2 border-gray-200">
+                   <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
+                     <FaUsers className="text-[#FFD700]" />
+                     Team Information
+                   </h2>
+                   <div className="space-y-8">
+                     {/* Team Name */}
+                     <div>
+                       <label className="block text-sm font-bold mb-2">
+                         Team Name <span className="text-red-500">*</span>
+                       </label>
+                       <input
+                         type="text"
+                         name="teamName"
+                         value={formData.teamName}
+                         onChange={handleInputChange}
+                         placeholder="Enter your team name"
+                         className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.teamName ? "border-red-500" : "border-gray-300"}`}
+                       />
+                       {errors.teamName && (
+                         <p className="text-red-500 text-sm mt-1">{errors.teamName}</p>
+                       )}
+                     </div>
+ 
+                     {/* Team Logo */}
+                     <div>
+                       <label className="block text-sm font-bold mb-2">Team Logo (Optional)</label>
+                       <input
+                         type="file"
+                         accept="image/png, image/jpeg, image/jpg"
+                         onChange={(e) => {
+                           if (e.target.files && e.target.files[0]) {
+                             setTeamLogo(e.target.files[0]);
+                           }
+                         }}
+                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                       />
+                     </div>
+ 
+                     {/* Team Members */}
+                     <div>
+                       <h3 className="text-lg font-bold mb-4">Team Members Details</h3>
+                       <p className="text-sm text-gray-600 mb-4 font-semibold">
+                         Leader is Player 1. {formData.mainCategory === "Hackathon" 
+                           ? "Please provide details for Member 2 (and Member 3 if registering as a triplet)." 
+                           : "Please provide details for the remaining 3 members."}
+                       </p>
+                       
+                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                         {(formData.mainCategory === "Hackathon" ? [0, 1] : [0, 1, 2]).map((index) => (
+                           <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                             <h4 className="font-bold text-sm mb-3 text-[#FFD700] bg-black inline-block px-3 py-1 rounded">Member {index + 2}</h4>
+                             <div className="space-y-3">
+                               <input
+                                 type="text"
+                                 placeholder="Full Name *"
+                                 value={formData.teamMembersDetails[index].name}
                                 onChange={(e) => {
                                   const newDetails = [...formData.teamMembersDetails];
                                   newDetails[index].name = e.target.value;

@@ -113,7 +113,7 @@ export default function GamingArenaPage() {
               <div className="flex items-center justify-center mb-6">
                 <FaGamepad className="text-5xl text-black mr-4" />
                 <h1 className={`${orbitron.className} text-5xl md:text-6xl font-extrabold text-black tracking-tight`}>
-                  DevPlay
+                  E-Sports
                 </h1>
               </div>
             </TimelineContent>
@@ -247,7 +247,7 @@ export default function GamingArenaPage() {
                   Cancel
                 </button>
                 <Link
-                  href={`/register?category=DevPlay&game=${encodeURIComponent(activeGame.title)}`}
+                  href={`/register?category=E-Sports&game=${encodeURIComponent(activeGame.title)}`}
                   className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg`}
                 >
                   Register Now

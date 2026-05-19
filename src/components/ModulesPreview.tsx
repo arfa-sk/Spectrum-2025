@@ -14,11 +14,11 @@ export default function ModulesPreview() {
 
   const modules = [
     {
-      title: "DevPlay",
+      title: "E-Sports",
       description: "Enter the battleground: Counter Strike, PUBG, Tekken, FIFA, & Game Dev.",
       icon: FaGamepad,
       href: "/modules/gaming-arena",
-      badge: "Featured Module",
+      badge: "6 Games",
     },
     {
       title: "Hackathon",

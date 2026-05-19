@@ -54,28 +54,46 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex flex-col items-center text-center px-6 overflow-hidden bg-white"
+      className="relative flex flex-col items-center justify-center min-h-screen text-center px-6 overflow-hidden bg-white"
       role="banner"
       aria-label="Spectrum 2026 Hero Section"
     >
 
       {/* HERO CONTENT */}
-      <div className="relative z-20 min-h-[110vh] flex flex-col items-center justify-start pt-16 md:pt-20">
-        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false} as="div" className="flex flex-col items-center mb-4">
+      <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col items-center justify-center py-20 md:py-24">
+        <TimelineContent animationNum={0} timelineRef={sectionRef} once={false} as="div" className="flex flex-col items-center mb-6">
           <img 
-            src="/sponsors/Suffa Logo.png" 
-            alt="DHA Suffa University Logo" 
-            className="h-20 md:h-24 w-auto object-contain mb-4 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+            src="/sponsors/tapshop.png" 
+            alt="Tapshop Logo" 
+            className="h-16 md:h-20 w-auto object-contain select-none pointer-events-none"
           />
-          <p className={`${spaceGrotesk.className} text-xl md:text-2xl text-neutral-800 tracking-[0.22em] uppercase`}>DHA Suffa University Presents</p>
+          <p className={`${spaceGrotesk.className} text-sm md:text-base text-black tracking-[0.25em] uppercase font-bold mt-2`}>
+            Presents
+          </p>
         </TimelineContent>
-        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
+        <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div" className="mb-14">
           <h1
-            className={`${orbitron.className} text-6xl md:text-8xl font-bold mb-10 text-black`}
+            className={`${orbitron.className} text-6xl md:text-8xl font-bold mb-6 text-black tracking-tight`}
             aria-label="Spectrum 2026 - The Ultimate Tech Fest"
           >
             SPECTRUM 2026
           </h1>
+          <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-3">
+            <span className={`${spaceGrotesk.className} text-xs md:text-sm font-black uppercase tracking-[0.3em] text-black`}>
+              Organised by FCIT
+            </span>
+            <span className="text-black text-xs md:text-sm font-bold">|</span>
+            <div className="flex items-center justify-center gap-2">
+              <img 
+                src="/sponsors/Suffa Logo.png" 
+                alt="DHA Suffa University Logo" 
+                className="h-5 w-auto object-contain select-none pointer-events-none"
+              />
+              <span className={`${spaceGrotesk.className} text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-black`}>
+                DHA Suffa University
+              </span>
+            </div>
+          </div>
         </TimelineContent>
 
         {/* NEXT-LEVEL TECH COUNTDOWN */}

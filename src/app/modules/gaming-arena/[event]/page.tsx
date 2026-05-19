@@ -180,7 +180,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                 href="/modules/gaming-arena"
                 className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8`}
               >
-                ← Back to DevPlay
+                ← Back to E-Sports
               </Link>
             </TimelineContent>
 
@@ -268,7 +268,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
 
                   <TimelineContent animationNum={23} timelineRef={sectionRef} once={true} as="div">
                     <Link
-                      href={`/register?category=DevPlay&game=${encodeURIComponent(config.title.replace(" Tournament", "").replace(" Championship", "").replace(" Showdown", "").replace(" Spike Clash", ""))}`}
+                      href={`/register?category=E-Sports&game=${encodeURIComponent(config.title.replace(" Tournament", "").replace(" Championship", "").replace(" Showdown", "").replace(" Spike Clash", ""))}`}
                       className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 font-bold rounded-full transition transform hover:scale-105 shadow-lg`}
                     >
                       Register Now

@@ -84,7 +84,7 @@ export default function SpecialDeals() {
           </div>
         </div>
       ),
-      details: ["Any DevPlay Arena Entry", "VIP Qawali Pass Included", "Standard Console Access"],
+      details: ["Any E-Sports Arena Entry", "VIP Qawali Pass Included", "Standard Console Access"],
       link: "/register?category=Special%20Deals&deal=gaming-bundle",
     },
   ];

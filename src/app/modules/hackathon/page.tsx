@@ -18,54 +18,54 @@ import {
   FaBalanceScale,
   FaCogs,
   FaCheckCircle,
-  FaArrowRight
+  FaArrowRight,
+  FaTimes,
+  FaCoins
 } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
-import { HACKATHON_CONFIG, HACKATHON_FAQS } from "@/config/hackathon";
+import { HACKATHON_CONFIG, HackathonTrack } from "@/config/hackathon";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export default function HackathonPage() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"eligibility" | "conduct" | "intellectual">("eligibility");
-
-  const toggleFaq = (index: number) => {
-    setActiveFaq(activeFaq === index ? null : index);
-  };
+  const [activeTab, setActiveTab] = useState<"eligibility" | "conduct" | "intellectual" | "integrity">("eligibility");
+  const [activeTrack, setActiveTrack] = useState<HackathonTrack | null>(null);
+  const [modalTab, setModalTab] = useState<"overview" | "timeline" | "rubric" | "rules">("overview");
 
   return (
     <>
       <Navbar />
       <main
         ref={sectionRef}
-        className="relative min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-black overflow-hidden pb-12"
+        className="relative min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-black overflow-x-hidden"
       >
         {/* Shiny Background Radial Gradient */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_20%,rgba(255,215,0,0.04)_0%,transparent_50%)] pointer-events-none"></div>
 
         {/* 1. Cinematic Hero Section */}
-        <div className="relative pt-32 pb-20 px-6">
-          <div className="max-w-6xl mx-auto text-center relative z-10">
+        <div className="relative pt-32 pb-20 px-6 min-h-screen flex flex-col justify-center items-center">
+          <div className="max-w-6xl mx-auto text-center relative z-10 w-full mt-10">
             
-
-            <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center border-2 border-[#C5A100] shadow-lg relative group transition-transform duration-500 hover:rotate-12">
-                  {/* Glow */}
-                  <div className="absolute inset-0 bg-[#FFD700] rounded-2xl blur-md opacity-25"></div>
-                  <FaCode className="text-[#FFD700] text-3xl relative z-10" />
-                </div>
-              </div>
+            <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
+              <Link 
+                href="/#modules" 
+                className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-500 hover:text-black transition-colors mb-12`}
+              >
+                ← Back to Modules
+              </Link>
             </TimelineContent>
 
-            <TimelineContent animationNum={3} timelineRef={sectionRef} once={false} as="h1">
-              <h1 className={`${orbitron.className} text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 text-black`}>
-                SPECTRUM <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-[#C5A100] to-[#B8860B]">HACKATHON</span>
-              </h1>
+            <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
+              <div className="flex items-center justify-center mb-6">
+                <FaCode className="text-5xl md:text-6xl text-black mr-4" />
+                <h1 className={`${orbitron.className} text-6xl sm:text-7xl md:text-8xl font-extrabold tracking-tight text-black`}>
+                  HACKATHON
+                </h1>
+              </div>
             </TimelineContent>
 
             <TimelineContent animationNum={4} timelineRef={sectionRef} once={false} as="div">
@@ -99,22 +99,6 @@ export default function HackathonPage() {
           </div>
         </div>
 
-        {/* 2. Storytelling / Vision Section */}
-        <section className="py-20 px-6 border-y-2 border-black bg-white relative">
-          <div className="max-w-4xl mx-auto text-center">
-            <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="div">
-              <span className="text-xs font-bold text-[#B8860B] uppercase tracking-widest block mb-4">// Core Philosophy</span>
-              <h2 className={`${orbitron.className} text-2xl md:text-3xl font-bold mb-8 text-black leading-tight`}>
-                "WE ARE NOT JUST WRITING CODE. WE ARE DESIGNING COGNITIVE LOOPS TO SHAPE DIGITAL INFRASTRUCTURE."
-              </h2>
-              <div className="w-16 h-[2px] bg-[#FFD700] mx-auto mb-8"></div>
-              <p className={`${spaceGrotesk.className} text-gray-700 leading-relaxed text-lg max-w-3xl mx-auto`}>
-                The Spectrum Hackathon is engineered for the elite. We reject standard, uninspired task lists. Here, developers are pushed to think like systems architects, cybersecurity operatives, and autonomous engineers. Whether you are debugging on the microsecond level or configuring self-prompting AI workflows, your creations must be ready to deploy and designed to disrupt.
-              </p>
-            </TimelineContent>
-          </div>
-        </section>
-
         {/* 3. Spectacular Hackathon Tracks Grid */}
         <section className="py-24 px-6 max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -127,7 +111,7 @@ export default function HackathonPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[85rem] mx-auto px-4">
             {Object.values(HACKATHON_CONFIG).map((track, index) => (
               <TimelineContent
                 key={track.id}
@@ -136,155 +120,35 @@ export default function HackathonPage() {
                 once={true}
                 as="div"
               >
-                <Link href={`/modules/hackathon/${track.id}`} className="group block">
-                  <div className="relative h-96 rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 bg-black">
+                <div onClick={() => { setActiveTrack(track); setModalTab("overview"); }} className="group block">
+                  <div className="group relative cursor-pointer bg-neutral-950 rounded-[2rem] border border-neutral-800/80 overflow-hidden transition-all duration-500 hover:shadow-[0_30px_70px_rgba(0,0,0,0.4)] hover:border-white/40 hover:-translate-y-3 hover:scale-[1.02] h-72 sm:h-80 md:h-[22rem] lg:h-[24rem] shadow-2xl">
                     
                     {/* Background Image with Zoom Effect */}
                     <div 
-                      className="absolute inset-0 bg-cover bg-no-repeat transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-85"
+                      className="absolute inset-0 bg-cover bg-no-repeat opacity-100 transition-all duration-700 ease-out group-hover:scale-105"
                       style={{
                         backgroundImage: `url('${track.image}')`,
                         backgroundPosition: track.imagePosition || "center"
                       }}
                     ></div>
                     
-                    {/* Sleek Dark Gradient Overlay for Maximum Readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/10 transition-opacity duration-300"></div>
+                    {/* Elegant Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/35 transition-all duration-300 group-hover:from-black/85 group-hover:to-black/45"></div>
 
-                    {/* Content Container */}
-                    <div className="relative z-10 h-full flex flex-col justify-between p-6 text-white">
-                      
-                      {/* Top Row: Format & Sprint Duration Badge */}
-                      <div className="flex justify-between items-center gap-2">
-                        <span className={`${spaceGrotesk.className} inline-block bg-[#FFD700] text-black text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm`}>
-                          {track.format}
-                        </span>
-                        <span className={`${spaceGrotesk.className} inline-block bg-black/75 border border-white/20 text-white text-[9px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider`}>
-                          {track.duration}
-                        </span>
-                      </div>
-
-                      {/* Bottom Panel: Clean, Glassmorphic Text Card for Perfect Contrast */}
-                      <div className="backdrop-blur-md bg-black/60 border border-white/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-black/75 group-hover:border-[#FFD700]/30 shadow-lg">
-                        <h3 className={`${orbitron.className} text-sm md:text-base font-bold text-[#FFD700] transition-colors duration-300 group-hover:text-white leading-snug drop-shadow-md`}>
-                          {track.title}
-                        </h3>
-                        
-                        {/* Mini Prize/Fee Metadata Row (Extremely Clean) */}
-                        <div className="grid grid-cols-2 gap-4 mt-2.5 pt-2.5 border-t border-white/10 text-left">
-                          <div>
-                            <p className="text-[8px] text-gray-400 uppercase tracking-widest font-bold">Winning Prize</p>
-                            <p className="text-xs font-bold text-white mt-0.5">{track.prizePool}</p>
-                          </div>
-                          <div>
-                            <p className="text-[8px] text-gray-400 uppercase tracking-widest font-bold">Reg Fee</p>
-                            <p className="text-xs font-bold text-[#FFD700] mt-0.5">{track.entryFee}</p>
-                          </div>
-                        </div>
-                        
-                        {/* Explore CTA Row */}
-                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                          <span className={`${spaceGrotesk.className} text-[10px] font-bold uppercase tracking-wider text-white group-hover:text-[#FFD700] transition-colors`}>
-                            Explore Track
-                          </span>
-                          <FaArrowRight className="text-[#FFD700] group-hover:translate-x-1 transition-transform duration-300 text-xs" />
-                        </div>
-                      </div>
-
+                    {/* Card Content - Title at top left */}
+                    <div className="absolute top-6 left-6 right-6">
+                      <h3 className={`${orbitron.className} text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-wider leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]`}>
+                        {track.title}
+                      </h3>
                     </div>
-                  </div>
-                </Link>
-              </TimelineContent>
-            ))}
-          </div>
-        </section>
 
-        {/* 4. Mega Prize Pool Section */}
-        <section className="py-24 px-6 border-y-2 border-black bg-white relative z-10">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-12 gap-12 items-center">
-              
-              <div className="md:col-span-7">
-                <TimelineContent animationNum={12} timelineRef={sectionRef} once={true} as="div">
-                  <span className="text-xs font-bold text-[#B8860B] uppercase tracking-widest block mb-2">// Bounty Matrix</span>
-                  <h2 className={`${orbitron.className} text-3xl md:text-4xl font-bold mb-6 text-black`}>
-                    MEGA PRIZE SPLIT
-                  </h2>
-                  <p className={`${spaceGrotesk.className} text-gray-700 text-sm leading-relaxed mb-6`}>
-                    Every track in the Spectrum V2 Hackathon carries an identical, high-stakes cash payout. We ensure equal prestige and equal reward across all operational sub-modules. No slashed prices or generic tokens—strictly cash payouts for elite solutions.
-                  </p>
-                  <ul className="space-y-3">
-                    {Object.values(HACKATHON_CONFIG).map((track) => (
-                      <li key={track.id} className="flex items-center gap-3 text-sm text-gray-700">
-                        <FaCheckCircle className="text-[#C5A100]" />
-                        <span className="font-semibold text-black">{track.title}</span>: 
-                        <span className="font-bold text-[#B8860B]">{track.prizePool} Cash Award</span>
-                      </li>
-                    ))}
-                  </ul>
-                </TimelineContent>
-              </div>
-
-              <div className="md:col-span-5 flex justify-center">
-                <TimelineContent animationNum={13} timelineRef={sectionRef} once={true} as="div">
-                  <div className="relative p-8 rounded-3xl border-2 border-black bg-white text-center shadow-xl max-w-sm">
-                    {/* Glowing Accent */}
-                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-[#FFD700]/20 rounded-full blur-xl"></div>
-                    
-                    <span className="text-xs uppercase text-gray-500 font-bold tracking-wider block mb-2">Combined Pool Cash</span>
-                    <p className={`${orbitron.className} text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-[#C5A100] to-[#B8860B]`}>
-                      Rs. 200,000
-                    </p>
-                    <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-2 border-t border-gray-200 pt-3 font-bold">
-                      Direct Cash Distribution Matrix
-                    </p>
-                    <div className="mt-6">
-                      <Link 
-                        href="/register?category=Hackathon"
-                        className={`${orbitron.className} block w-full py-4 rounded-xl bg-gradient-to-r from-black to-gray-800 text-[#FFD700] hover:bg-gradient-to-r hover:from-[#FFD700] hover:to-[#B8860B] hover:text-black border-2 border-black font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-md`}
-                      >
-                        Secure Your Spot
-                      </Link>
+                    {/* Centered Pill Button at the Bottom */}
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+                      <span className={`${spaceGrotesk.className} px-6 py-2.5 bg-black text-white text-xs sm:text-sm font-bold rounded-full tracking-wider uppercase shadow-xl transition-all duration-300 border border-neutral-800/50 group-hover:bg-white group-hover:text-black group-hover:scale-105 inline-block whitespace-nowrap`}>
+                        View Details
+                      </span>
                     </div>
-                  </div>
-                </TimelineContent>
-              </div>
 
-            </div>
-          </div>
-        </section>
-
-        {/* 5. Chronological Timeline */}
-        <section className="py-24 px-6 max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className={`${orbitron.className} text-3xl md:text-4xl font-bold mb-4 text-black`}>
-              OPERATIONAL TIMELINE
-            </h2>
-            <p className={`${spaceGrotesk.className} text-gray-600 max-w-xl mx-auto text-sm`}>
-              Track your sequence of events. The engineering sprint is structured to test resilience, architecture, and pitch preparedness.
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
-          </div>
-
-          <div className="relative border-l-2 border-black pl-8 ml-4 space-y-12">
-            <div className="absolute top-0 left-[-2px] w-[2px] h-full bg-gradient-to-b from-[#FFD700] via-black to-transparent"></div>
-            
-            {[
-              { time: "08:00 AM", title: "Global Developer Check-In", desc: "Reporting, hardware setup allocations, and network environment authentication checks." },
-              { time: "09:00 AM", title: "API Keys Activation & Hacking Start", desc: "All system parameters unlocked. Development begins live across all operational labs." },
-              { time: "02:00 PM", title: "Architectural Mentorship Checks", desc: "One-on-one evaluations with engineering leads to debug architectural hurdles and state parameters." },
-              { time: "08:00 PM", title: "Repository Freeze & Deployments", desc: "Absolute code freeze. Deployed builds must be pushed live and repositories locked for auditing." },
-              { time: "08:30 PM", title: "VC Pitch Arena & Live Demos", desc: "Teams defend their systems, interfaces, and startup designs before the venture jury panel." }
-            ].map((step, idx) => (
-              <TimelineContent key={idx} animationNum={14 + idx} timelineRef={sectionRef} once={true} as="div">
-                <div className="relative">
-                  {/* Timeline Dot */}
-                  <div className="absolute -left-[42px] top-1.5 w-6 h-6 rounded-full border-4 border-white bg-gradient-to-r from-[#FFD700] to-[#B8860B] shadow-md"></div>
-                  
-                  <div className="p-6 rounded-3xl border-2 border-black bg-white hover:shadow-lg transition-all duration-300">
-                    <span className="text-xs font-bold text-[#B8860B] uppercase tracking-widest">{step.time}</span>
-                    <h3 className={`${orbitron.className} text-xl font-bold text-black mt-1 mb-2`}>{step.title}</h3>
-                    <p className={`${spaceGrotesk.className} text-sm text-gray-600`}>{step.desc}</p>
                   </div>
                 </div>
               </TimelineContent>
@@ -292,8 +156,396 @@ export default function HackathonPage() {
           </div>
         </section>
 
+        {/* Dynamic Detail Modal */}
+        {activeTrack && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in transition-opacity duration-300">
+            <div 
+              className="relative bg-white border-2 border-black rounded-3xl p-6 md:p-8 max-w-2xl w-full shadow-2xl transition-transform duration-500 scale-100 overflow-hidden"
+              style={{
+                boxShadow: "0 0 40px rgba(255, 215, 0, 0.2)"
+              }}
+            >
+              {/* Gold light leak effect */}
+              <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-[#FFD700]/10 blur-3xl pointer-events-none"></div>
+
+              {/* Close Button */}
+              <button 
+                onClick={() => setActiveTrack(null)}
+                className="absolute top-6 right-6 p-2 rounded-full border border-gray-200 hover:bg-black hover:text-white transition-all duration-300 z-10 bg-white"
+              >
+                <FaTimes size={18} />
+              </button>
+
+              {/* Header Title */}
+              <div className="mb-6">
+                <span className={`${spaceGrotesk.className} inline-block px-4 py-1.5 text-xs font-bold bg-[#FFD700] text-black rounded-full mb-3 shadow`}>
+                  {activeTrack.format} Competition
+                </span>
+                <h2 className={`${orbitron.className} text-3xl md:text-4xl font-extrabold text-black uppercase pr-10`}>
+                  {activeTrack.title}
+                </h2>
+                <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-black mt-2"></div>
+              </div>
+
+              {/* Modal Sub-tabs */}
+              <div className="flex gap-1.5 mb-6 overflow-x-auto border-b border-gray-100 pb-2 scrollbar-none">
+                {[
+                  { id: "overview", label: "Overview" },
+                  { id: "timeline", label: "Timeline & Format" },
+                  { id: "rubric", label: "Judging Rubric" },
+                  { id: "rules", label: "Rules & Logistics" }
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setModalTab(tab.id as any)}
+                    className={`${orbitron.className} px-3 py-2 text-[10px] sm:text-xs font-bold uppercase rounded-lg transition-all duration-300 whitespace-nowrap ${
+                      modalTab === tab.id
+                        ? "bg-black text-[#FFD700] shadow-md"
+                        : "text-gray-500 hover:text-black hover:bg-gray-100"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Scrollable Tab Contents */}
+              <div className="max-h-[380px] overflow-y-auto pr-2 space-y-6 mb-8 scrollbar-thin scrollbar-thumb-gray-200">
+                {modalTab === "overview" && (
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-2`}>Event Concept</h4>
+                      <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed`}>
+                        {activeTrack.eventConcept || activeTrack.description}
+                      </p>
+                    </div>
+
+                    {activeTrack.toolsAllowed && (
+                      <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl">
+                        <h4 className={`${orbitron.className} text-xs font-bold text-black mb-2 flex items-center gap-2`}>
+                          <span className="w-2 h-2 rounded-full bg-[#B8860B]"></span> Tools & Environment Allowed
+                        </h4>
+                        <p className={`${spaceGrotesk.className} text-xs text-gray-600 leading-relaxed`}>
+                          {activeTrack.toolsAllowed}
+                        </p>
+                      </div>
+                    )}
+
+                    {activeTrack.competitionTracks && (
+                      <div className="space-y-3">
+                        <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider`}>Tracks & Categories</h4>
+                        <div className="grid gap-3">
+                          {activeTrack.competitionTracks.map((ct, idx) => (
+                            <div key={idx} className="p-3.5 bg-neutral-50 rounded-xl border border-gray-150">
+                              <span className={`${orbitron.className} text-xs font-bold text-black block`}>{ct.title}</span>
+                              <span className={`${spaceGrotesk.className} text-xs text-gray-600 block mt-1`}>{ct.description}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {activeTrack.datasetDetails && (
+                      <div>
+                        <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-2`}>Dataset Information</h4>
+                        <p className={`${spaceGrotesk.className} text-xs text-gray-600 leading-relaxed bg-[#FFD700]/5 p-3 rounded-xl border border-[#FFD700]/25`}>
+                          {activeTrack.datasetDetails}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Meta Grid */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                      <div className="p-3 bg-neutral-50 rounded-xl text-center border border-gray-100">
+                        <span className={`${spaceGrotesk.className} text-[9px] text-gray-400 uppercase font-bold tracking-wider`}>Team Size</span>
+                        <span className={`${spaceGrotesk.className} text-xs font-bold text-black block mt-0.5`}>{activeTrack.teamSize}</span>
+                      </div>
+                      <div className="p-3 bg-neutral-50 rounded-xl text-center border border-gray-100">
+                        <span className={`${spaceGrotesk.className} text-[9px] text-gray-400 uppercase font-bold tracking-wider`}>Ticket Fee</span>
+                        <span className={`${spaceGrotesk.className} text-xs font-bold text-black block mt-0.5`}>{activeTrack.prizePool === "Rs. 30,000" ? "Rs. 500 - 1000" : activeTrack.entryFee}</span>
+                      </div>
+                      <div className="p-3 bg-neutral-50 rounded-xl text-center border border-gray-100">
+                        <span className={`${spaceGrotesk.className} text-[9px] text-gray-400 uppercase font-bold tracking-wider`}>Duration</span>
+                        <span className={`${spaceGrotesk.className} text-xs font-bold text-black block mt-0.5`}>{activeTrack.duration}</span>
+                      </div>
+                      <div className="p-3 bg-neutral-50 rounded-xl text-center border border-gray-100">
+                        <span className={`${spaceGrotesk.className} text-[9px] text-gray-400 uppercase font-bold tracking-wider`}>Venue</span>
+                        <span className={`${spaceGrotesk.className} text-xs font-bold text-black block mt-0.5 truncate`}>{activeTrack.location}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {modalTab === "timeline" && (
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-4`}>Event Checklist & Timeline</h4>
+                      {activeTrack.timeline.map((t, idx) => (
+                        <div key={idx} className="flex gap-4 items-start">
+                          <div className="flex flex-col items-center">
+                            <div className="w-8 h-8 rounded-full bg-black text-[#FFD700] flex items-center justify-center font-bold text-xs flex-shrink-0">
+                              {idx + 1}
+                            </div>
+                            {idx < activeTrack.timeline.length - 1 && (
+                              <div className="w-0.5 h-10 bg-gray-200 my-1"></div>
+                            )}
+                          </div>
+                          <div>
+                            <span className={`${orbitron.className} text-xs font-extrabold text-[#B8860B]`}>{t.time}</span>
+                            <p className={`${spaceGrotesk.className} text-sm text-gray-800 mt-0.5`}>{t.event}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {activeTrack.pitchFormat && (
+                      <div className="pt-6 border-t border-gray-100">
+                        <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-4`}>Day 2 Presentation Format</h4>
+                        <div className="grid grid-cols-3 gap-3">
+                          {activeTrack.pitchFormat.map((pf, idx) => (
+                            <div key={idx} className="p-3 bg-gray-50 border border-gray-100 rounded-xl text-center">
+                              <span className={`${orbitron.className} text-lg font-black text-black block`}>{pf.duration}</span>
+                              <span className="text-[9px] uppercase font-bold text-gray-400 block tracking-wider mt-1">{pf.label}</span>
+                              <span className="text-[10px] text-gray-500 block mt-1 leading-tight">{pf.description}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {modalTab === "rubric" && (
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-4`}>Evaluation Criteria & Scoring</h4>
+                      {activeTrack.judgingCriteria.map((jc, idx) => (
+                        <div key={idx} className="p-4 bg-gray-50 border border-gray-200 rounded-2xl">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className={`${orbitron.className} text-xs sm:text-sm font-bold text-black`}>{jc.metric}</span>
+                            <span className="text-xs font-extrabold text-[#B8860B] bg-[#FFD700]/10 px-2.5 py-0.5 rounded">{jc.weight}</span>
+                          </div>
+                          {jc.weight.includes("%") && (
+                            <div className="w-full bg-gray-250 h-1 rounded-full overflow-hidden mb-2">
+                              <div 
+                                className="bg-[#B8860B] h-full rounded-full" 
+                                style={{ width: jc.weight }}
+                              ></div>
+                            </div>
+                          )}
+                          <p className={`${spaceGrotesk.className} text-xs text-gray-600 leading-normal`}>{jc.description}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {activeTrack.prizeSplitDetails && (
+                      <div className="pt-6 border-t border-gray-100">
+                        <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-4`}>Prize Breakdown</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          {activeTrack.prizeSplitDetails.map((ps, idx) => (
+                            <div key={idx} className="flex justify-between items-center p-3 bg-gray-50 border border-gray-100 rounded-xl">
+                              <span className="text-xs text-gray-500 font-semibold">{ps.place}</span>
+                              <span className="text-xs font-bold text-[#B8860B]">{ps.prize}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {modalTab === "rules" && (
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-4`}>Official Regulations</h4>
+                      <ul className="space-y-3">
+                        {activeTrack.rules.map((rule, idx) => (
+                          <li key={idx} className="flex gap-3 text-xs text-gray-600 leading-relaxed">
+                            <span className="text-[#B8860B] font-bold">0{idx + 1}.</span>
+                            <span>{rule}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {activeTrack.mentorSetup && (
+                      <div className="pt-6 border-t border-gray-100">
+                        <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-3`}>Mentor Setup (Day 1)</h4>
+                        <ul className="space-y-2">
+                          {activeTrack.mentorSetup.map((item, idx) => (
+                            <li key={idx} className="flex gap-2 text-xs text-gray-500">
+                              <span className="text-gray-300 font-bold">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {activeTrack.logisticNotes && (
+                      <div className="pt-6 border-t border-gray-100">
+                        <h4 className={`${orbitron.className} text-xs font-extrabold uppercase text-gray-400 tracking-wider mb-3`}>Lab & Logistics Notes</h4>
+                        <ul className="space-y-2">
+                          {activeTrack.logisticNotes.map((item, idx) => (
+                            <li key={idx} className="flex gap-2 text-xs text-gray-500">
+                              <span className="text-blue-500 font-bold">CP</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setActiveTrack(null)}
+                  className={`${orbitron.className} flex-1 py-4 border border-black hover:bg-neutral-100 text-black font-bold rounded-2xl transition-all duration-300 text-xs sm:text-sm`}
+                >
+                  Cancel
+                </button>
+                <Link
+                  href={`/register?category=Hackathon&track=${encodeURIComponent(activeTrack.title)}`}
+                  className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg text-xs sm:text-sm`}
+                >
+                  Register Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 4. Mega Prize Pool Section */}
+        <section className="py-24 px-6 bg-white relative z-10">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              {/* <span className="text-xs font-bold text-[#B8860B] uppercase tracking-widest block mb-2">// Reward Distribution</span> */}
+              <h2 className={`${orbitron.className} text-4xl font-extrabold text-black`}>
+                MEGA PRIZE SPLIT
+              </h2>
+              <p className={`${spaceGrotesk.className} text-gray-600 max-w-xl mx-auto text-sm mt-3`}>
+                Equal prestige, high-stakes cash payouts. We ensure transparent reward distribution across all three tracks of Spectrum V2.
+              </p>
+              <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Competitive Programming Prize Card */}
+              <div className="bg-neutral-950 text-white rounded-[2rem] p-8 border border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col justify-between group hover:border-[#FFD700]/50 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-400">
+                      <FaCode size={24} />
+                    </div>
+                    <div>
+                      <h4 className={`${orbitron.className} font-bold text-lg`}>CP Track</h4>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Total Pool: Rs. 30,000</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4 mb-8">
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">Winner</span>
+                      <span className="text-lg font-bold text-[#FFD700]">Rs. 20,000</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">Runner-up</span>
+                      <span className="text-lg font-bold text-gray-300">Rs. 10,000</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 border-t border-neutral-900 pt-4 mt-auto">
+                  Platform: HackerRank / VJudge. Manual review checks.
+                </div>
+              </div>
+
+              {/* AI & Data Science Prize Card */}
+              <div className="bg-neutral-950 text-white rounded-[2rem] p-8 border border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col justify-between group hover:border-[#FFD700]/50 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-purple-500/10 rounded-2xl text-purple-400">
+                      <FaMicrochip size={24} />
+                    </div>
+                    <div>
+                      <h4 className={`${orbitron.className} font-bold text-lg`}>AI & DS Track</h4>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Prizes & Goodies</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4 mb-8">
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">1st Place</span>
+                      <span className="text-lg font-bold text-[#FFD700]">Cash + Certificate</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">2nd Place</span>
+                      <span className="text-lg font-bold text-gray-300">Cash + Certificate</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">3rd Place</span>
+                      <span className="text-sm font-semibold text-gray-400">Goodies + Cert</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">Best Insight</span>
+                      <span className="text-sm font-semibold text-[#A855F7]">Special Award</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 border-t border-neutral-900 pt-4 mt-auto">
+                  Tabular dataset from local context. Notebook submission.
+                </div>
+              </div>
+
+              {/* Build & Pitch Prize Card */}
+              <div className="bg-neutral-950 text-white rounded-[2rem] p-8 border border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col justify-between group hover:border-[#FFD700]/50 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-amber-500/10 rounded-2xl text-amber-400">
+                      <FaRocket size={24} />
+                    </div>
+                    <div>
+                      <h4 className={`${orbitron.className} font-bold text-lg`}>Build & Pitch</h4>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Incubation & Rewards</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4 mb-8">
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">Top Teams</span>
+                      <span className="text-lg font-bold text-[#FFD700]">Cash Share</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">VC Opportunities</span>
+                      <span className="text-md font-bold text-amber-300">Startup Incubation</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-neutral-800">
+                      <span className="text-sm text-gray-400">Certifications</span>
+                      <span className="text-sm text-gray-400">DSU IT Dept. Certs</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 border-t border-neutral-900 pt-4 mt-auto">
+                  Pre-seed pitch model. Fully functional live demos.
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-16 text-center">
+              <Link 
+                href="/register?category=Hackathon"
+                className={`${orbitron.className} inline-block px-8 py-4 rounded-2xl bg-black text-[#FFD700] hover:bg-neutral-900 border-2 border-black font-bold text-sm uppercase tracking-widest transition-all duration-300 shadow-xl hover:scale-105`}
+              >
+                Register For Hackathon
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* 6. Team Rules Section */}
-        <section className="py-24 px-6 border-t-2 border-black bg-white">
+        <section className="py-24 px-6 bg-white">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <h2 className={`${orbitron.className} text-3xl md:text-4xl font-bold mb-4 text-black`}>
@@ -306,16 +558,17 @@ export default function HackathonPage() {
             </div>
 
             {/* Cybernetic Tabs */}
-            <div className="flex justify-center gap-4 mb-10 border-b border-gray-200 pb-4">
+            <div className="flex justify-center gap-4 mb-10 border-b border-gray-200 pb-4 overflow-x-auto scrollbar-none">
               {[
                 { id: "eligibility", label: "Participation Bounds" },
                 { id: "conduct", label: "Rules of Combat" },
-                { id: "intellectual", label: "IP & Frameworks" }
+                { id: "integrity", label: "AI & Integrity Policies" },
+                { id: "intellectual", label: "IP Ownership" }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`${orbitron.className} px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${
+                  className={`${orbitron.className} px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-300 whitespace-nowrap ${
                     activeTab === tab.id 
                       ? "text-[#B8860B] border-b-2 border-[#FFD700]" 
                       : "text-gray-500 hover:text-black"
@@ -336,11 +589,11 @@ export default function HackathonPage() {
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">02.</span>
-                    <span>Solo participants are allowed to register strictly for the <strong>Speed Programming Challenge</strong>. All other tracks require teams of 2 to 4 members.</span>
+                    <span>Solo registrations are only permitted for the Competitive Programming challenge. For AI & DS Hackathon and Build & Pitch, teams must consist of exactly 2 or 3 members (duos or triplets only).</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">03.</span>
-                    <span>Participants must bring their own hardware, chargers, and development kits. Stable high-speed Wi-Fi and server nodes will be allocated at registration desks.</span>
+                    <span>Participants must bring their own hardware, development systems, chargers, and pre-installed tools. Stable internet and power access will be allocated in all workspace zones.</span>
                   </li>
                 </ul>
               )}
@@ -349,15 +602,32 @@ export default function HackathonPage() {
                 <ul className="space-y-4 text-sm text-gray-700">
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">01.</span>
-                    <span>All code repositories must begin empty or from documented, open-source template configurations. Zero pre-built private solutions are allowed.</span>
+                    <span>All building must take place during the official Day 1 sprint hours. Bringing pre-built products, analysis files, or codebases is strictly forbidden and results in disqualification.</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">02.</span>
-                    <span>Any automated DDOS or penetration attempts on grading tools, servers, or other competitor hardware triggers immediate DQ.</span>
+                    <span>Submissions must freeze exactly at the 6:00 PM code freeze deadline on Day 1. Late submissions will not be scored.</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">03.</span>
-                    <span>Repository sync logs will be actively checked. Continuous commits are required during the 12-hour period.</span>
+                    <span>Live demonstrations of working products are mandatory on Day 2. Video recordings, static mockups, or slides-only presentations will receive a score of zero on the product and usability dimension.</span>
+                  </li>
+                </ul>
+              )}
+
+              {activeTab === "integrity" && (
+                <ul className="space-y-4 text-sm text-gray-700">
+                  <li className="flex gap-3">
+                    <span className="text-[#B8860B] font-bold">01.</span>
+                    <span>AI usage policies vary by track: Build & Pitch has zero restrictions on LLMs or AI assistants (Cursor, v0, Lovable, Claude Code are fully allowed). AI & DS allows public pre-trained models with proper citations. Competitive Programming strictly prohibits all AI code generators.</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-[#B8860B] font-bold">02.</span>
+                    <span>Manual and automated checks will be conducted post-sprint. Codebases and Jupyter notebooks will be analyzed for plagiarism, code similarity, and integrity violations.</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-[#B8860B] font-bold">03.</span>
+                    <span>Violation of any integrity policy at any stage of the hackathon will result in immediate disqualification with no registration refund.</span>
                   </li>
                 </ul>
               )}
@@ -366,7 +636,7 @@ export default function HackathonPage() {
                 <ul className="space-y-4 text-sm text-gray-700">
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">01.</span>
-                    <span>All prototypes engineered belong completely to the participants. Spectrum retains zero intellectual claims or equity.</span>
+                    <span>All prototypes engineered belong completely to the participants. DHA Suffa University and Spectrum retain zero intellectual claims or equity.</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">02.</span>
@@ -374,109 +644,6 @@ export default function HackathonPage() {
                   </li>
                 </ul>
               )}
-            </div>
-          </div>
-        </section>
-
-        {/* 7. Judging Criteria Section */}
-        <section className="py-24 px-6 max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className={`${orbitron.className} text-3xl md:text-4xl font-bold mb-4 text-black`}>
-              SCORING MATRIX DESIGN
-            </h2>
-            <p className={`${spaceGrotesk.className} text-gray-600 max-w-xl mx-auto text-sm`}>
-              Review what determines victory. Our venture capital and engineering judges analyze technical systems, performance, and commercial viability.
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
-          </div>
-
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { score: "35%", title: "Technical Accuracy", desc: "Clean loops, secure APIs, latency metrics, and optimal data structure choices." },
-              { score: "30%", title: "Autonomy Loop", desc: "Effective problem-solving in open loops and structural workflow resilience." },
-              { score: "20%", title: "Design Architecture", desc: "Futuristic visual layouts, responsive design, and intuitive UX navigation components." },
-              { score: "15%", title: "VC Presentation Pitch", desc: "Communication elegance, target market defense, and live product demo confidence." }
-            ].map((cell, idx) => (
-              <div key={idx} className="p-6 rounded-3xl border-2 border-black bg-white text-center hover:scale-105 transition-transform duration-300 shadow-md">
-                <p className={`${orbitron.className} text-4xl font-extrabold text-[#B8860B] mb-3`}>{cell.score}</p>
-                <h3 className="text-sm font-bold mb-2 text-black">{cell.title}</h3>
-                <p className={`${spaceGrotesk.className} text-xs text-gray-500 leading-relaxed`}>{cell.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 8. Scrolling Sponsors Panel */}
-        <section className="py-16 border-y-2 border-black bg-white overflow-hidden">
-          <div className="max-w-6xl mx-auto px-6 text-center">
-            <span className="text-xs uppercase text-gray-500 tracking-widest font-bold block mb-8">// Technical Alliances & Event Grant Partners</span>
-            <div className="flex flex-wrap justify-center items-center gap-12 grayscale opacity-40 hover:grayscale-0 hover:opacity-85 transition-all duration-500">
-              <span className={`${orbitron.className} text-2xl font-black tracking-widest text-black`}>RED BULL</span>
-              <span className={`${orbitron.className} text-2xl font-black tracking-widest text-black`}>PEPSI CO</span>
-              <span className={`${orbitron.className} text-2xl font-black tracking-widest text-black`}>DSU SYSTEMS</span>
-            </div>
-          </div>
-        </section>
-
-        {/* 9. Interactive FAQ Accordion */}
-        <section className="py-24 px-6 max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className={`${orbitron.className} text-3xl md:text-4xl font-bold mb-4 text-black`}>
-              COMMON FAQS ANSWERED
-            </h2>
-            <p className={`${spaceGrotesk.className} text-gray-600 max-w-xl mx-auto text-sm`}>
-              Clear all operational confusion. Review standard procedures below.
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mt-4"></div>
-          </div>
-
-          <div className="space-y-4">
-            {HACKATHON_FAQS.map((faq, index) => (
-              <div 
-                key={index} 
-                className="rounded-3xl border-2 border-black bg-white overflow-hidden transition-all duration-300 shadow-sm"
-              >
-                <button
-                  onClick={() => toggleFaq(index)}
-                  className="w-full flex justify-between items-center p-6 text-left hover:bg-[#FFD700]/5 transition-colors"
-                >
-                  <span className={`${orbitron.className} font-bold text-sm text-black`}>{faq.question}</span>
-                  <FaChevronDown 
-                    className={`text-[#B8860B] text-xs transition-transform duration-300 ${
-                      activeFaq === index ? "transform rotate-180" : ""
-                    }`} 
-                  />
-                </button>
-                
-                {activeFaq === index && (
-                  <div className="px-6 pb-6 border-t-2 border-gray-100 pt-4 bg-gray-50/50">
-                    <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed`}>
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 10. Global Registration CTA */}
-        <section className="py-20 px-6 max-w-4xl mx-auto text-center">
-          <div className="relative p-12 rounded-3xl border-2 border-black bg-white shadow-xl">
-            <span className="text-xs uppercase text-[#B8860B] tracking-widest font-bold block mb-4">// System Ready</span>
-            <h2 className={`${orbitron.className} text-3xl sm:text-4xl font-bold mb-6 text-black`}>
-              ARE YOU READY TO DEPLOY?
-            </h2>
-            <p className={`${spaceGrotesk.className} text-gray-600 text-sm max-w-xl mx-auto leading-relaxed mb-8`}>
-              Access credentials, declare your stack, and register your team. Applications undergo instant automated verification processing.
-            </p>
-            <div className="flex justify-center">
-              <Link 
-                href="/register?category=Hackathon"
-                className={`${orbitron.className} inline-block px-10 py-5 rounded-full bg-gradient-to-r from-black to-gray-800 text-[#FFD700] hover:bg-gradient-to-r hover:from-[#FFD700] hover:to-[#B8860B] hover:text-black font-extrabold text-sm uppercase tracking-widest hover:scale-105 transition-transform duration-300 shadow-md border-2 border-black`}
-              >
-                Commence Registration
-              </Link>
             </div>
           </div>
         </section>
