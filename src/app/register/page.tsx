@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Orbitron, Space_Grotesk } from "next/font/google";
-import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle, FaCogs, FaTicketAlt } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -28,7 +28,13 @@ interface FormData {
   mainCategory: string;
   subCategory: string;
   teamName: string;
+  inGameUid?: string;
   teamMembersDetails: TeamMember[];
+  projectIdea?: string;
+  githubLink?: string;
+  techStack?: string;
+  problemStatement?: string;
+  teamRoles?: string;
 }
 
 interface SubCategories {
@@ -45,13 +51,10 @@ const subCategories: SubCategories = {
     "Valorant"
   ],
   "Hackathon": [
-    "Speed Debugging",
-    "Speed Programming",
-    "Dark Spider",
-    "Web Development",
-    "Data Science",
-    "Mobile App Development",
-    "Database Design"
+    "Speed Programming Challenge",
+    "AI Agentic Systems Arena",
+    "Startup Innovation Challenge",
+    "Cybersecurity Warfare (CTF)"
   ],
   "Play To Win": [
     "Singing",
@@ -62,6 +65,15 @@ const subCategories: SubCategories = {
     "Arm Wrestling"
   ],
   "Spectrum Startup Arena": [],
+  "Qawali Night": [
+    "Standard Ticket - Rs. 800",
+    "DSU Student Ticket - Rs. 700"
+  ],
+  "Special Deals": [
+    "Qawali Night Pass - Rs. 700",
+    "Hackathon + Qawali Bundle - Rs. 800",
+    "Gaming + Qawali Bundle - Rs. 800"
+  ]
 };
 
 export default function RegisterPage() {
@@ -82,6 +94,11 @@ export default function RegisterPage() {
       { name: "", phoneNumber: "" },
       { name: "", phoneNumber: "" }
     ],
+    projectIdea: "",
+    githubLink: "",
+    techStack: "",
+    problemStatement: "",
+    teamRoles: ""
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -105,11 +122,41 @@ export default function RegisterPage() {
       const params = new URLSearchParams(window.location.search);
       const category = params.get("category");
       const game = params.get("game");
-      if (category && subCategories[category]) {
+      const track = params.get("track");
+      const ticket = params.get("ticket");
+      const deal = params.get("deal");
+
+      const trackMap: Record<string, string> = {
+        "speed-programming": "Speed Programming Challenge",
+        "ai-agents": "AI Agentic Systems Arena",
+        "startup-innovation": "Startup Innovation Challenge",
+        "cybersecurity": "Cybersecurity Warfare (CTF)"
+      };
+
+      if (category === "Qawali") {
+        setFormData(prev => ({
+          ...prev,
+          mainCategory: "Qawali Night",
+          subCategory: ticket === "student" ? "DSU Student Ticket - Rs. 700" : "Standard Ticket - Rs. 800"
+        }));
+      } else if (category === "Special Deals" || category === "Special%20Deals") {
+        let mappedDeal = "";
+        if (deal === "qawali-pass") mappedDeal = "Qawali Night Pass - Rs. 700";
+        else if (deal === "hackathon-bundle") mappedDeal = "Hackathon + Qawali Bundle - Rs. 800";
+        else if (deal === "gaming-bundle") mappedDeal = "Gaming + Qawali Bundle - Rs. 800";
+
+        setFormData(prev => ({
+          ...prev,
+          mainCategory: "Special Deals",
+          subCategory: mappedDeal
+        }));
+      } else if (category && subCategories[category]) {
+        const subParam = track || game;
+        const mappedSub = subParam ? (trackMap[subParam] || subParam) : "";
         setFormData(prev => ({
           ...prev,
           mainCategory: category,
-          subCategory: game && subCategories[category].includes(game) ? game : ""
+          subCategory: mappedSub && subCategories[category].includes(mappedSub) ? mappedSub : ""
         }));
       }
     }
@@ -151,6 +198,12 @@ export default function RegisterPage() {
       submitData.append("teamMembersDetails", JSON.stringify(formData.teamMembersDetails));
       submitData.append("termsAccepted", String(termsAccepted));
       if (teamLogo) submitData.append("teamLogo", teamLogo);
+
+      if (formData.projectIdea) submitData.append("projectIdea", formData.projectIdea);
+      if (formData.githubLink) submitData.append("githubLink", formData.githubLink);
+      if (formData.techStack) submitData.append("techStack", formData.techStack);
+      if (formData.problemStatement) submitData.append("problemStatement", formData.problemStatement);
+      if (formData.teamRoles) submitData.append("teamRoles", formData.teamRoles);
 
       const response = await fetch("/api/register", {
         method: "POST",
@@ -256,7 +309,7 @@ export default function RegisterPage() {
     }
 
     // Sub-category validation (only required if the category has sub-categories)
-    const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Play To Win"];
+    const categoriesWithSubCategories = ["DevPlay", "Hackathon", "Play To Win", "Qawali Night", "Special Deals"];
     if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
       newErrors.subCategory = "Please select a sub-category";
     }
@@ -267,25 +320,34 @@ export default function RegisterPage() {
     const teamBasedCategories = ["Hackathon", "Spectrum Startup Arena"];
     const teamDevPlayGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
     
-    const isTeamEvent = teamBasedCategories.includes(formData.mainCategory) || 
-                       (formData.mainCategory === "DevPlay" && teamDevPlayGames.includes(formData.subCategory));
+    const isTeamEvent = 
+      (formData.mainCategory === "Hackathon" && formData.subCategory !== "Speed Programming Challenge") ||
+      formData.mainCategory === "Spectrum Startup Arena" ||
+      (formData.mainCategory === "DevPlay" && teamDevPlayGames.includes(formData.subCategory));
 
     if (isTeamEvent) {
       if (!formData.teamName || !formData.teamName.trim()) {
         newErrors.teamName = "Team name is required for team-based events";
       }
       
-      // Check if any member field is empty
-      let hasIncompleteMember = false;
-      formData.teamMembersDetails.forEach(member => {
-        if (!member.name.trim() || !member.phoneNumber.trim()) {
-          hasIncompleteMember = true;
+      // Relax validation for Hackathon tracks (min 2 members total, i.e. at least member 2 field filled)
+      if (formData.mainCategory === "Hackathon") {
+        const firstMember = formData.teamMembersDetails[0];
+        if (!firstMember.name.trim() || !firstMember.phoneNumber.trim()) {
+          newErrors.teamName = "Teams require at least 2 members. Please fill in details for Member 2.";
         }
-
-      });
-      
-      if (hasIncompleteMember) {
-        newErrors.teamName = "Teams require exactly 4 members. If you have fewer members, contact Team Spectrum for further guidelines: Phone 03141349607 | Email spectrum2026.dsu@gmail.com. We'll get back to you soon.";
+      } else {
+        // Check if any member field is empty (for non-hackathon DevPlay team events)
+        let hasIncompleteMember = false;
+        formData.teamMembersDetails.forEach(member => {
+          if (!member.name.trim() || !member.phoneNumber.trim()) {
+            hasIncompleteMember = true;
+          }
+        });
+        
+        if (hasIncompleteMember) {
+          newErrors.teamName = "Teams require exactly 4 members. If you have fewer members, contact Team Spectrum for further guidelines.";
+        }
       }
     }
 
@@ -362,6 +424,11 @@ export default function RegisterPage() {
           { name: "", phoneNumber: "" },
           { name: "", phoneNumber: "" }
         ],
+        projectIdea: "",
+        githubLink: "",
+        techStack: "",
+        problemStatement: "",
+        teamRoles: ""
       });
 
       // Scroll to success message
@@ -548,6 +615,53 @@ export default function RegisterPage() {
           >
             <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
               <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Immersive V3 Visual Checkout Banner */}
+                {(formData.mainCategory === "Qawali Night" || formData.mainCategory === "Special Deals") && (
+                  <div className="backdrop-blur-md bg-neutral-950 text-white rounded-2xl border-2 border-[#FFD700]/40 p-6 md:p-8 space-y-4 shadow-[0_0_30px_rgba(255,215,0,0.15)] animate-slide-down">
+                    <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+                      <div className="w-10 h-10 bg-neutral-900 border border-[#FFD700]/30 rounded-xl flex items-center justify-center">
+                        <FaTicketAlt className="text-[#FFD700] text-lg animate-pulse" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">// Checkout Summary</p>
+                        <h4 className={`${orbitron.className} text-base md:text-lg font-bold text-[#FFD700]`}>
+                          {formData.mainCategory}
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <p className="text-gray-400 font-semibold">Selected Ticket/Package:</p>
+                        <p className="text-white font-bold mt-1 text-sm">{formData.subCategory || "None Selected"}</p>
+                      </div>
+                      <div className="sm:text-right">
+                        <p className="text-gray-400 font-semibold">Payable Amount:</p>
+                        <p className={`${orbitron.className} text-xl font-black text-[#FFD700] mt-0.5`}>
+                          {formData.subCategory?.includes("Rs. 800") ? "Rs. 800" : formData.subCategory?.includes("Rs. 700") ? "Rs. 700" : "Select below"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-neutral-900/60 border border-white/5 rounded-xl p-4 text-[11px] text-gray-300 space-y-2">
+                      <p className="font-bold text-white uppercase tracking-wider text-[9px]">Included in Pass:</p>
+                      {formData.mainCategory === "Qawali Night" ? (
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li>Standard open lawn access under the stars</li>
+                          <li>Full Sufi Qawali performances admission</li>
+                          <li>DSU campus visitor clearance certificate</li>
+                        </ul>
+                      ) : (
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li>Exclusive combo package access (music + arena entry)</li>
+                          <li>VIP priority seating passes included</li>
+                          <li>Free snack refreshments & certificates</li>
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Personal Information Section */}
                 <div>
                   <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
@@ -719,6 +833,8 @@ export default function RegisterPage() {
                         <option value="Hackathon">Hackathon</option>
                         <option value="DevPlay">DevPlay</option>
                         <option value="Spectrum Startup Arena">Spectrum Startup Arena</option>
+                        <option value="Qawali Night">Qawali Night</option>
+                        <option value="Special Deals">Special Deals</option>
                       </select>
                       {errors.mainCategory && (
                         <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
@@ -841,6 +957,86 @@ export default function RegisterPage() {
                     </div>
                   </div>
                 </div>
+                )}
+
+                {/* Hackathon Innovation Profile Section (Optional) */}
+                {formData.mainCategory === "Hackathon" && (
+                  <div className="pt-6 border-t-2 border-gray-200">
+                    <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3 text-black`}>
+                      <FaCogs className="text-[#FFD700]" />
+                      Hackathon Innovation Profile <span className="text-xs text-gray-500 font-normal tracking-normal">(Optional)</span>
+                    </h2>
+                    <div className="space-y-6">
+                      {/* Project Idea */}
+                      <div>
+                        <label className="block text-sm font-bold mb-2">Project Idea / Concept</label>
+                        <textarea
+                          name="projectIdea"
+                          value={formData.projectIdea || ""}
+                          onChange={handleInputChange}
+                          placeholder="Briefly describe your proposed product idea, system design or what you plan to engineer..."
+                          rows={3}
+                          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm resize-none"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* GitHub Link */}
+                        <div>
+                          <label className="block text-sm font-bold mb-2">GitHub Profile / Repository Link</label>
+                          <input
+                            type="url"
+                            name="githubLink"
+                            value={formData.githubLink || ""}
+                            onChange={handleInputChange}
+                            placeholder="https://github.com/yourusername"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
+                          />
+                        </div>
+
+                        {/* Tech Stack */}
+                        <div>
+                          <label className="block text-sm font-bold mb-2">Proposed Tech Stack</label>
+                          <input
+                            type="text"
+                            name="techStack"
+                            value={formData.techStack || ""}
+                            onChange={handleInputChange}
+                            placeholder="e.g., Next.js, Python, OpenAI API, Supabase"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
+                          />
+                        </div>
+
+                        {/* Problem Statement */}
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-bold mb-2">Problem Statement</label>
+                          <input
+                            type="text"
+                            name="problemStatement"
+                            value={formData.problemStatement || ""}
+                            onChange={handleInputChange}
+                            placeholder="What real-world problem does your startup or system tackle?"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
+                          />
+                        </div>
+
+                        {/* Team Roles */}
+                        {formData.subCategory !== "Speed Programming Challenge" && (
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-bold mb-2">Team Roles Distribution</label>
+                            <input
+                              type="text"
+                              name="teamRoles"
+                              value={formData.teamRoles || ""}
+                              onChange={handleInputChange}
+                              placeholder="e.g., Lead Developer: Arfa, UI/UX Designer: Sarah, Backend Dev: Ali"
+                              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all text-sm"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 )}
 
                 {/* Consent & Submission */}
