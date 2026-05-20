@@ -70,7 +70,7 @@ export default function GamingArenaPage() {
       description: "Jump into the fast-paced, high-octane battlegrounds of Free Fire. Put your squad's quick-thinking and survival tactics to the test in this premier squad battle royale series, featuring maximum competitiveness.",
       image: "/modules/free-fire.png",
       imagePosition: "center",
-      prize: "Trophies & Medals",
+      prize: "Rs 120K",
     },
     {
       title: "Counter-Strike 2",
@@ -81,7 +81,7 @@ export default function GamingArenaPage() {
       description: "Tactical shooting reaches its peak in Counter-Strike 2. Perfect your smoke executes, coordinate site takes, and showcase absolute precision aiming. Compete under official competitive guidelines in a 4-player squad.",
       image: "/modules/cs-2.png",
       imagePosition: "center",
-      prize: "Trophies & Medals",
+      prize: "Rs 120K",
     },
     {
       title: "Valorant",
@@ -92,7 +92,7 @@ export default function GamingArenaPage() {
       description: "Defy limits and claim your radiant rank. Valorant at Spectrum V1 brings intense tactical FPS action where mechanical skill meets tactical agency. Coordinate utility and execute perfect strategies with your 4-player team.",
       image: "/modules/valorant.png",
       imagePosition: "center",
-      prize: "Trophies & Medals",
+      prize: "Rs 120K",
     }
   ];
 
