@@ -235,10 +235,30 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (regError) {
+      const insertErrorDetails = {
+        message: regError.message,
+        code: regError.code,
+        details: regError.details,
+        hint: regError.hint,
+      };
+
+      logger.error("Flat Registration Insert Error", {
+        ...insertErrorDetails,
+        ip: clientIP,
+        category,
+        payload: {
+          fullName: body.fullName,
+          email: body.email,
+          phoneNumber: body.phoneNumber,
+          university: body.university,
+          mainCategory: body.mainCategory,
+          subCategory: body.subCategory,
+        },
+      });
+
       if (regError.code === "23505") {
         return NextResponse.json({ success: false, error: "You are already registered for this specific event." }, { status: 409 });
       }
-      logger.error("Flat Registration Insert Error", regError);
       return NextResponse.json({ success: false, error: "Registration failed." }, { status: 500 });
     }
 
