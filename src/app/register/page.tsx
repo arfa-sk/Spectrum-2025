@@ -75,6 +75,19 @@ const subCategories: SubCategories = {
   ]
 };
 
+const eSportsFivePlayerGames = ["Counter-Strike 2", "Valorant"];
+const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
+
+const getRequiredTeamMembersCount = (mainCategory: string, subCategory: string): number => {
+  if (mainCategory === "Hackathon") return 2;
+  if (mainCategory === "Spectrum Startup Arena") return 3;
+  if (mainCategory === "E-Sports") {
+    if (eSportsFivePlayerGames.includes(subCategory)) return 4;
+    if (teamESportsGames.includes(subCategory)) return 3;
+  }
+  return 0;
+};
+
 export default function RegisterPage() {
   const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
@@ -89,6 +102,7 @@ export default function RegisterPage() {
     subCategory: "",
     teamName: "",
     teamMembersDetails: [
+      { name: "", phoneNumber: "" },
       { name: "", phoneNumber: "" },
       { name: "", phoneNumber: "" },
       { name: "", phoneNumber: "" }
@@ -106,6 +120,7 @@ export default function RegisterPage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [teamLogo, setTeamLogo] = useState<File | null>(null);
   const [termsError, setTermsError] = useState<string | null>(null);
+  const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory);
 
   // Phase 1: Scalability improvements
   const lastSubmissionTimeRef = useRef<number>(0);
@@ -305,17 +320,8 @@ export default function RegisterPage() {
     }
 
     // Team validation
-    const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
-    
-    const isHackathonTeam = 
-      formData.mainCategory === "Hackathon" && 
-      (formData.subCategory === "AI & DS Hackathon" || formData.subCategory === "Build & Pitch Hackathon");
-
-    const isTeamEvent = 
-      isHackathonTeam ||
-      formData.mainCategory === "Spectrum Startup Arena" ||
-      (formData.mainCategory === "E-Sports" && teamESportsGames.includes(formData.subCategory)) ||
-      (formData.mainCategory === "Hackathon" && formData.subCategory === "Competitive Programming" && (formData.teamName || formData.teamMembersDetails[0].name.trim() || formData.teamMembersDetails[1].name.trim()));
+    const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory);
+    const isTeamEvent = requiredTeamMemberCount > 0;
 
     if (isTeamEvent) {
       if (!formData.teamName || !formData.teamName.trim()) {
@@ -329,16 +335,11 @@ export default function RegisterPage() {
           newErrors.teamName = "Teams require at least 2 members. Please fill in details for Member 2.";
         }
       } else {
-        // Check if any member field is empty (for non-hackathon E-Sports team events)
-        let hasIncompleteMember = false;
-        formData.teamMembersDetails.forEach(member => {
-          if (!member.name.trim() || !member.phoneNumber.trim()) {
-            hasIncompleteMember = true;
-          }
-        });
-        
+        // Check if required additional member fields are all filled
+        const membersToValidate = formData.teamMembersDetails.slice(0, requiredTeamMemberCount);
+        const hasIncompleteMember = membersToValidate.some(member => !member.name.trim() || !member.phoneNumber.trim());
         if (hasIncompleteMember) {
-          newErrors.teamName = "Teams require exactly 4 members. If you have fewer members, contact Team Spectrum for further guidelines.";
+          newErrors.teamName = `Teams require ${requiredTeamMemberCount + 1} players. Please fill in details for all ${requiredTeamMemberCount} additional members.`;
         }
       }
     }
@@ -873,8 +874,7 @@ export default function RegisterPage() {
                 </div>
 
                  {/* Team Information Section */}
-                 {((["Hackathon", "Spectrum Startup Arena"].includes(formData.mainCategory)) || 
-                   (formData.mainCategory === "E-Sports" && ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"].includes(formData.subCategory))) && (
+                 {requiredTeamMemberCount > 0 && (
                  <div className="pt-6 border-t-2 border-gray-200">
                    <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
                      <FaUsers className="text-[#FFD700]" />
@@ -918,13 +918,13 @@ export default function RegisterPage() {
                      <div>
                        <h3 className="text-lg font-bold mb-4">Team Members Details</h3>
                        <p className="text-sm text-gray-600 mb-4 font-semibold">
-                         Leader is Player 1. {formData.mainCategory === "Hackathon" 
-                           ? "Please provide details for Member 2 (and Member 3 if registering as a triplet)." 
-                           : "Please provide details for the remaining 3 members."}
+                         Leader is Player 1. {formData.mainCategory === "Hackathon"
+                           ? "Please provide details for Member 2 (and Member 3 if registering as a triplet)."
+                           : `Please provide details for the remaining ${requiredTeamMemberCount} member${requiredTeamMemberCount === 1 ? "" : "s"}.`}
                        </p>
                        
                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                         {(formData.mainCategory === "Hackathon" ? [0, 1] : [0, 1, 2]).map((index) => (
+                         {Array.from({ length: requiredTeamMemberCount }, (_, index) => index).map((index) => (
                            <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
                              <h4 className="font-bold text-sm mb-3 text-[#FFD700] bg-black inline-block px-3 py-1 rounded">Member {index + 2}</h4>
                              <div className="space-y-3">

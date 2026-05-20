@@ -112,11 +112,11 @@ const EVENT_CONFIG: Record<
   counterstrike: {
     title: "Counter-Strike 2 Showdown",
     description:
-      "Tactical shooting reaches its peak in Counter-Strike 2. Perfect your smoke executes, coordinate site takes, and showcase absolute precision aiming. Compete under official competitive guidelines in a 4-player squad.",
+      "Tactical shooting reaches its peak in Counter-Strike 2. Perfect your smoke executes, coordinate site takes, and showcase absolute precision aiming. Compete under official competitive guidelines in a 5-player squad.",
     date: "April 9, 2026",
     time: "10:00 AM - 7:00 PM",
     location: "PC Gaming Lab, DSU Campus",
-    format: "4v4 Squad (Team)",
+    format: "5v5 Squad (Team)",
     duration: "Best of 3 Brackets",
     prize: "Rs 120K",
     registrationFee: "Rs. 2000 per team",
@@ -130,11 +130,11 @@ const EVENT_CONFIG: Record<
   valorant: {
     title: "Valorant Spike Clash",
     description:
-      "Defy limits and claim your radiant rank. Valorant at Spectrum V1 brings intense tactical FPS action where mechanical skill meets tactical agency. Coordinate utility and execute perfect strategies with your 4-player team.",
+      "Defy limits and claim your radiant rank. Valorant at Spectrum V1 brings intense tactical FPS action where mechanical skill meets tactical agency. Coordinate utility and execute perfect strategies with your 5-player team.",
     date: "April 9, 2026",
     time: "9:00 AM - 8:00 PM",
     location: "PC Gaming Lab, DSU Campus",
-    format: "4v4 Squad (Team)",
+    format: "5v5 Squad (Team)",
     duration: "Best of 3 Finals",
     prize: "Rs 120K",
     registrationFee: "Rs. 2000 per team",
@@ -144,7 +144,7 @@ const EVENT_CONFIG: Record<
     bgA: "from-cyan-400",
     bgB: "to-blue-500",
     accent: "text-cyan-600",
-  },
+  }
 };
 
 type PageProps = { params: Promise<{ event: string }> };
