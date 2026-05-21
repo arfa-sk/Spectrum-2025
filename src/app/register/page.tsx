@@ -53,7 +53,7 @@ const subCategories: SubCategories = {
   "Hackathon": [
     "Competitive Programming",
     "AI & DS Hackathon",
-    "Build & Pitch Hackathon"
+    "Vibe & Pitch Hackathon"
   ],
   "Play To Win": [
     "Singing",
@@ -78,8 +78,12 @@ const subCategories: SubCategories = {
 const eSportsFivePlayerGames = ["Counter-Strike 2", "Valorant"];
 const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
 
-const getRequiredTeamMembersCount = (mainCategory: string, subCategory: string): number => {
-  if (mainCategory === "Hackathon") return 2;
+const getRequiredTeamMembersCount = (mainCategory: string, subCategory: string, hackathonFormat?: string): number => {
+  if (mainCategory === "Hackathon") {
+    if (hackathonFormat === "Solo") return 0;
+    if (hackathonFormat === "Duo") return 1;
+    return 2; // Triplet
+  }
   if (mainCategory === "Spectrum Startup Arena") return 3;
   if (mainCategory === "E-Sports") {
     if (eSportsFivePlayerGames.includes(subCategory)) return 4;
@@ -120,7 +124,8 @@ export default function RegisterPage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [teamLogo, setTeamLogo] = useState<File | null>(null);
   const [termsError, setTermsError] = useState<string | null>(null);
-  const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory);
+  const [hackathonFormat, setHackathonFormat] = useState<string>("Solo");
+  const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory, hackathonFormat);
 
   // Phase 1: Scalability improvements
   const lastSubmissionTimeRef = useRef<number>(0);
@@ -144,7 +149,7 @@ export default function RegisterPage() {
       const trackMap: Record<string, string> = {
         "competitive-programming": "Competitive Programming",
         "ai-ds-hackathon": "AI & DS Hackathon",
-        "vibe-and-pitch": "Build & Pitch Hackathon"
+        "vibe-and-pitch": "Vibe & Pitch Hackathon"
       };
 
       if (category === "Qawali") {
@@ -320,7 +325,7 @@ export default function RegisterPage() {
     }
 
     // Team validation
-    const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory);
+    const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory, hackathonFormat);
     const isTeamEvent = requiredTeamMemberCount > 0;
 
     if (isTeamEvent) {
@@ -328,17 +333,13 @@ export default function RegisterPage() {
         newErrors.teamName = "Team name is required for team-based events";
       }
       
-      // Relax validation for Hackathon tracks (min 2 members total, i.e. at least member 2 field filled)
-      if (formData.mainCategory === "Hackathon") {
-        const firstMember = formData.teamMembersDetails[0];
-        if (!firstMember.name.trim() || !firstMember.phoneNumber.trim()) {
-          newErrors.teamName = "Teams require at least 2 members. Please fill in details for Member 2.";
-        }
-      } else {
-        // Check if required additional member fields are all filled
-        const membersToValidate = formData.teamMembersDetails.slice(0, requiredTeamMemberCount);
-        const hasIncompleteMember = membersToValidate.some(member => !member.name.trim() || !member.phoneNumber.trim());
-        if (hasIncompleteMember) {
+      // Check if required additional member fields are all filled
+      const membersToValidate = formData.teamMembersDetails.slice(0, requiredTeamMemberCount);
+      const hasIncompleteMember = membersToValidate.some(member => !member.name.trim() || !member.phoneNumber.trim());
+      if (hasIncompleteMember) {
+        if (formData.mainCategory === "Hackathon") {
+          newErrors.teamName = `Please fill in details for all selected team members (Member ${requiredTeamMemberCount === 1 ? "2" : "2 and 3"}).`;
+        } else {
           newErrors.teamName = `Teams require ${requiredTeamMemberCount + 1} players. Please fill in details for all ${requiredTeamMemberCount} additional members.`;
         }
       }
@@ -868,6 +869,26 @@ export default function RegisterPage() {
                             {errors.subCategory}
                           </p>
                         )}
+                      </div>
+                    )}
+
+                    {/* Participation Format */}
+                    {formData.mainCategory === "Hackathon" && (
+                      <div>
+                        <label className="block text-sm font-bold mb-2">
+                          Participation Format <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={hackathonFormat}
+                            onChange={(e) => setHackathonFormat(e.target.value)}
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all appearance-none bg-white cursor-pointer"
+                          >
+                            <option value="Solo">Solo (1 Participant)</option>
+                            <option value="Duo">Duo (2 Participants)</option>
+                            <option value="Triplet">Triplet (3 Participants)</option>
+                          </select>
+                        </div>
                       </div>
                     )}
                   </div>

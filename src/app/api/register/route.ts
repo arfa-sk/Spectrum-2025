@@ -59,13 +59,12 @@ function validateRegistration(data: Partial<RegistrationRequest>): {
   const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
   const isHackathonTeam = 
     data.mainCategory === "Hackathon" && 
-    (data.subCategory === "AI & DS Hackathon" || data.subCategory === "Build & Pitch Hackathon");
+    (!!data.teamName?.trim() || (!!data.teamMembersDetails && data.teamMembersDetails.some((m: any) => m.name?.trim())));
 
   const isTeamEvent = 
     isHackathonTeam ||
     data.mainCategory === "Spectrum Startup Arena" ||
-    (data.mainCategory === "E-Sports" && teamESportsGames.includes(data.subCategory || "")) ||
-    (data.mainCategory === "Hackathon" && data.subCategory === "Competitive Programming" && (data.teamName || (data.teamMembersDetails && data.teamMembersDetails[0]?.name?.trim())));
+    (data.mainCategory === "E-Sports" && teamESportsGames.includes(data.subCategory || ""));
 
   if (isTeamEvent) {
     if (!data.teamName || !data.teamName.trim()) {

@@ -20,7 +20,7 @@ export interface HackathonTrack {
   judgingCriteria: { metric: string; weight: string; description: string }[];
   timeline: { time: string; event: string }[];
   
-  // Custom rich details
+  handbookUrl?: string;
   eventConcept?: string;
   toolsAllowed?: string;
   pitchFormat?: { duration: string; label: string; description: string }[];
@@ -36,10 +36,10 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
   "competitive-programming": {
     id: "competitive-programming",
     title: "Competitive Programming",
-    tagline: "Spectrum 26 · DHA Suffa University · 2-Day Event",
-    description: "Solve algorithmic puzzles under timed conditions. Top 40% advance from Day 1 to Day 2.",
+    tagline: "Speed Programming Arena · DHA Suffa University · 2-Day Event",
+    description: "Race against the clock to solve complex algorithmic puzzles, optimize data structures, and debug under intense pressure. Go head-to-head with the region's top programmers. Only the top 40% of scorers from the Day 1 preliminary round will advance to the high-stakes Day 2 Grand Finals.",
     prizePool: "Rs. 30,000",
-    entryFee: "Solo: Rs. 500 | Duo: Rs. 750 | Triplet: Rs. 1,000",
+    entryFee: "Solo: Rs. 500 | Duo: Rs. 1,000 | Triplet: Rs. 1,500",
     format: "Solo, Duo, or Triplet",
     duration: "2-Day Event",
     teamSize: "1 – 3 participants",
@@ -51,6 +51,7 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
     accentColor: "#3B82F6",
     image: "/modules/speed-programming.png",
     imagePosition: "center",
+    handbookUrl: "/handbooks/competitive-programming.pdf",
     eventConcept: "Teams solve timed algorithm challenges across 4–5 labs. Submissions are automatically scored and top entries are manually checked for integrity.",
     toolsAllowed: "No AI tools, ChatGPT, or external search allowed. Standard IDE compilers for C++, Python, and Java are pre-configured.",
     rules: [
@@ -80,16 +81,71 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
       "3-4 proctors per lab; Competition Head holds final disqualification authority."
     ]
   },
+  "vibe-and-pitch": {
+    id: "vibe-and-pitch",
+    title: "Vibe & Pitch Hackathon",
+    tagline: "Pre-Seed Startup & MVP Software Sprint · 2-Day Event",
+    description: "An intensive software sprint where raw ideas transform into working products. Formulate a solution to a real-world problem, build a functional MVP using your choice of modern tech stacks, and deliver a compelling startup-style pitch to industry founders.",
+    prizePool: "Exciting Cash Awards + Startup Incubation",
+    entryFee: "Solo: Rs. 500 | Duo: Rs. 1,000 | Triplet: Rs. 1,500",
+    format: "Solo, Duo, or Triplet",
+    duration: "2-Day Event",
+    teamSize: "1 – 3 participants",
+    location: "DHA Suffa University Campus",
+    date: "May 25-26, 2026",
+    time: "09:00 AM",
+    iconName: "FaRocket",
+    bgGradient: "from-amber-950 via-slate-900 to-black",
+    accentColor: "#F59E0B",
+    image: "/modules/web-development.png",
+    imagePosition: "center",
+    handbookUrl: "/handbooks/vibe-and-pitch.pdf",
+    eventConcept: "Teams build a working product and pitch it as a market-ready concept. Judging focuses on viability, clarity, and business potential.",
+    toolsAllowed: "Open toolset: AI, no-code, web frameworks, APIs, and all platforms are allowed.",
+    rules: [
+      "Any tool, framework, AI model, or platform is permitted.",
+      "Solo, duo, or triplet entries are allowed (1 to 3 participants).",
+      "All building must occur on Day 1 during official hours; pre-built projects are disqualified.",
+      "Live demo is mandatory on Day 2; video recordings or slide-only pitches won't score.",
+      "Teams may not share code, designs, or ideas with other teams during build day."
+    ],
+    timeline: [
+      { time: "1 Week Before", event: "Broad vertical announced (e.g. local services, education) to think about problems." },
+      { time: "Day 1 — Build", event: "9:00 AM - 6:00 PM. Hard code freeze. Submit URL/Github/APK and problem statement before midnight." },
+      { time: "Day 2 — Pitch", event: "Morning onwards. Live pitching in randomized order to industry judges panel." },
+      { time: "Day 2 — Afternoon", event: "Winners announced. Public judge feedback session for all teams." }
+    ],
+    pitchFormat: [
+      { duration: "5 Min", label: "Live Demo + Pitch", description: "Show the product running live (no videos; slides optional, demo mandatory)" },
+      { duration: "3 Min", label: "Judge Q&A", description: "Judges probe use case, market size, business model, and edge cases" },
+      { duration: "2 Min", label: "Transition Buffer", description: "Reset, score recording, next team sets up" }
+    ],
+    judgingCriteria: [
+      { metric: "Problem & Use Case", weight: "30%", description: "Is this a real problem? Specific target user? Evidence the problem exists?" },
+      { metric: "Product-Market Fit", weight: "25%", description: "Credible estimate of who pays, clear timing value prop, differentiation from alternatives." },
+      { metric: "Product & Usability", weight: "25%", description: "Core flow works live. Coherent UX. Demonstrates value directly without handholding." },
+      { metric: "Scalability & Sense", weight: "20%", description: "Coherent monetization, thoughts beyond the demo, response to operational limitations." }
+    ],
+    mentorSetup: [
+      "2-3 mentors (founders, product leads, alumni) circulate to help unblock tech or business framing.",
+      "Mentors may not write code, design screens, or make product decisions.",
+      "Optional 30-minute mid-day check-in available to any team that requests it."
+    ],
+    prizeSplitDetails: [
+      { place: "Top Teams", prize: "Cash Rewards pool share + Certificate" },
+      { place: "Incubation", prize: "VC Incubation opportunities & mentor credits" }
+    ]
+  },
   "ai-ds-hackathon": {
     id: "ai-ds-hackathon",
     title: "AI & DS Hackathon",
-    tagline: "Data innovation challenge at DHA Suffa",
-    description: "Build a dataset solution in two days and pitch your insights.",
+    tagline: "Advanced Machine Learning & Data Challenge · 2-Day Event",
+    description: "Tackle complex real-world datasets. Clean noisy data, engineer predictive features, build robust machine learning models, and translate technical metrics into high-impact business strategies. Present your pipeline and insights directly to industry judges.",
     prizePool: "Exciting Cash Awards + Certificates",
-    entryFee: "Rs. 500 per team",
-    format: "Duo or Triplet only",
+    entryFee: "Solo: Rs. 500 | Duo: Rs. 1,000 | Triplet: Rs. 1,500",
+    format: "Solo, Duo, or Triplet",
     duration: "2-Day Event",
-    teamSize: "2 – 3 participants per team",
+    teamSize: "1 – 3 participants",
     location: "DHA Suffa University IT Labs",
     date: "May 25-26, 2026",
     time: "09:00 AM",
@@ -98,6 +154,7 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
     accentColor: "#A855F7",
     image: "/modules/data-science.png",
     imagePosition: "center 30%",
+    handbookUrl: "/handbooks/ai-ds-hackathon.pdf",
     eventConcept: "Analyze a dataset, build a model or insight, and present a clear solution.",
     toolsAllowed: "Python, Jupyter Notebook / Colab, and common data libraries. Public pre-trained models may be cited.",
     rules: [
@@ -140,60 +197,6 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
       { place: "2nd Place", prize: "Cash Prize + DSU Certificate" },
       { place: "3rd Place", prize: "DSU Certificate + Goodies" },
       { place: "Best Insight", prize: "Special Judge Award + LinkedIn Feature" }
-    ]
-  },
-  "vibe-and-pitch": {
-    id: "vibe-and-pitch",
-    title: "Build & Pitch Hackathon",
-    tagline: "Spectrum 26 · DHA Suffa University · 2-Day Event",
-    description: "Build a real product for a real problem and pitch it like a pre-seed startup.",
-    prizePool: "Exciting Cash Awards + Startup Incubation",
-    entryFee: "Rs. 1,500 per team",
-    format: "Duo or Triplet only",
-    duration: "2-Day Event",
-    teamSize: "2 – 3 participants per team",
-    location: "DHA Suffa University Campus",
-    date: "May 25-26, 2026",
-    time: "09:00 AM",
-    iconName: "FaRocket",
-    bgGradient: "from-amber-950 via-slate-900 to-black",
-    accentColor: "#F59E0B",
-    image: "/modules/web-development.png",
-    imagePosition: "center",
-    eventConcept: "Teams build a working product and pitch it as a market-ready concept. Judging focuses on viability, clarity, and business potential.",
-    toolsAllowed: "Open toolset: AI, no-code, web frameworks, APIs, and all platforms are allowed.",
-    rules: [
-      "Any tool, framework, AI model, or platform is permitted.",
-      "Solo entries not accepted; teams of 2 or 3 only.",
-      "All building must occur on Day 1 during official hours; pre-built projects are disqualified.",
-      "Live demo is mandatory on Day 2; video recordings or slide-only pitches won't score.",
-      "Teams may not share code, designs, or ideas with other teams during build day."
-    ],
-    timeline: [
-      { time: "1 Week Before", event: "Broad vertical announced (e.g. local services, education) to think about problems." },
-      { time: "Day 1 — Build", event: "9:00 AM - 6:00 PM. Hard code freeze. Submit URL/Github/APK and problem statement before midnight." },
-      { time: "Day 2 — Pitch", event: "Morning onwards. Live pitching in randomized order to industry judges panel." },
-      { time: "Day 2 — Afternoon", event: "Winners announced. Public judge feedback session for all teams." }
-    ],
-    pitchFormat: [
-      { duration: "5 Min", label: "Live Demo + Pitch", description: "Show the product running live (no videos; slides optional, demo mandatory)" },
-      { duration: "3 Min", label: "Judge Q&A", description: "Judges probe use case, market size, business model, and edge cases" },
-      { duration: "2 Min", label: "Transition Buffer", description: "Reset, score recording, next team sets up" }
-    ],
-    judgingCriteria: [
-      { metric: "Problem & Use Case", weight: "30%", description: "Is this a real problem? Specific target user? Evidence the problem exists?" },
-      { metric: "Product-Market Fit", weight: "25%", description: "Credible estimate of who pays, clear timing value prop, differentiation from alternatives." },
-      { metric: "Product & Usability", weight: "25%", description: "Core flow works live. Coherent UX. Demonstrates value directly without handholding." },
-      { metric: "Scalability & Sense", weight: "20%", description: "Coherent monetization, thoughts beyond the demo, response to operational limitations." }
-    ],
-    mentorSetup: [
-      "2-3 mentors (founders, product leads, alumni) circulate to help unblock tech or business framing.",
-      "Mentors may not write code, design screens, or make product decisions.",
-      "Optional 30-minute mid-day check-in available to any team that requests it."
-    ],
-    prizeSplitDetails: [
-      { place: "Top Teams", prize: "Cash Rewards pool share + Certificate" },
-      { place: "Incubation", prize: "VC Incubation opportunities & mentor credits" }
     ]
   }
 };
