@@ -84,7 +84,7 @@ export default function HackathonPage() {
                   <FaTrophy className="text-[#C5A100] text-xl" />
                   <div className="text-left">
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Combined Reward Pool</p>
-                    <p className="text-sm font-bold text-black">Rs. 200,000 Cash Award</p>
+                    <p className="text-sm font-bold text-black">Rs. 100,000 Cash Award</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 px-5 py-3 border-2 border-black rounded-2xl bg-white shadow-md">

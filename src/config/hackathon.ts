@@ -19,7 +19,7 @@ export interface HackathonTrack {
   rules: string[];
   judgingCriteria: { metric: string; weight: string; description: string }[];
   timeline: { time: string; event: string }[];
-  
+
   handbookUrl?: string;
   eventConcept?: string;
   toolsAllowed?: string;
@@ -86,7 +86,7 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
     title: "Vibe & Pitch Hackathon",
     tagline: "Pre-Seed Startup & MVP Software Sprint · 2-Day Event",
     description: "An intensive software sprint where raw ideas transform into working products. Formulate a solution to a real-world problem, build a functional MVP using your choice of modern tech stacks, and deliver a compelling startup-style pitch to industry founders.",
-    prizePool: "Exciting Cash Awards + Startup Incubation",
+    prizePool: "Rs. 40,000",
     entryFee: "Solo: Rs. 500 | Duo: Rs. 1,000 | Triplet: Rs. 1,500",
     format: "Solo, Duo, or Triplet",
     duration: "2-Day Event",
@@ -132,7 +132,8 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
       "Optional 30-minute mid-day check-in available to any team that requests it."
     ],
     prizeSplitDetails: [
-      { place: "Top Teams", prize: "Cash Rewards pool share + Certificate" },
+      { place: "Winner", prize: "Rs. 25,000 + Certificate" },
+      { place: "Runner-up", prize: "Rs. 15,000 + Certificate" },
       { place: "Incubation", prize: "VC Incubation opportunities & mentor credits" }
     ]
   },
@@ -141,7 +142,7 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
     title: "AI & DS Hackathon",
     tagline: "Advanced Machine Learning & Data Challenge · 2-Day Event",
     description: "Tackle complex real-world datasets. Clean noisy data, engineer predictive features, build robust machine learning models, and translate technical metrics into high-impact business strategies. Present your pipeline and insights directly to industry judges.",
-    prizePool: "Exciting Cash Awards + Certificates",
+    prizePool: "Rs. 30,000",
     entryFee: "Solo: Rs. 500 | Duo: Rs. 1,000 | Triplet: Rs. 1,500",
     format: "Solo, Duo, or Triplet",
     duration: "2-Day Event",
@@ -193,10 +194,9 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
       "Optional 30-minute mid-day check-in is available for quick approach gut-check."
     ],
     prizeSplitDetails: [
-      { place: "1st Place", prize: "Cash Prize + DSU Certificate" },
-      { place: "2nd Place", prize: "Cash Prize + DSU Certificate" },
-      { place: "3rd Place", prize: "DSU Certificate + Goodies" },
-      { place: "Best Insight", prize: "Special Judge Award + LinkedIn Feature" }
+      { place: "Winner", prize: "Rs. 20,000 + DSU Certificate" },
+      { place: "Runner-up", prize: "Rs. 10,000 + DSU Certificate" },
+      { place: "3rd Place", prize: "DSU Certificate + Goodies" }
     ]
   }
 };
