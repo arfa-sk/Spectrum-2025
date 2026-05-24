@@ -179,9 +179,15 @@ export default function RegisterPage() {
 
   // Phase 1: Scalability improvements
   const lastSubmissionTimeRef = useRef<number>(0);
-  const submissionCooldownMs = 3000; // 3 seconds cooldown between submissions
-  const maxRetries = 2;
-  const retryAttemptRef = useRef<number>(0);
+  const submissionCooldownMs = 3000;
+
+  const [showStatusCheck, setShowStatusCheck] = useState(false);
+  const [statusCheckEmail, setStatusCheckEmail] = useState("");
+  const [statusCheckLoading, setStatusCheckLoading] = useState(false);
+  const [statusCheckResult, setStatusCheckResult] = useState<{
+    type: "registered" | "not_registered" | "error";
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     return () => {
@@ -272,75 +278,136 @@ export default function RegisterPage() {
     }
   }, []);
 
-  // Phase 2: Submit via API route with retry logic
+  // Submit registration (single attempt — no auto-retry to avoid duplicates)
   const submitViaAPI = async (
-    teamLogoUrl: string | null,
-    attempt: number = 0
-  ): Promise<{ success: boolean; message: string }> => {
-    const delay = Math.min(1000 * Math.pow(2, attempt), 5000);
+    teamLogoUrl: string | null
+  ): Promise<{ success: boolean; message: string; registrationId?: string }> => {
+    const payload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      university: formData.university,
+      department: formData.department || undefined,
+      rollNumber: formData.rollNumber || undefined,
+      mainCategory: formData.mainCategory,
+      subCategory: formData.subCategory || undefined,
+      teamName: formData.teamName || undefined,
+      teamMembersDetails: formData.teamMembersDetails,
+      termsAccepted,
+      teamLogoUrl: teamLogoUrl || undefined,
+      projectIdea: formData.projectIdea || undefined,
+      githubLink: formData.githubLink || undefined,
+      techStack: formData.techStack || undefined,
+      problemStatement: formData.problemStatement || undefined,
+      teamRoles: formData.teamRoles || undefined,
+    };
 
-    if (attempt > 0) {
-      setSubmitMessage(`Retrying registration... (${attempt}/${maxRetries})`);
-      await new Promise((resolve) => setTimeout(resolve, delay));
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await parseRegisterApiResponse(response);
+
+    if (response.status === 429) {
+      const retryAfter = String(data.retryAfter ?? response.headers.get("Retry-After") ?? "300");
+      throw new Error(
+        `Too many registration attempts. Please wait ${retryAfter} seconds before trying again.`
+      );
     }
 
-    try {
-      const payload = {
-        fullName: formData.fullName,
+    if (response.status === 409 || data.alreadyRegistered) {
+      throw new Error(
+        String(
+          data.error ??
+            `You are already registered for ${formData.mainCategory} — ${formData.subCategory || "General"}. You don't need to sign up again for this event.`
+        )
+      );
+    }
+
+    if (!response.ok || !data.success) {
+      throw new Error(String(data.error ?? data.message ?? "Registration failed"));
+    }
+
+    const registrationData = data.data as { id?: string; email?: string } | undefined;
+
+    return {
+      success: true,
+      message: String(data.message ?? "Registration successful!"),
+      registrationId: registrationData?.id,
+    };
+  };
+
+  const attachTeamLogo = async (registrationId: string, logoUrl: string) => {
+    const response = await fetch("/api/register/logo", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        registrationId,
         email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        university: formData.university,
-        department: formData.department || undefined,
-        rollNumber: formData.rollNumber || undefined,
+        teamLogoUrl: logoUrl,
+      }),
+    });
+
+    const data = await parseRegisterApiResponse(response);
+    if (!response.ok || !data.success) {
+      throw new Error(String(data.error ?? "Could not save team logo."));
+    }
+  };
+
+  const handleCheckRegistrationStatus = async () => {
+    const email = (statusCheckEmail || formData.email).trim();
+    if (!email) {
+      setStatusCheckResult({ type: "error", message: "Please enter your email address." });
+      return;
+    }
+    if (!formData.mainCategory) {
+      setStatusCheckResult({ type: "error", message: "Please select an event category first." });
+      return;
+    }
+    if (!formData.subCategory && subCategories[formData.mainCategory]?.length) {
+      setStatusCheckResult({ type: "error", message: "Please select a sub-category first." });
+      return;
+    }
+
+    setStatusCheckLoading(true);
+    setStatusCheckResult(null);
+
+    try {
+      const params = new URLSearchParams({
+        email,
         mainCategory: formData.mainCategory,
-        subCategory: formData.subCategory || undefined,
-        teamName: formData.teamName || undefined,
-        teamMembersDetails: formData.teamMembersDetails,
-        termsAccepted,
-        teamLogoUrl: teamLogoUrl || undefined,
-        projectIdea: formData.projectIdea || undefined,
-        githubLink: formData.githubLink || undefined,
-        techStack: formData.techStack || undefined,
-        problemStatement: formData.problemStatement || undefined,
-        teamRoles: formData.teamRoles || undefined,
-      };
-
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        subCategory: formData.subCategory || "General",
       });
-
+      const response = await fetch(`/api/register/status?${params.toString()}`);
       const data = await parseRegisterApiResponse(response);
 
-      // Handle rate limiting (429)
-      if (response.status === 429) {
-        const retryAfter = String(data.retryAfter ?? response.headers.get("Retry-After") ?? "300");
-        throw new Error(
-          `Too many registration attempts. Please wait ${retryAfter} seconds before trying again.`
-        );
-      }
-
-      // Handle other errors
       if (!response.ok || !data.success) {
-        throw new Error(String(data.error ?? data.message ?? "Registration failed"));
+        throw new Error(String(data.error ?? "Could not check registration status."));
       }
 
-      // Success - reset retry counter
-      retryAttemptRef.current = 0;
-      return { success: true, message: String(data.message ?? "Registration successful!") };
+      if (data.registered) {
+        setStatusCheckResult({
+          type: "registered",
+          message: `Yes — you're registered for ${String(data.event ?? "this event")}. No need to submit again.`,
+        });
+      } else {
+        setStatusCheckResult({
+          type: "not_registered",
+          message: `Not registered yet for ${String(data.event ?? "this event")}. You can submit the form below.`,
+        });
+      }
     } catch (error: unknown) {
-      const retryable =
-        error instanceof Error &&
-        isNetworkFailure(error.message) &&
-        !error.message.toLowerCase().includes("too many") &&
-        !error.message.toLowerCase().includes("rate limit");
-
-      if (retryable && attempt < maxRetries) {
-        return submitViaAPI(teamLogoUrl, attempt + 1);
-      }
-
-      throw error;
+      setStatusCheckResult({
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Could not check registration status. Please try again.",
+      });
+    } finally {
+      setStatusCheckLoading(false);
     }
   };
 
@@ -472,32 +539,26 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
     lastSubmissionTimeRef.current = now;
-    retryAttemptRef.current = 0;
 
     try {
-      let teamLogoUrl: string | null = null;
+      setSubmitMessage("Submitting registration...");
+      const result = await submitViaAPI(null);
 
-      if (teamLogo) {
-        setSubmitMessage("Uploading team logo...");
+      let successMessage = result.message || "Registration successful! Redirecting to confirmation page...";
+
+      if (teamLogo && result.registrationId) {
+        setSubmitMessage("Registration saved. Uploading team logo...");
         try {
-          teamLogoUrl = await uploadTeamLogo(teamLogo);
-        } catch (logoErr: unknown) {
-          const logoMessage =
-            logoErr instanceof Error
-              ? logoErr.message
-              : "Could not upload team logo. Please try again or register without a logo.";
-          setSubmitStatus("error");
-          setLogoError(logoMessage);
-          setSubmitMessage(logoMessage);
-          return;
+          const logoUrl = await uploadTeamLogo(teamLogo);
+          await attachTeamLogo(result.registrationId, logoUrl);
+        } catch {
+          successMessage =
+            "Registration successful! We couldn't attach your team logo — please contact spectrum2026.dsu@gmail.com if you need to add it.";
         }
       }
 
-      setSubmitMessage("Submitting registration...");
-      const result = await submitViaAPI(teamLogoUrl, 0);
-
       setSubmitStatus("success");
-      setSubmitMessage(result.message || "Registration successful! Redirecting to confirmation page...");
+      setSubmitMessage(successMessage);
       
       setTimeout(() => {
         try {
@@ -589,10 +650,17 @@ export default function RegisterPage() {
         message = "Registration is currently unavailable due to security configuration. Please contact support or try again later.";
       }
       // Duplicate email errors
-      else if (errorCode === "23505" || errorMessage.includes("duplicate key") || errorMessage.includes("already exists") || errorMessage.includes("unique constraint") || errorMessage.includes("already registered")) {
-        message = errorMessage.includes("already registered")
+      else if (
+        errorCode === "23505" ||
+        errorMessage.includes("duplicate key") ||
+        errorMessage.includes("already exists") ||
+        errorMessage.includes("unique constraint") ||
+        errorMessage.includes("already registered") ||
+        errorMessage.includes("don't need to sign up again")
+      ) {
+        message = errorMessage.includes("already registered") || errorMessage.includes("don't need to sign up again")
           ? errorMessage
-          : "This email is already registered. Please use a different email address.";
+          : `You are already registered for ${formData.mainCategory}${formData.subCategory ? ` — ${formData.subCategory}` : ""}. You don't need to sign up again for this event.`;
       }
       // Server-side registration errors
       else if (
@@ -631,7 +699,8 @@ export default function RegisterPage() {
       }
       // Real network / timeout failures (request never completed)
       else if (isNetworkFailure(errorMessage)) {
-        message = "Could not reach the registration server. Please check your internet connection and try again.";
+        message =
+          "We couldn't confirm your registration. Please use 'Check my registration' below before submitting again.";
       }
       // Invalid subcategory errors
       else if (errorMessage.includes("Invalid subcategory") || errorMessage.includes("subcategory")) {
@@ -758,6 +827,56 @@ export default function RegisterPage() {
             }}
           >
             <div className="bg-white rounded-3xl border-2 border-[#FFD700]/30 shadow-[0_0_50px_rgba(255,215,0,0.2)] p-8 md:p-12">
+              {/* Check registration status */}
+              <div className="mb-8 pb-8 border-b border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => setShowStatusCheck((prev) => !prev)}
+                  className="text-sm font-bold text-gray-700 hover:text-black underline underline-offset-2"
+                >
+                  {showStatusCheck ? "Hide registration check" : "Already submitted? Check if you're registered"}
+                </button>
+
+                {showStatusCheck && (
+                  <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
+                    <p className="text-sm text-gray-600">
+                      Unsure if your registration went through? Check here before submitting again.
+                    </p>
+                    <input
+                      type="email"
+                      placeholder="Your email address"
+                      value={statusCheckEmail || formData.email}
+                      onChange={(e) => setStatusCheckEmail(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] outline-none"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Uses the event category and sub-category selected in the form below.
+                    </p>
+                    <button
+                      type="button"
+                      disabled={statusCheckLoading}
+                      onClick={() => void handleCheckRegistrationStatus()}
+                      className="px-5 py-2.5 bg-black text-[#FFD700] font-bold rounded-lg hover:bg-gray-900 disabled:opacity-60"
+                    >
+                      {statusCheckLoading ? "Checking..." : "Check my registration"}
+                    </button>
+                    {statusCheckResult && (
+                      <p
+                        className={`text-sm font-semibold ${
+                          statusCheckResult.type === "registered"
+                            ? "text-green-700"
+                            : statusCheckResult.type === "not_registered"
+                              ? "text-blue-700"
+                              : "text-red-600"
+                        }`}
+                      >
+                        {statusCheckResult.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Immersive V3 Visual Checkout Banner */}
                 {(formData.mainCategory === "Qawali Night" || formData.mainCategory === "Special Deals") && (

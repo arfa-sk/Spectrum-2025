@@ -260,17 +260,39 @@ export async function POST(request: NextRequest) {
 
     const teamMembersText = buildTeamMembersText(body);
 
+    const normalizedEmail = body.email.toLowerCase().trim();
+    const subCategory = body.subCategory || "General";
+
+    const { data: existingRegistration } = await supabaseServer
+      .from("registrations")
+      .select("id")
+      .eq("email", normalizedEmail)
+      .eq("main_category", body.mainCategory)
+      .eq("sub_category", subCategory)
+      .maybeSingle();
+
+    if (existingRegistration) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `You are already registered for ${body.mainCategory} — ${subCategory}. You don't need to sign up again for this event.`,
+          alreadyRegistered: true,
+        },
+        { status: 409 }
+      );
+    }
+
     const { data: regData, error: regError } = await supabaseServer
       .from("registrations")
       .insert({
         full_name: body.fullName.trim(),
-        email: body.email.toLowerCase().trim(),
+        email: normalizedEmail,
         phone_number: body.phoneNumber.trim(),
         university: body.university?.trim() || null,
         department: body.department?.trim() || null,
         roll_number: body.rollNumber?.trim() || null,
         main_category: body.mainCategory,
-        sub_category: body.subCategory || "General",
+        sub_category: subCategory,
         team_name: body.teamName?.trim() || null,
         team_logo_url: teamLogoUrl,
         team_members: teamMembersText,
@@ -291,7 +313,11 @@ export async function POST(request: NextRequest) {
 
       if (regError.code === "23505") {
         return NextResponse.json(
-          { success: false, error: "You are already registered for this specific event." },
+          {
+            success: false,
+            error: `You are already registered for ${body.mainCategory} — ${subCategory}. You don't need to sign up again for this event.`,
+            alreadyRegistered: true,
+          },
           { status: 409 }
         );
       }
