@@ -8,6 +8,12 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
+import {
+  compressTeamLogo,
+  formatLogoSize,
+  MAX_TEAM_LOGO_INPUT_BYTES,
+  uploadTeamLogo,
+} from "@/lib/teamLogoUpload";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
@@ -78,6 +84,47 @@ const subCategories: SubCategories = {
 const eSportsFivePlayerGames = ["Counter-Strike 2", "Valorant"];
 const teamESportsGames = ["PUBG", "Free Fire", "Counter-Strike 2", "Valorant"];
 
+async function parseRegisterApiResponse(response: Response): Promise<Record<string, unknown>> {
+  const text = await response.text();
+
+  if (
+    response.status === 413 ||
+    text.includes("Request Entity Too Large") ||
+    text.includes("Body exceeded") ||
+    text.includes("FUNCTION_PAYLOAD_TOO_LARGE")
+  ) {
+    throw new Error(
+      "Upload too large. Please use a team logo under 2 MB, or register without a logo."
+    );
+  }
+
+  if (!text.trim()) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(text) as Record<string, unknown>;
+  } catch {
+    throw new Error(
+      response.ok
+        ? "Registration server returned an invalid response. Please try again."
+        : `Registration failed (${response.status}). Please try again or contact support.`
+    );
+  }
+}
+
+function isNetworkFailure(message: string): boolean {
+  const msg = message.toLowerCase();
+  return (
+    msg.includes("failed to fetch") ||
+    msg.includes("network error") ||
+    msg.includes("networkerror") ||
+    msg.includes("load failed") ||
+    msg.includes("network request failed") ||
+    msg.includes("the internet connection appears to be offline")
+  );
+}
+
 const getRequiredTeamMembersCount = (mainCategory: string, subCategory: string, hackathonFormat?: string): number => {
   if (mainCategory === "Hackathon") {
     if (hackathonFormat === "Solo") return 0;
@@ -123,6 +170,9 @@ export default function RegisterPage() {
   const [submitMessage, setSubmitMessage] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [teamLogo, setTeamLogo] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState("");
+  const [isProcessingLogo, setIsProcessingLogo] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
   const [hackathonFormat, setHackathonFormat] = useState<string>("Solo");
   const requiredTeamMemberCount = getRequiredTeamMembersCount(formData.mainCategory, formData.subCategory, hackathonFormat);
@@ -130,8 +180,49 @@ export default function RegisterPage() {
   // Phase 1: Scalability improvements
   const lastSubmissionTimeRef = useRef<number>(0);
   const submissionCooldownMs = 3000; // 3 seconds cooldown between submissions
-  const maxRetries = 3;
+  const maxRetries = 2;
   const retryAttemptRef = useRef<number>(0);
+
+  useEffect(() => {
+    return () => {
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+    };
+  }, [logoPreview]);
+
+  const handleTeamLogoSelect = async (file: File | undefined) => {
+    if (!file) {
+      setTeamLogo(null);
+      setLogoError("");
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      setLogoPreview(null);
+      return;
+    }
+
+    if (file.size > MAX_TEAM_LOGO_INPUT_BYTES) {
+      setTeamLogo(null);
+      setLogoError(`File is too large (${formatLogoSize(file.size)}). Maximum input size is 10 MB.`);
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      setLogoPreview(null);
+      return;
+    }
+
+    setIsProcessingLogo(true);
+    setLogoError("");
+
+    try {
+      const compressed = await compressTeamLogo(file);
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      setTeamLogo(compressed);
+      setLogoPreview(URL.createObjectURL(compressed));
+    } catch (error: unknown) {
+      setTeamLogo(null);
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      setLogoPreview(null);
+      setLogoError(error instanceof Error ? error.message : "Could not process this image. Please try another file.");
+    } finally {
+      setIsProcessingLogo(false);
+    }
+  };
 
 
   // Pre-populate mainCategory and subCategory from URL parameters
@@ -182,47 +273,49 @@ export default function RegisterPage() {
   }, []);
 
   // Phase 2: Submit via API route with retry logic
-  const submitViaAPI = async (attempt: number = 0): Promise<{ success: boolean; message: string }> => {
-    const delay = Math.min(1000 * Math.pow(2, attempt), 10000); // Max 10 seconds
+  const submitViaAPI = async (
+    teamLogoUrl: string | null,
+    attempt: number = 0
+  ): Promise<{ success: boolean; message: string }> => {
+    const delay = Math.min(1000 * Math.pow(2, attempt), 5000);
 
     if (attempt > 0) {
-      // Show retry message to user
-      setSubmitMessage(`Connection issue detected. Retrying... (${attempt}/${maxRetries})`);
-      await new Promise(resolve => setTimeout(resolve, delay));
+      setSubmitMessage(`Retrying registration... (${attempt}/${maxRetries})`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
 
     try {
-      const submitData = new FormData();
-      submitData.append("fullName", formData.fullName);
-      submitData.append("email", formData.email);
-      submitData.append("phoneNumber", formData.phoneNumber);
-
-      submitData.append("university", formData.university);
-      if (formData.department) submitData.append("department", formData.department);
-      if (formData.rollNumber) submitData.append("rollNumber", formData.rollNumber);
-      submitData.append("mainCategory", formData.mainCategory);
-      if (formData.subCategory) submitData.append("subCategory", formData.subCategory);
-      if (formData.teamName) submitData.append("teamName", formData.teamName);
-      submitData.append("teamMembersDetails", JSON.stringify(formData.teamMembersDetails));
-      submitData.append("termsAccepted", String(termsAccepted));
-      if (teamLogo) submitData.append("teamLogo", teamLogo);
-
-      if (formData.projectIdea) submitData.append("projectIdea", formData.projectIdea);
-      if (formData.githubLink) submitData.append("githubLink", formData.githubLink);
-      if (formData.techStack) submitData.append("techStack", formData.techStack);
-      if (formData.problemStatement) submitData.append("problemStatement", formData.problemStatement);
-      if (formData.teamRoles) submitData.append("teamRoles", formData.teamRoles);
+      const payload = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        university: formData.university,
+        department: formData.department || undefined,
+        rollNumber: formData.rollNumber || undefined,
+        mainCategory: formData.mainCategory,
+        subCategory: formData.subCategory || undefined,
+        teamName: formData.teamName || undefined,
+        teamMembersDetails: formData.teamMembersDetails,
+        termsAccepted,
+        teamLogoUrl: teamLogoUrl || undefined,
+        projectIdea: formData.projectIdea || undefined,
+        githubLink: formData.githubLink || undefined,
+        techStack: formData.techStack || undefined,
+        problemStatement: formData.problemStatement || undefined,
+        teamRoles: formData.teamRoles || undefined,
+      };
 
       const response = await fetch("/api/register", {
         method: "POST",
-        body: submitData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      const data = await parseRegisterApiResponse(response);
 
       // Handle rate limiting (429)
       if (response.status === 429) {
-        const retryAfter = data.retryAfter || response.headers.get("Retry-After") || "300";
+        const retryAfter = String(data.retryAfter ?? response.headers.get("Retry-After") ?? "300");
         throw new Error(
           `Too many registration attempts. Please wait ${retryAfter} seconds before trying again.`
         );
@@ -230,38 +323,23 @@ export default function RegisterPage() {
 
       // Handle other errors
       if (!response.ok || !data.success) {
-        throw new Error(data.error || data.message || "Registration failed");
+        throw new Error(String(data.error ?? data.message ?? "Registration failed"));
       }
 
       // Success - reset retry counter
       retryAttemptRef.current = 0;
-      return { success: true, message: data.message || "Registration successful!" };
+      return { success: true, message: String(data.message ?? "Registration successful!") };
     } catch (error: unknown) {
-      // Check if it's a retryable error (network issues, timeouts, 5xx errors)
-      const isRetryable = (error: unknown): boolean => {
-        if (error instanceof Error) {
-          const message = error.message.toLowerCase();
-          // Don't retry on client errors (4xx) except 429 (rate limit)
-          if (message.includes("too many") || message.includes("rate limit")) {
-            return false; // Rate limit is not retryable immediately
-          }
-          // Retry on network/timeout errors
-          return (
-            message.includes("network") ||
-            message.includes("timeout") ||
-            message.includes("fetch") ||
-            message.includes("failed to fetch")
-          );
-        }
-        return false;
-      };
+      const retryable =
+        error instanceof Error &&
+        isNetworkFailure(error.message) &&
+        !error.message.toLowerCase().includes("too many") &&
+        !error.message.toLowerCase().includes("rate limit");
 
-      if (isRetryable(error) && attempt < maxRetries) {
-        // Retry with exponential backoff
-        return submitViaAPI(attempt + 1);
+      if (retryable && attempt < maxRetries) {
+        return submitViaAPI(teamLogoUrl, attempt + 1);
       }
 
-      // Max retries reached or non-retryable error - throw to be handled by main catch
       throw error;
     }
   };
@@ -352,8 +430,13 @@ export default function RegisterPage() {
       setTermsError(null);
     }
 
+    if (isProcessingLogo) {
+      setLogoError("Please wait for the image to finish processing.");
+    }
+
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0 && termsAccepted;
+    const logoValid = !logoError && !isProcessingLogo;
+    return Object.keys(newErrors).length === 0 && termsAccepted && logoValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -392,8 +475,26 @@ export default function RegisterPage() {
     retryAttemptRef.current = 0;
 
     try {
-      // Phase 2: Submit via API route with retry logic
-      const result = await submitViaAPI(0);
+      let teamLogoUrl: string | null = null;
+
+      if (teamLogo) {
+        setSubmitMessage("Uploading team logo...");
+        try {
+          teamLogoUrl = await uploadTeamLogo(teamLogo);
+        } catch (logoErr: unknown) {
+          const logoMessage =
+            logoErr instanceof Error
+              ? logoErr.message
+              : "Could not upload team logo. Please try again or register without a logo.";
+          setSubmitStatus("error");
+          setLogoError(logoMessage);
+          setSubmitMessage(logoMessage);
+          return;
+        }
+      }
+
+      setSubmitMessage("Submitting registration...");
+      const result = await submitViaAPI(teamLogoUrl, 0);
 
       setSubmitStatus("success");
       setSubmitMessage(result.message || "Registration successful! Redirecting to confirmation page...");
@@ -432,6 +533,10 @@ export default function RegisterPage() {
         problemStatement: "",
         teamRoles: ""
       });
+      setTeamLogo(null);
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      setLogoPreview(null);
+      setLogoError("");
 
       // Scroll to success message
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -484,12 +589,49 @@ export default function RegisterPage() {
         message = "Registration is currently unavailable due to security configuration. Please contact support or try again later.";
       }
       // Duplicate email errors
-      else if (errorCode === "23505" || errorMessage.includes("duplicate key") || errorMessage.includes("already exists") || errorMessage.includes("unique constraint")) {
-        message = "This email is already registered. Please use a different email address.";
+      else if (errorCode === "23505" || errorMessage.includes("duplicate key") || errorMessage.includes("already exists") || errorMessage.includes("unique constraint") || errorMessage.includes("already registered")) {
+        message = errorMessage.includes("already registered")
+          ? errorMessage
+          : "This email is already registered. Please use a different email address.";
       }
-      // Network/connection errors (after retries exhausted)
-      else if (errorMessage.includes("network") || errorMessage.includes("timeout") || errorMessage.includes("fetch")) {
-        message = "Connection issue. Please check your internet connection and try again.";
+      // Server-side registration errors
+      else if (
+        errorMessage.includes("Registration service is temporarily unavailable") ||
+        errorMessage.includes("Registration failed") ||
+        errorMessage.includes("unexpected error occurred") ||
+        errorMessage.includes("An unexpected error")
+      ) {
+        message = "Something went wrong on our end. Please try again in a moment, or contact spectrum2026.dsu@gmail.com if it keeps happening.";
+      }
+      // Validation errors from API
+      else if (errorMessage.includes("Validation failed")) {
+        message = "Please check your form details and try again.";
+      }
+      // Logo upload errors
+      else if (
+        errorMessage.includes("team logo") ||
+        errorMessage.includes("Logo upload") ||
+        errorMessage.includes("Could not upload") ||
+        errorMessage.includes("Could not process image")
+      ) {
+        message = errorMessage;
+        setLogoError(errorMessage);
+      }
+      // Upload / payload size errors
+      else if (
+        errorMessage.includes("Upload too large") ||
+        errorMessage.includes("Team logo must be") ||
+        errorMessage.includes("Invalid team logo") ||
+        errorMessage.includes("Request Entity Too Large") ||
+        errorMessage.includes("not valid JSON") ||
+        errorMessage.includes("Unexpected token")
+      ) {
+        message = "There was a problem with the team logo. Please try a different image or register without one.";
+        setLogoError("Please choose a different image or skip the logo.");
+      }
+      // Real network / timeout failures (request never completed)
+      else if (isNetworkFailure(errorMessage)) {
+        message = "Could not reach the registration server. Please check your internet connection and try again.";
       }
       // Invalid subcategory errors
       else if (errorMessage.includes("Invalid subcategory") || errorMessage.includes("subcategory")) {
@@ -925,14 +1067,35 @@ export default function RegisterPage() {
                        <label className="block text-sm font-bold mb-2">Team Logo (Optional)</label>
                        <input
                          type="file"
-                         accept="image/png, image/jpeg, image/jpg"
+                         accept="image/png,image/jpeg,image/jpg,image/webp"
+                         disabled={isProcessingLogo || isSubmitting}
                          onChange={(e) => {
-                           if (e.target.files && e.target.files[0]) {
-                             setTeamLogo(e.target.files[0]);
-                           }
+                           void handleTeamLogoSelect(e.target.files?.[0]);
+                           e.target.value = "";
                          }}
-                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all"
+                         className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all disabled:opacity-60 ${logoError ? "border-red-500" : "border-gray-300"}`}
                        />
+                       <p className="text-sm text-gray-500 mt-1">
+                         PNG or JPEG. Large photos are auto-compressed before upload.
+                       </p>
+                       {isProcessingLogo && (
+                         <p className="text-sm text-gray-600 mt-1">Processing image...</p>
+                       )}
+                       {logoError && (
+                         <p className="text-red-500 text-sm mt-1">{logoError}</p>
+                       )}
+                       {teamLogo && !logoError && !isProcessingLogo && (
+                         <p className="text-green-700 text-sm mt-1">
+                           Ready: {teamLogo.name} ({formatLogoSize(teamLogo.size)})
+                         </p>
+                       )}
+                       {logoPreview && !logoError && (
+                         <img
+                           src={logoPreview}
+                           alt="Team logo preview"
+                           className="mt-3 h-20 w-20 rounded-lg border border-gray-200 object-cover"
+                         />
+                       )}
                      </div>
  
                      {/* Team Members */}
