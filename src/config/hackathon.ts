@@ -20,6 +20,7 @@ export interface HackathonTrack {
   judgingCriteria: { metric: string; weight: string; description: string }[];
   timeline: { time: string; event: string }[];
 
+  presentedBy?: { name: string; logo: string };
   handbookUrl?: string;
   eventConcept?: string;
   toolsAllowed?: string;
@@ -137,66 +138,62 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
       { place: "Incubation", prize: "VC Incubation opportunities & mentor credits" }
     ]
   },
-  "ai-ds-hackathon": {
-    id: "ai-ds-hackathon",
-    title: "AI & DS Hackathon",
-    tagline: "Advanced Machine Learning & Data Challenge · 2-Day Event",
-    description: "Tackle complex real-world datasets. Clean noisy data, engineer predictive features, build robust machine learning models, and translate technical metrics into high-impact business strategies. Present your pipeline and insights directly to industry judges.",
+  "build-with-ai-ar": {
+    id: "build-with-ai-ar",
+    title: "Build with AI: AR Edition",
+    presentedBy: { name: "Cognivision", logo: "/gallery/file.svg" },
+    tagline: "Live Coding AR Competition · Powered by Cognivision · 1-Day Event",
+    description: "A one-day live coding event powered by Cognivision, a spatial computing platform that lets you build real augmented reality and computer vision mobile apps using AI. Start with a hands-on workshop, then compete to build the best AR application. No prior AR experience required — what's tested is your creativity, speed, and ability to ship something that works.",
     prizePool: "Rs. 30,000",
     entryFee: "Solo: Rs. 500 | Duo: Rs. 1,000 | Triplet: Rs. 1,500",
     format: "Solo, Duo, or Triplet",
-    duration: "2-Day Event",
+    duration: "1-Day Event",
     teamSize: "1 – 3 participants",
-    location: "DHA Suffa University IT Labs",
-    date: "May 25-26, 2026",
+    location: "DHA Suffa University",
+    date: "June 8, 2026",
     time: "09:00 AM",
     iconName: "FaMicrochip",
     bgGradient: "from-purple-950 via-slate-900 to-black",
     accentColor: "#A855F7",
     image: "/modules/data-science.png",
     imagePosition: "center 30%",
-    handbookUrl: "/handbooks/ai-ds-hackathon.pdf",
-    eventConcept: "Analyze a dataset, build a model or insight, and present a clear solution.",
-    toolsAllowed: "Python, Jupyter Notebook / Colab, and common data libraries. Public pre-trained models may be cited.",
+    handbookUrl: "/handbooks/BuildwithAI_ AR-Edition.pdf",
+    eventConcept: "Cognivision trains all participants on spatial computing, then transitions into a live build competition where students use what they learned to create a working AR application.",
+    toolsAllowed: "Cognivision platform via VS Code. All AR, computer vision, and on-device ML tooling is handled by the platform. Describe what you want to build in plain English and the AI assembles it.",
     rules: [
-      "Dataset distributed at 9 AM on Day 1 — no prior access allowed.",
-      "All analysis must be performed during official hours on Day 1.",
-      "Notebooks must be fully re-runnable from top to bottom with visible outputs.",
-      "Use of public pre-trained models and AI APIs is allowed, but must be cited.",
-      "Live walkthrough of notebook is mandatory on Day 2 — slides-only pitches won't score on methodology."
+      "All building must take place during the official competition window on the day. Pre-built applications are grounds for disqualification.",
+      "The Cognivision platform must be used for the build. Support from Cognivision mentors is available and encouraged.",
+      "Participants must bring their own laptop and a personal iPhone or Android device for real-device testing. Developer mode must be enabled before arriving.",
+      "Basic mobile app development understanding is preferred. No prior AR or computer vision experience needed.",
+      "Sharing code or builds with other registered participants during the competition is not permitted.",
+      "Any violation results in disqualification with no refund."
     ],
     timeline: [
-      { time: "1 Week Before", event: "Broad domain released (e.g. healthcare, agriculture) for background research." },
-      { time: "Day 1 — 9 AM", event: "Dataset released. Data cleaning, modeling, and exploratory analysis." },
-      { time: "Day 1 — 6 PM", event: "Hard notebook freeze. Submit .ipynb file, summary, and 5-slide deck by midnight." },
-      { time: "Day 2 — Morning", event: "All teams pitch to a panel of faculty & industry judges in randomized order." },
-      { time: "Day 2 — Afternoon", event: "Winners announced. Judges provide one minute of public feedback to every team." }
-    ],
-    pitchFormat: [
-      { duration: "5 Min", label: "Results Walkthrough", description: "Walk through the notebook and showcase key findings" },
-      { duration: "3 Min", label: "Judge Q&A", description: "Defend data choices, methodology, and assumptions" },
-      { duration: "2 Min", label: "Transition Buffer", description: "Score recording and setup for the next team" }
+      { time: "Session 1 — Workshop (60 min)", event: "Hands-on training by Cognivision. Learn the platform, build and run your first working AR app on your device." },
+      { time: "Session 2 — Live Build", event: "New build prompt revealed. Create the best AR or computer vision application within the time window." },
+      { time: "Submissions", event: "Evaluated by Cognivision on technical execution, creativity, use case relevance, and whether the app ships and runs correctly." },
+      { time: "June 10 — Awards", event: "Winners announced at the Spectrum 26 closing ceremony. Top three invited on stage." }
     ],
     judgingCriteria: [
-      { metric: "Problem & EDA", weight: "30%", description: "Clearly defined target variable or question; thorough correlation & outlier checks." },
-      { metric: "Methodology", weight: "25%", description: "Justified choice of algorithms, correct validation splits, and appropriate evaluation metrics." },
-      { metric: "Quality of Insights", weight: "25%", description: "Results interpreted in plain language; real-world impact & limitations acknowledged honestly." },
-      { metric: "Communication", weight: "20%", description: "Commented, reproducible notebook, clean visualizations, and confident Q&A." }
+      { metric: "Technical Execution", weight: "30%", description: "Does the application actually work? Does it run on a real device and do what it is supposed to do?" },
+      { metric: "Creativity & Use Case", weight: "30%", description: "Is the idea novel? Is the AR or CV capability used in a way that makes sense and adds value?" },
+      { metric: "Completion", weight: "20%", description: "Was the application shipped within the competition window?" },
+      { metric: "Demo Quality", weight: "20%", description: "Can the participant explain what they built and why the idea is worth pursuing?" }
     ],
-    competitionTracks: [
-      { title: "Track A — Predictive Modelling", description: "Build a supervised learning model on the dataset. Focuses on predictive validation and model behavior analysis." },
-      { title: "Track B — Exploratory Analysis & Viz", description: "Deep exploratory analysis (patterns, anomalies, correlations) without a model. Focuses on narrative and viz." }
-    ],
-    datasetDetails: "Real-world tabular dataset (min 5,000 rows) from South Asian context (Healthcare, Education, Agriculture, Finance, or Urban planning).",
     mentorSetup: [
-      "2-3 mentors with DS experience circulate the venue to help teams with data bottlenecks.",
-      "Mentors may not write code, select features, or choose models.",
-      "Optional 30-minute mid-day check-in is available for quick approach gut-check."
+      "Cognivision mentors are present throughout both the workshop and competition.",
+      "Mentors provide technical support on the Cognivision platform.",
+      "Students who impress during the competition may be considered for internship opportunities with Cognivision."
     ],
     prizeSplitDetails: [
-      { place: "Winner", prize: "Rs. 20,000 + DSU Certificate" },
-      { place: "Runner-up", prize: "Rs. 10,000 + DSU Certificate" },
-      { place: "3rd Place", prize: "DSU Certificate + Goodies" }
+      { place: "1st Place", prize: "Rs. 20,000" },
+      { place: "2nd Place", prize: "Rs. 10,000" },
+      { place: "3rd Place", prize: "Certificate + Goodies, recognised on stage" }
+    ],
+    logisticNotes: [
+      "Bring: Laptop with VS Code installed, iPhone (iOS 16+) or Android (8.0+), USB cable, phone charged to at least 60%.",
+      "Full system requirements shared via participant WhatsApp group before the event.",
+      "All participants receive a certificate of participation and Cognivision platform beta access with monthly token rewards for up to one year."
     ]
   }
 };

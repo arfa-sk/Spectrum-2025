@@ -58,7 +58,7 @@ const subCategories: SubCategories = {
   ],
   "Hackathon": [
     "Competitive Programming",
-    "AI & DS Hackathon",
+    "Build with AI: AR Edition",
     "Vibe & Pitch Hackathon"
   ],
   "Play To Win": [
@@ -245,7 +245,8 @@ export default function RegisterPage() {
 
       const trackMap: Record<string, string> = {
         "competitive-programming": "Competitive Programming",
-        "ai-ds-hackathon": "AI & DS Hackathon",
+        "ai-ds-hackathon": "Build with AI: AR Edition",
+        "build-with-ai-ar": "Build with AI: AR Edition",
         "vibe-and-pitch": "Vibe & Pitch Hackathon"
       };
 

@@ -138,6 +138,14 @@ export default function HackathonPage() {
 
                   {/* Card Content - Title at top left */}
                   <div className="absolute top-6 left-6 right-6">
+                    {track.presentedBy && (
+                      <div className="flex items-center gap-4 mb-4 bg-black/60 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/20 w-fit shadow-lg">
+                        <img src={track.presentedBy.logo} alt={track.presentedBy.name} className="w-12 h-12 rounded-xl" />
+                        <span className={`${orbitron.className} text-lg sm:text-xl font-bold text-white uppercase tracking-widest drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]`}>
+                          {track.presentedBy.name} presents
+                        </span>
+                      </div>
+                    )}
                     <h3 className={`${orbitron.className} text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-wider leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]`}>
                       {track.title}
                     </h3>
@@ -180,6 +188,14 @@ export default function HackathonPage() {
                 <span className={`${spaceGrotesk.className} inline-block px-4 py-1.5 text-xs font-bold bg-[#FFD700] text-black rounded-full mb-3 shadow`}>
                   {activeTrack.format} Competition
                 </span>
+                {activeTrack.presentedBy && (
+                  <div className="flex items-center gap-4 mb-4 bg-gray-100 px-5 py-3.5 rounded-2xl border-2 border-gray-300 w-fit shadow-sm">
+                    <img src={activeTrack.presentedBy.logo} alt={activeTrack.presentedBy.name} className="w-12 h-12 rounded-xl" />
+                    <span className={`${orbitron.className} text-lg font-bold text-black uppercase tracking-widest`}>
+                      {activeTrack.presentedBy.name} presents
+                    </span>
+                  </div>
+                )}
                 <h2 className={`${orbitron.className} text-3xl md:text-4xl font-extrabold text-black uppercase pr-10`}>
                   {activeTrack.title}
                 </h2>
@@ -322,7 +338,7 @@ export default function HackathonPage() {
                 <ul className="space-y-4 text-sm text-gray-700">
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">01.</span>
-                    <span>AI usage policies vary by track: Vibe & Pitch has zero restrictions on LLMs or AI assistants (Cursor, v0, Lovable, Claude Code are fully allowed). AI & DS allows public pre-trained models with proper citations. Competitive Programming strictly prohibits all AI code generators.</span>
+                    <span>AI usage policies vary by track: Vibe & Pitch has zero restrictions on LLMs or AI assistants (Cursor, v0, Lovable, Claude Code are fully allowed). Build with AI: AR Edition requires use of the Cognivision platform. Competitive Programming strictly prohibits all AI code generators.</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#B8860B] font-bold">02.</span>

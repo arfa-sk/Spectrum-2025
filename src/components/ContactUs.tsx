@@ -71,17 +71,15 @@ export default function ContactUs() {
     try {
       const { error } = await supabase
         .from('contact_messages')
-        .insert([
-          {
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            subject: formData.subject.trim(),
-            message: formData.message.trim(),
-          }
-        ])
-        .select();
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+        });
 
       if (error) {
+        console.error('Supabase contact insert error:', error.message, error.code, error.hint);
         throw error;
       }
 

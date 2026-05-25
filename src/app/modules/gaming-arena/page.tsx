@@ -53,7 +53,7 @@ export default function GamingArenaPage() {
     {
       title: "PUBG",
       type: "Team",
-      pricing: "Rs 2000 / team",
+      pricing: "Rs 1500 / team",
       teamSize: "4 Players (Team)",
       vibe: "Tactical battle royale squads. Communication, map control, survival instincts.",
       description: "Drop, loot, survive. Compete in our high-stakes PUBG Mobile championship. Assemble your 4-player squad and outmaneuver rival teams across multiple maps to secure the ultimate chicken dinner under custom competitive settings.",
@@ -64,7 +64,7 @@ export default function GamingArenaPage() {
     {
       title: "Free Fire",
       type: "Team",
-      pricing: "Rs 2000 / team",
+      pricing: "Rs 1500 / team",
       teamSize: "4 Players (Team)",
       vibe: "Fast-paced battle royale squad fights. Quick reflexes, close combat mastery.",
       description: "Jump into the fast-paced, high-octane battlegrounds of Free Fire. Put your squad's quick-thinking and survival tactics to the test in this premier squad battle royale series, featuring maximum competitiveness.",
