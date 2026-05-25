@@ -80,7 +80,7 @@ export default function SuffasGotTalentPage() {
   return (
     <>
       <Navbar />
-      <main ref={sectionRef} className="relative min-h-screen bg-white text-black">
+      <main ref={sectionRef} className="relative min-h-screen bg-white text-black overflow-x-hidden">
 
         <div className="container mx-auto px-6 py-20">
           {/* Header */}
@@ -97,7 +97,7 @@ export default function SuffasGotTalentPage() {
             <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
               <div className="flex items-center justify-center mb-6">
                 <FaMicrophone className="text-4xl text-black mr-4" />
-                <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black`}>
+                <h1 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black`}>
                   Play To Win
                 </h1>
               </div>

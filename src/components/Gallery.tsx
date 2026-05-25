@@ -41,7 +41,7 @@ export default memo(function Gallery({
     >
       {/* Header */}
       <div className="container mx-auto px-6 text-center mb-12">
-          <h2 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black mb-6`}>
+          <h2 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black mb-6`}>
             {title}
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-8"></div>

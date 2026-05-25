@@ -75,7 +75,7 @@ export default function ModulesPreview() {
         </div>
 
         {/* Modules Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {modules.map((module, index) => (
             <TimelineContent
               key={module.title}
@@ -85,7 +85,7 @@ export default function ModulesPreview() {
               as="div"
             >
               <Link href={module.href} className="group block h-full">
-                <div className="relative bg-white h-[420px] rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 group-hover:shadow-2xl group-hover:scale-[1.03] group-hover:-translate-y-2">
+                <div className="relative bg-white min-h-[360px] md:min-h-[420px] rounded-3xl border-2 border-black overflow-hidden transition-all duration-500 group-hover:shadow-2xl group-hover:scale-[1.03] group-hover:-translate-y-2">
                   
                   {/* Clean Background */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100 opacity-100 group-hover:from-gray-50 group-hover:to-gray-200 transition-all duration-500"></div>

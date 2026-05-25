@@ -158,7 +158,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
 
   return (
     <>
-      <main ref={sectionRef} className="relative min-h-screen bg-white text-black">
+      <main ref={sectionRef} className="relative min-h-screen bg-white text-black overflow-x-hidden">
         {/* Logo */}
         <div className="absolute top-6 left-6 z-50">
           <Link href="/" className="flex items-center">
@@ -185,7 +185,7 @@ export default function GamingArenaEventPage({ params }: PageProps) {
             </TimelineContent>
 
             <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
-              <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black text-center mb-6`}>
+              <h1 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black text-center mb-6`}>
                 {config.title}
               </h1>
             </TimelineContent>

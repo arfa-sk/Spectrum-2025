@@ -1,6 +1,6 @@
 "use client";
 import { useScroll, useTransform } from "framer-motion";
-import { useRef, useMemo, memo } from "react";
+import { useRef, useMemo, memo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -13,23 +13,29 @@ export const ParallaxScrollSecond = memo(({
   className?: string;
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
-  
-  // Optimized scroll tracking - use direct transform instead of spring for smoother performance
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: gridRef,
     offset: ["start start", "end end"],
   });
 
-  // Simplified transforms - direct transform is faster than spring for scroll
-  const translateYFirst = useTransform(scrollYProgress, [0, 1], [0, -500]);
-  const translateXFirst = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const rotateXFirst = useTransform(scrollYProgress, [0, 1], [0, -15]);
+  const translateYFirst = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -200 : -500]);
+  const translateXFirst = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -150]);
+  const rotateXFirst = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -15]);
 
-  const translateYSecond = useTransform(scrollYProgress, [0, 1], [0, -250]);
+  const translateYSecond = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -100 : -250]);
 
-  const translateYThird = useTransform(scrollYProgress, [0, 1], [0, -500]);
-  const translateXThird = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const rotateXThird = useTransform(scrollYProgress, [0, 1], [0, 15]);
+  const translateYThird = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -200 : -500]);
+  const translateXThird = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 150]);
+  const rotateXThird = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 15]);
 
   // Memoize image splitting for better performance
   const imageParts = useMemo(() => {
@@ -43,7 +49,7 @@ export const ParallaxScrollSecond = memo(({
 
   return (
     <div
-      className={cn("h-[80rem] w-full overflow-hidden", className)}
+      className={cn("h-[40rem] md:h-[60rem] lg:h-[80rem] w-full overflow-hidden", className)}
       ref={gridRef}
       style={{ 
         contain: "layout style paint",

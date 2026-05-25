@@ -100,7 +100,7 @@ function Stall() {
 
         {/* Stall Categories Grid - optimized with content-visibility */}
         <div 
-          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
           style={{ contain: "layout style" }}
         >
           {stallCategories.map((category) => {

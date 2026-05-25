@@ -762,7 +762,7 @@ export default function RegisterPage() {
           </TimelineContent>
           <TimelineContent animationNum={1} timelineRef={sectionRef} once={false}>
             <h1
-              className={`${orbitron.className} text-5xl md:text-7xl font-bold mb-6 text-black`}
+              className={`${orbitron.className} text-3xl sm:text-4xl md:text-7xl font-bold mb-6 text-black`}
             >
               REGISTER NOW
             </h1>
@@ -1227,7 +1227,7 @@ export default function RegisterPage() {
                            : `Please provide details for the remaining ${requiredTeamMemberCount} member${requiredTeamMemberCount === 1 ? "" : "s"}.`}
                        </p>
                        
-                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                          {Array.from({ length: requiredTeamMemberCount }, (_, index) => index).map((index) => (
                            <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
                              <h4 className="font-bold text-sm mb-3 text-[#FFD700] bg-black inline-block px-3 py-1 rounded">Member {index + 2}</h4>
@@ -1294,7 +1294,7 @@ export default function RegisterPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`${orbitron.className} inline-block px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-110 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                    className={`${orbitron.className} inline-block px-8 sm:px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-105 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                   >
                     {isSubmitting ? (

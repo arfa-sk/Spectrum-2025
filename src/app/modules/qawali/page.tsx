@@ -196,7 +196,7 @@ export default function QawaliNightPage() {
               
               {/* Ticket Card 1: Standard ticket */}
               <TimelineContent animationNum={14} timelineRef={sectionRef} once={true} as="div">
-                <div className="relative bg-black border-2 border-neutral-800 hover:border-[#FFD700]/50 rounded-[32px] p-8 flex flex-col justify-between h-[400px] transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 group shadow-lg">
+                <div className="relative bg-black border-2 border-neutral-800 hover:border-[#FFD700]/50 rounded-[32px] p-6 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[400px] transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 group shadow-lg">
                   <div>
                     <div className="flex justify-between items-center mb-6">
                       <span className={`${orbitron.className} text-[10px] font-bold text-[#FFD700] tracking-widest uppercase bg-[#FFD700]/10 px-3 py-1 rounded-full`}>
@@ -241,7 +241,7 @@ export default function QawaliNightPage() {
 
               {/* Ticket Card 2: Student ticket */}
               <TimelineContent animationNum={15} timelineRef={sectionRef} once={true} as="div">
-                <div className="relative bg-black border-2 border-[#FFD700] rounded-[32px] p-8 flex flex-col justify-between h-[400px] transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 group shadow-[0_0_25px_rgba(255,215,0,0.1)]">
+                <div className="relative bg-black border-2 border-[#FFD700] rounded-[32px] p-6 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[400px] transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 group shadow-[0_0_25px_rgba(255,215,0,0.1)]">
                   {/* Glowing Leak */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent rounded-[32px] pointer-events-none"></div>
                   

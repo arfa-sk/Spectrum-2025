@@ -59,7 +59,7 @@ export default function ModulesPage() {
                 </Link>
               </TimelineContent>
               <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
-                <h1 className={`${orbitron.className} text-6xl md:text-7xl font-bold text-black mb-6`}>
+                <h1 className={`${orbitron.className} text-4xl sm:text-5xl md:text-7xl font-bold text-black mb-6`}>
                   CHOOSE YOUR ARENA
                 </h1>
               </TimelineContent>
@@ -76,7 +76,7 @@ export default function ModulesPage() {
             </div>
 
             {/* Enhanced Modules Grid - Keeping Black Outline */}
-            <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
               {modules.map((module, index) => (
                 <TimelineContent
                   key={module.title}

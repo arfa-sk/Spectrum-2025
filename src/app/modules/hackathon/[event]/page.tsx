@@ -169,7 +169,7 @@ export default function HackathonEventPage({ params }: PageProps) {
 
             {/* Right Column: Checkout Card */}
             <div className="lg:col-span-5">
-              <TimelineContent animationNum={9} timelineRef={sectionRef} once={false} as="div" className="sticky top-24">
+              <TimelineContent animationNum={9} timelineRef={sectionRef} once={false} as="div" className="lg:sticky lg:top-24">
                 <div className="rounded-3xl p-8 border-2 border-black bg-white shadow-xl overflow-hidden relative text-black">
                   {/* Accent Highlight */}
                   <div 

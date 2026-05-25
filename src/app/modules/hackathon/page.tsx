@@ -62,7 +62,7 @@ export default function HackathonPage() {
             <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
               <div className="flex items-center justify-center mb-6">
                 <FaCode className="text-5xl md:text-6xl text-black mr-4" />
-                <h1 className={`${orbitron.className} text-6xl sm:text-7xl md:text-8xl font-extrabold tracking-tight text-black`}>
+                <h1 className={`${orbitron.className} text-4xl sm:text-6xl md:text-8xl font-extrabold tracking-tight text-black`}>
                   HACKATHON
                 </h1>
               </div>
@@ -167,7 +167,7 @@ export default function HackathonPage() {
         {activeTrack && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in transition-opacity duration-300">
             <div 
-              className="relative bg-white border-2 border-black rounded-3xl p-8 max-w-2xl w-full shadow-2xl transition-transform duration-500 scale-100 overflow-hidden"
+              className="relative bg-white border-2 border-black rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl transition-transform duration-500 scale-100"
               style={{
                 boxShadow: "0 0 40px rgba(255, 215, 0, 0.2)"
               }}
@@ -216,7 +216,7 @@ export default function HackathonPage() {
                 </div>
 
                 {/* Meta details list */}
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="flex flex-col items-center justify-center p-3 bg-neutral-50 rounded-xl border border-gray-100 text-center">
                     <FaUsers className="text-[#C5A100] text-lg mb-1" />
                     <span className={`${spaceGrotesk.className} text-[0.65rem] text-gray-400 uppercase tracking-wider`}>Team Size</span>

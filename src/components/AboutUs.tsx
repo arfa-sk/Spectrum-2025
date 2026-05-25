@@ -20,7 +20,7 @@ export default function AboutUs() {
       ref={sectionRef}
       className="relative z-10 py-28 bg-[#0f0f0f] text-white overflow-hidden min-h-[70vh]"
     >
-      {/* 3D Canvas Background - Optimized with reduced star count and DPR */}
+      {/* 3D Canvas Background */}
       <div className="absolute inset-0">
         <Canvas camera={{ position: [0, 0, 6], fov: 50 }} dpr={[1, 1.5]}>
           <Suspense fallback={null}>
@@ -34,7 +34,7 @@ export default function AboutUs() {
       <div className="relative z-10 max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center animate-float">
         <TimelineContent animationNum={0} timelineRef={sectionRef} once={false}>
           <h2
-            className={`${orbitron.className} text-6xl font-extrabold text-white`}
+            className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-extrabold text-white`}
           >
             About Us
           </h2>

@@ -142,7 +142,7 @@ export default function SpecialDeals() {
               as="div"
             >
               <div 
-                className={`relative bg-black/40 h-[480px] rounded-[32px] border-2 flex flex-col justify-between p-8 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 group ${
+                className={`relative bg-black/40 min-h-[420px] md:min-h-[480px] rounded-[32px] border-2 flex flex-col justify-between p-6 sm:p-8 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 group ${
                   deal.isPopular ? "border-[#FFD700]" : "border-neutral-800 hover:border-[#FFD700]/50"
                 }`}
                 style={{

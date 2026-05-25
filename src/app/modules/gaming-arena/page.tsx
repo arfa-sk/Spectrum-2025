@@ -185,7 +185,7 @@ export default function GamingArenaPage() {
         {activeGame && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in transition-opacity duration-300">
             <div 
-              className="relative bg-white border-2 border-black rounded-3xl p-8 max-w-2xl w-full shadow-2xl transition-transform duration-500 scale-100 overflow-hidden"
+              className="relative bg-white border-2 border-black rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl transition-transform duration-500 scale-100"
               style={{
                 boxShadow: "0 0 40px rgba(255, 215, 0, 0.2)"
               }}
@@ -206,7 +206,7 @@ export default function GamingArenaPage() {
                 <span className={`${spaceGrotesk.className} inline-block px-4 py-1.5 text-xs font-bold bg-[#FFD700] text-black rounded-full mb-3 shadow`}>
                   {activeGame.type} Competition
                 </span>
-                <h2 className={`${orbitron.className} text-4xl font-extrabold text-black uppercase`}>
+                <h2 className={`${orbitron.className} text-2xl sm:text-4xl font-extrabold text-black uppercase`}>
                   {activeGame.title}
                 </h2>
                 <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-black mt-2"></div>
@@ -226,7 +226,7 @@ export default function GamingArenaPage() {
                 </div>
 
                 {/* Meta details list */}
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="flex flex-col items-center justify-center p-3 bg-neutral-50 rounded-xl border border-gray-100">
                     <FaUsers className="text-[#C5A100] text-lg mb-1" />
                     <span className={`${spaceGrotesk.className} text-[0.65rem] text-gray-400 uppercase tracking-wider`}>Team Size</span>
@@ -246,16 +246,16 @@ export default function GamingArenaPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => setActiveGame(null)}
-                  className={`${orbitron.className} flex-1 py-4 border border-black hover:bg-neutral-100 text-black font-bold rounded-2xl transition-all duration-300`}
+                  className={`${orbitron.className} flex-1 py-4 border border-black hover:bg-neutral-100 text-black font-bold rounded-2xl transition-all duration-300 text-xs sm:text-sm`}
                 >
                   Cancel
                 </button>
                 <Link
                   href={`/register?category=E-Sports&game=${encodeURIComponent(activeGame.title)}`}
-                  className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg`}
+                  className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg text-xs sm:text-sm`}
                 >
                   Register Now
                 </Link>

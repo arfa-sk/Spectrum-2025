@@ -194,7 +194,7 @@ export default function SuffasGotTalentEventPage({ params }: PageProps) {
             </TimelineContent>
 
             <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
-              <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black text-center mb-6`}>
+              <h1 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black text-center mb-6`}>
                 {config.title}
               </h1>
             </TimelineContent>

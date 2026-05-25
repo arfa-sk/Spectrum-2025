@@ -73,7 +73,7 @@ export default function HeroSection() {
         </TimelineContent>
         <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div" className="mb-14">
           <h1
-            className={`${orbitron.className} text-6xl md:text-8xl font-bold mb-6 text-black tracking-tight`}
+            className={`${orbitron.className} text-4xl sm:text-5xl md:text-8xl font-bold mb-6 text-black tracking-tight`}
             aria-label="Spectrum 2026 - The Ultimate Tech Fest"
           >
             SPECTRUM 2026
@@ -112,7 +112,7 @@ export default function HeroSection() {
             Launching In
           </p>
 
-          <div className="flex items-end justify-center gap-4 md:gap-6">
+          <div className="flex items-end justify-center gap-3 sm:gap-4 md:gap-6">
             {[
               { label: "Days", value: countdown.days },
               { label: "Hours", value: countdown.hours },
@@ -132,7 +132,7 @@ export default function HeroSection() {
 
                 {/* Divider ":" */}
                 {i < 3 && (
-                  <span className="absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 text-3xl md:text-5xl font-light text-black/30">
+                  <span className="absolute -right-2 sm:-right-3 md:-right-5 top-1/2 -translate-y-1/2 text-2xl sm:text-3xl md:text-5xl font-light text-black/30">
                     :
                   </span>
                 )}
@@ -154,11 +154,7 @@ export default function HeroSection() {
       {/* MULTILAYER ORB COMPONENTS */}
       <div className="absolute top-[68%] md:top-[66%] flex flex-col items-center justify-center w-full z-10 pointer-events-none">
         {!reduceMotion && (
-          <div className="orb-container" style={{
-            width: '100%',
-            height: '800px',
-            position: 'relative'
-          }}>
+          <div className="orb-container w-full h-[60vh] md:h-[800px] relative">
             {/* Background Orb - Gold theme */}
             <div style={{
               position: 'absolute',

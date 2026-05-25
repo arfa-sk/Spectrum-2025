@@ -122,7 +122,7 @@ export default function ContactUs() {
 
       {/* HEADER SECTION */}
       <div className="text-center mb-16 px-6">
-        <h1 className={`${orbitron.className} text-5xl md:text-6xl font-bold text-black mb-6`}>
+        <h1 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black mb-6`}>
           CONNECT WITH US
         </h1>
         <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
@@ -132,7 +132,7 @@ export default function ContactUs() {
       </div>
 
       {/* === CONTENT === */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 flex flex-col lg:flex-row gap-16 items-start justify-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 flex flex-col lg:flex-row gap-8 lg:gap-16 items-start justify-center">
 
         {/* Left: Contact Information */}
         <div className="flex-1 space-y-10 w-full lg:w-2/5">
