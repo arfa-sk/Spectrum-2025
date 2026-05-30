@@ -31,10 +31,10 @@ export default function ModulesPage() {
     },
     {
       title: "Play To Win",
-      description: "The stage is yours. Sing, act, laugh - make them remember your name.",
+      description: "Penta Arcade: a 3-day creative team competition testing speed, memory, coordination, and strategy across five arcade games.",
       icon: FaMicrophone,
       href: "/modules/suffas-got-talent",
-      badge: "6 Performances",
+      badge: "5 Games",
     },
   ];
 

@@ -53,7 +53,7 @@ export default function GamingArenaPage() {
     {
       title: "PUBG",
       type: "Team",
-      pricing: "Rs 1500 / team",
+      pricing: "Rs 2000 / team",
       teamSize: "4 Players (Team)",
       vibe: "Tactical battle royale squads. Communication, map control, survival instincts.",
       description: "Drop, loot, survive. Compete in our high-stakes PUBG Mobile championship. Assemble your 4-player squad and outmaneuver rival teams across multiple maps to secure the ultimate chicken dinner under custom competitive settings.",

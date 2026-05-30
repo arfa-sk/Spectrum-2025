@@ -6,301 +6,219 @@ import Image from "next/image";
 import {
   FaUsers,
   FaClock,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaTrophy,
+  FaCheckCircle,
+  FaClipboardList,
+  FaBalanceScale,
+  FaDownload,
 } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef, use } from "react";
 import { notFound } from "next/navigation";
+import { CREATIVE_GAMES, PENTA_ARCADE_META } from "@/config/creativeCompetition";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-type EventKey = "singing" | "standup-comedy" | "tug-of-war" | "the-memory-pat" | "minute-to-win-it" | "arm-wrestling";
-
-const EVENT_CONFIG: Record<
-  EventKey,
-  {
-    title: string;
-    description: string;
-    date: string;
-    time: string;
-    location: string;
-    format: string;
-    duration: string;
-    prize: string;
-    runnerUpPrize?: string;
-    registrationFee: string;
-    capacityLabel: string;
-    max: number;
-    current: number;
-    bgA: string;
-    bgB: string;
-    accent: string;
-  }
-> = {
-  "singing": {
-    title: "Singing Competition",
-    description:
-      "Step onto the stage and let your voice be heard in this captivating singing competition. Showcase your vocal range, emotional expression, and stage presence. Whether you&apos;re a classical vocalist or pop singer, this is your moment to shine.",
-    date: "March 27, 2025",
-    time: "6:00 PM - 9:00 PM",
-    location: "Main Auditorium",
-    format: "Individual",
-    duration: "3 Minutes",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
-    capacityLabel: "Participants",
-    max: 30,
-    current: 12,
-    bgA: "from-pink-400",
-    bgB: "to-red-400",
-    accent: "text-pink-600",
-  },
-  "standup-comedy": {
-    title: "Standup Comedy Contest",
-    description:
-      "Make the audience roar with laughter in this hilarious standup comedy contest. Your wit, timing, and charisma will be your greatest assets on stage. From observational humor to storytelling, show us your unique comedic voice.",
-    date: "March 28, 2025",
-    time: "7:00 PM - 10:00 PM",
-    location: "Comedy Club",
-    format: "Individual",
-    duration: "5 Minutes",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
-    capacityLabel: "Participants",
-    max: 20,
-    current: 8,
-    bgA: "from-yellow-400",
-    bgB: "to-orange-400",
-    accent: "text-yellow-600",
-  },
-  "tug-of-war": {
-    title: "Tug of War",
-    description:
-      "Grip the rope, brace your stance, and pull in perfect sync. Tug of War pits raw power against strategy as teams battle for leverage in a best-of-three showdown.",
-    date: "March 29, 2025",
-    time: "5:00 PM - 8:00 PM",
-    location: "Main Arena",
-    format: "Team (4-6)",
-    duration: "5 Minutes",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1500 per team",
-    capacityLabel: "Teams",
-    max: 10,
-    current: 4,
-    bgA: "from-amber-400",
-    bgB: "to-yellow-500",
-    accent: "text-amber-600",
-  },
-  "the-memory-pat": {
-    title: "The Memory Pat",
-    description:
-      "Test your memory skills in this challenging pattern recognition game. Remember sequences, colors, and patterns to prove your mental agility and concentration. Challenge yourself with increasingly complex patterns and sequences.",
-    date: "March 30, 2025",
-    time: "4:00 PM - 7:00 PM",
-    location: "Game Room",
-    format: "Individual",
-    duration: "5 Minutes",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
-    capacityLabel: "Participants",
-    max: 30,
-    current: 12,
-    bgA: "from-purple-400",
-    bgB: "to-indigo-400",
-    accent: "text-purple-600",
-  },
-  "minute-to-win-it": {
-    title: "Minute to Win It",
-    description:
-      "Stack, toss, balance, and solve lightning-fast challenges with only sixty seconds on the clock. Each round is a new surprise that tests focus and dexterity.",
-    date: "March 31, 2025",
-    time: "3:00 PM - 6:00 PM",
-    location: "Activity Hall",
-    format: "Individual",
-    duration: "1 Minute",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
-    capacityLabel: "Participants",
-    max: 25,
-    current: 10,
-    bgA: "from-sky-400",
-    bgB: "to-blue-500",
-    accent: "text-sky-600",
-  },
-  "arm-wrestling": {
-    title: "Arm Wrestling Championship",
-    description:
-      "Square up, lock hands, and unleash controlled strength in intense one-on-one bouts. Technique, endurance, and explosive power crown the arm wrestling champion.",
-    date: "April 1, 2025",
-    time: "5:00 PM - 8:00 PM",
-    location: "Strength Zone",
-    format: "Individual",
-    duration: "3 Minutes",
-    prize: "Rs. 50,000",
-    runnerUpPrize: "Rs. 40,000",
-    registrationFee: "Rs. 1000 per person",
-    capacityLabel: "Participants",
-    max: 32,
-    current: 14,
-    bgA: "from-rose-400",
-    bgB: "to-red-500",
-    accent: "text-rose-600",
-  },
-};
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 interface PageProps {
   params: Promise<{ event: string }>;
 }
 
-export default function SuffasGotTalentEventPage({ params }: PageProps) {
+export default function CreativeGamePage({ params }: PageProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const { event } = use(params);
-  const key = event as EventKey;
-  const config = EVENT_CONFIG[key];
-  if (!config) return notFound();
+  const game = CREATIVE_GAMES[event];
+  const meta = PENTA_ARCADE_META;
+
+  if (!game) return notFound();
 
   return (
     <>
-      <main ref={sectionRef} className="relative min-h-screen bg-white text-black">
-        {/* Logo */}
+      <main
+        ref={sectionRef}
+        className="relative min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-black overflow-x-hidden pb-20"
+      >
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+
         <div className="absolute top-6 left-6 z-50">
-          <Image
-            src="/sponsors/Logo Spectrum.png"
-            alt="Spectrum Logo"
-            width={48}
-            height={48}
-            className="h-12 w-auto"
-          />
+          <Link href="/">
+            <Image
+              src="/sponsors/Logo Spectrum.png"
+              alt="Spectrum Logo"
+              width={48}
+              height={48}
+              className="h-12 w-auto"
+            />
+          </Link>
         </div>
 
-        <div className="container mx-auto px-6 py-20">
-          {/* Header */}
+        <div className="container mx-auto px-6 py-24 relative z-10">
           <div className="text-center mb-16">
             <TimelineContent animationNum={1} timelineRef={sectionRef} once={false} as="div">
               <Link
                 href="/modules/suffas-got-talent"
-                className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8`}
+                className={`${spaceGrotesk.className} inline-flex items-center text-sm text-gray-600 hover:text-black transition-colors mb-8 border-2 border-black px-4 py-1.5 rounded-full bg-white shadow-md`}
               >
-                ← Back to Play To Win
+                ← Back to Penta Arcade
               </Link>
             </TimelineContent>
 
-            <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="div">
-              <h1 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black text-center mb-6`}>
-                {config.title}
+            <TimelineContent animationNum={2} timelineRef={sectionRef} once={false} as="h1">
+              <span className="text-xs font-bold text-[#B8860B] uppercase tracking-widest block mb-3">
+                {game.gameType === "surprise" ? "Day 3 Finale Game" : "Announced Game Pool"}
+              </span>
+              <h1 className={`${orbitron.className} text-3xl sm:text-4xl md:text-6xl font-bold text-black text-center leading-tight`}>
+                {game.title}
               </h1>
             </TimelineContent>
 
             <TimelineContent animationNum={3} timelineRef={sectionRef} once={false} as="div">
-              <div className="w-24 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-8"></div>
+              <div className="w-24 h-[2px] bg-[#FFD700] mx-auto mt-6 mb-2" />
+              <p className={`${spaceGrotesk.className} text-sm text-[#B8860B] tracking-widest uppercase font-semibold`}>
+                {game.tagline}
+              </p>
             </TimelineContent>
           </div>
 
-          {/* Main Content - Event Info and Registration Side by Side */}
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Event Information */}
-            <TimelineContent animationNum={5} timelineRef={sectionRef} once={false} as="div">
-              <div className="rounded-2xl p-[1px] bg-gradient-to-br from-[#FFD700] to-[#C5A100] shadow-[0_0_20px_rgba(255,215,0,0.18)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:shadow-2xl">
-                <div className="rounded-2xl p-8 bg-white shadow-inner">
-                  <h2 className={`${orbitron.className} text-2xl font-bold text-black mb-3`}>Event Information</h2>
-                  <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#C5A100] mb-6"></div>
+          <div className="grid lg:grid-cols-12 gap-10 max-w-7xl mx-auto">
+            <div className="lg:col-span-7 space-y-10">
+              <TimelineContent animationNum={5} timelineRef={sectionRef} once={true} as="div">
+                <div className="rounded-3xl border-2 border-black bg-white p-6 sm:p-8 shadow-md">
+                  <h2 className={`${orbitron.className} text-xl font-bold text-black mb-4 flex items-center gap-2.5`}>
+                    <FaClipboardList className="text-[#C5A100] text-lg" /> Game Overview
+                  </h2>
+                  <div className="w-12 h-[2px] bg-[#FFD700] mb-6" />
+                  <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed`}>
+                    {game.description}
+                  </p>
+                </div>
+              </TimelineContent>
 
-                  <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="p">
-                    <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed mb-6`}>
-                      {config.description}
-                    </p>
-                  </TimelineContent>
+              <TimelineContent animationNum={6} timelineRef={sectionRef} once={true} as="div">
+                <div className="rounded-3xl border-2 border-black bg-white p-6 sm:p-8 shadow-md">
+                  <h2 className={`${orbitron.className} text-xl font-bold text-black mb-4 flex items-center gap-2.5`}>
+                    <FaCheckCircle className="text-[#C5A100] text-lg" /> Rules
+                  </h2>
+                  <div className="w-12 h-[2px] bg-[#FFD700] mb-6" />
+                  <ul className="space-y-4 text-xs sm:text-sm text-gray-600">
+                    {game.rules.map((rule, idx) => (
+                      <li key={idx} className="flex gap-3 leading-relaxed">
+                        <span className="text-[#B8860B] font-bold shrink-0">{String(idx + 1).padStart(2, "0")}.</span>
+                        <span>{rule}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TimelineContent>
 
-                  <div className="space-y-4">
-                    <TimelineContent animationNum={8} timelineRef={sectionRef} once={true} as="div">
-                      <div className="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gradient-to-r hover:from-[#FFF4BF] hover:to-[#FFE38E] transition-all duration-300">
-                        <FaClock className="text-[#C5A100] text-xl mr-4" />
-                        <div>
-                          <p className={`${spaceGrotesk.className} text-sm text-gray-600`}>Duration</p>
-                          <p className={`${spaceGrotesk.className} text-lg font-semibold text-black`}>{config.duration}</p>
+              {game.scoring && game.scoring.length > 0 && (
+                <TimelineContent animationNum={7} timelineRef={sectionRef} once={true} as="div">
+                  <div className="rounded-3xl border-2 border-black bg-white p-6 sm:p-8 shadow-md">
+                    <h2 className={`${orbitron.className} text-xl font-bold text-black mb-4 flex items-center gap-2.5`}>
+                      <FaBalanceScale className="text-[#C5A100] text-lg" /> Scoring
+                    </h2>
+                    <div className="w-12 h-[2px] bg-[#FFD700] mb-6" />
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {game.scoring.map((s) => (
+                        <div key={s.action} className="p-4 rounded-2xl border-2 border-black bg-gray-50">
+                          <span className="text-xs font-bold text-black uppercase tracking-wider block mb-1">{s.action}</span>
+                          <span className={`${orbitron.className} text-sm font-extrabold text-[#B8860B]`}>{s.points}</span>
                         </div>
-                      </div>
-                    </TimelineContent>
+                      ))}
+                    </div>
+                  </div>
+                </TimelineContent>
+              )}
 
-                    <TimelineContent animationNum={9} timelineRef={sectionRef} once={true} as="div">
-                      <div className="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gradient-to-r hover:from-[#FFF4BF] hover:to-[#FFE38E] transition-all duration-300">
-                        <FaUsers className="text-[#C5A100] text-xl mr-4" />
-                        <div>
-                          <p className={`${spaceGrotesk.className} text-sm text-gray-600`}>Format</p>
-                          <p className={`${spaceGrotesk.className} text-lg font-semibold text-black`}>{config.format}</p>
-                        </div>
+              <TimelineContent animationNum={8} timelineRef={sectionRef} once={true} as="div">
+                <div className="rounded-3xl border-2 border-black bg-white p-6 sm:p-8 shadow-md">
+                  <h2 className={`${orbitron.className} text-xl font-bold text-black mb-4 flex items-center gap-2.5`}>
+                    <FaClock className="text-[#C5A100] text-lg" /> Event Timeline
+                  </h2>
+                  <div className="w-12 h-[2px] bg-[#FFD700] mb-6" />
+                  <div className="border-l-2 border-black pl-6 space-y-6">
+                    {meta.timeline.map((item, idx) => (
+                      <div key={idx} className="relative">
+                        <div className="absolute -left-[32px] top-1.5 w-3 h-3 rounded-full bg-[#FFD700] border border-black shadow-sm" />
+                        <span className="text-[10px] font-bold text-[#B8860B] uppercase tracking-widest block mb-1">
+                          {item.time}
+                        </span>
+                        <p className={`${spaceGrotesk.className} text-sm text-gray-700 leading-relaxed`}>{item.event}</p>
                       </div>
-                    </TimelineContent>
+                    ))}
                   </div>
                 </div>
-              </div>
-            </TimelineContent>
+              </TimelineContent>
+            </div>
 
-            {/* Registration Card */}
-            <TimelineContent animationNum={6} timelineRef={sectionRef} once={false} as="div">
-              <div className="rounded-2xl p-[1px] bg-gradient-to-br from-[#FFD700] to-[#C5A100] shadow-[0_0_20px_rgba(255,215,0,0.18)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:shadow-2xl">
-                <div
-                  className="rounded-2xl p-8 transition-all duration-300"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #8B7355 0%, #D4AF37 25%, #F4E4BC 50%, #D4AF37 75%, #8B7355 100%), " +
-                      "radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.2), transparent 50%)",
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -2px 8px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.1)",
-                  }}
-                >
-                  <h3 className={`${orbitron.className} text-2xl font-bold text-black mb-6`}>Registration</h3>
+            <div className="lg:col-span-5">
+              <TimelineContent animationNum={9} timelineRef={sectionRef} once={false} as="div" className="lg:sticky lg:top-24">
+                <div className="rounded-3xl p-6 sm:p-8 border-2 border-black bg-white shadow-xl relative text-black">
+                  <h3 className={`${orbitron.className} text-xl font-bold text-black mb-6 border-b-2 border-gray-100 pb-4 uppercase tracking-widest`}>
+                    Penta Arcade
+                  </h3>
 
-                  <div className="space-y-4 mb-8">
-                    <TimelineContent animationNum={10} timelineRef={sectionRef} once={true} as="div">
-                      <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
-                        <span className={`${spaceGrotesk.className} text-black/70`}>Prize Pool</span>
-                        <span className={`${orbitron.className} text-2xl font-bold text-black`}>{config.prize}</span>
-                      </div>
-                    </TimelineContent>
-
-                    {config.runnerUpPrize && (
-                      <TimelineContent animationNum={11} timelineRef={sectionRef} once={true} as="div">
-                        <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
-                          <span className={`${spaceGrotesk.className} text-black/70`}>Runner Up</span>
-                          <span className={`${spaceGrotesk.className} text-lg font-semibold text-black`}>{config.runnerUpPrize}</span>
-                        </div>
-                      </TimelineContent>
-                    )}
-
-                    <TimelineContent animationNum={12} timelineRef={sectionRef} once={true} as="div">
-                      <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/20 transition-all duration-300">
-                        <span className={`${spaceGrotesk.className} text-black/70`}>Entry Fee</span>
-                        <span className={`${spaceGrotesk.className} text-lg font-semibold text-black`}>{config.registrationFee}</span>
-                      </div>
-                    </TimelineContent>
+                  <div className="space-y-5 mb-8">
+                    <div className="flex justify-between items-center py-2.5 border-b border-gray-100">
+                      <span className="text-xs text-gray-500 uppercase tracking-widest flex items-center gap-2 font-bold">
+                        <FaTrophy className="text-[#C5A100]" /> Prize Pool
+                      </span>
+                      <span className={`${orbitron.className} text-lg font-bold text-[#B8860B]`}>{meta.prizePool}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5 border-b border-gray-100">
+                      <span className="text-xs text-gray-500 uppercase tracking-widest flex items-center gap-2 font-bold">
+                        <FaClock className="text-blue-500" /> Duration
+                      </span>
+                      <span className={`${spaceGrotesk.className} text-sm font-semibold text-black`}>{meta.duration}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5 border-b border-gray-100">
+                      <span className="text-xs text-gray-500 uppercase tracking-widest flex items-center gap-2 font-bold">
+                        <FaUsers className="text-purple-500" /> Team Size
+                      </span>
+                      <span className={`${spaceGrotesk.className} text-sm font-semibold text-black`}>{meta.teamSize}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5 border-b border-gray-100">
+                      <span className="text-xs text-gray-500 uppercase tracking-widest flex items-center gap-2 font-bold">
+                        <FaCalendarAlt className="text-green-500" /> Event
+                      </span>
+                      <span className={`${spaceGrotesk.className} text-sm font-semibold text-black`}>{meta.date}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5 border-b border-gray-100">
+                      <span className="text-xs text-gray-500 uppercase tracking-widest flex items-center gap-2 font-bold">
+                        <FaMapMarkerAlt className="text-red-500" /> Venue
+                      </span>
+                      <span className={`${spaceGrotesk.className} text-sm font-semibold text-black text-right max-w-[55%]`}>{meta.location}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5">
+                      <span className="text-xs text-gray-500 uppercase tracking-widest font-bold">Entry Fee</span>
+                      <span className={`${orbitron.className} text-lg font-bold text-black`}>{meta.entryFee}</span>
+                    </div>
                   </div>
 
-                  <TimelineContent animationNum={13} timelineRef={sectionRef} once={true} as="div">
+                  <div className="space-y-3">
                     <Link
-                      href="#"
-                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-white font-bold rounded-full transition transform cursor-not-allowed pointer-events-none`}
+                      href="/register?category=Play%20To%20Win&game=Penta%20Arcade"
+                      className={`${orbitron.className} w-full block text-center py-4 bg-black text-[#FFD700] hover:bg-neutral-900 border-2 border-black font-extrabold rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-md`}
                     >
-                      Coming Soon
+                      Register Team
                     </Link>
-                  </TimelineContent>
+                    <Link
+                      href={meta.handbookUrl}
+                      download
+                      className={`${orbitron.className} w-full flex items-center justify-center gap-2 py-3 border-2 border-black bg-white hover:bg-neutral-100 text-black font-bold rounded-xl text-xs uppercase tracking-widest`}
+                    >
+                      <FaDownload className="text-xs" /> Handbook
+                    </Link>
+                  </div>
 
-                  <TimelineContent animationNum={14} timelineRef={sectionRef} once={true} as="p">
-                    <p className={`${spaceGrotesk.className} text-xs text-black/60 text-center mt-4`}>
-                      Registration closes 24 hours before the event
-                    </p>
-                  </TimelineContent>
+                  <p className={`${spaceGrotesk.className} text-[10px] text-gray-500 text-center mt-4 font-bold`}>
+                    One registration covers all 5 games across the 3-day event.
+                  </p>
                 </div>
-              </div>
-            </TimelineContent>
+              </TimelineContent>
+            </div>
           </div>
         </div>
       </main>

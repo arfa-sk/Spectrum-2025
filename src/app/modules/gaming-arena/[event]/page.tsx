@@ -83,7 +83,7 @@ const EVENT_CONFIG: Record<
     format: "4v4 Squad (Team)",
     duration: "Map Bracket Matches",
     prize: "Rs 120K",
-    registrationFee: "Rs. 1500 per team",
+    registrationFee: "Rs. 2000 per team",
     capacityLabel: "Squads Registered",
     max: 32,
     current: 12,

@@ -62,12 +62,7 @@ const subCategories: SubCategories = {
     "Vibe & Pitch Hackathon"
   ],
   "Play To Win": [
-    "Singing",
-    "Standup Comedy",
-    "Tug of War",
-    "The Memory Pat",
-    "Minute to Win It",
-    "Arm Wrestling"
+    "Penta Arcade"
   ],
   "Spectrum Startup Arena": [],
   "Qawali Night": [
@@ -136,6 +131,7 @@ const getRequiredTeamMembersCount = (mainCategory: string, subCategory: string, 
     if (eSportsFivePlayerGames.includes(subCategory)) return 4;
     if (teamESportsGames.includes(subCategory)) return 3;
   }
+  if (mainCategory === "Play To Win") return 4;
   return 0;
 };
 
@@ -247,6 +243,12 @@ export default function RegisterPage() {
         "competitive-programming": "Competitive Programming",
         "ai-ds-hackathon": "Build with AI: AR Edition",
         "build-with-ai-ar": "Build with AI: AR Edition",
+        "penta-arcade": "Penta Arcade",
+        "chromatic-harvest": "Penta Arcade",
+        "memory-matrix": "Penta Arcade",
+        "iron-maze": "Penta Arcade",
+        "wavelength-survival": "Penta Arcade",
+        "surprise-finale": "Penta Arcade",
         "vibe-and-pitch": "Vibe & Pitch Hackathon"
       };
 
