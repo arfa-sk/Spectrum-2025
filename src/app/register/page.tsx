@@ -1097,6 +1097,7 @@ export default function RegisterPage() {
                         <option value="">Select a category</option>
                         <option value="Hackathon">Hackathon</option>
                         <option value="E-Sports">E-Sports</option>
+                        <option value="Play To Win">Play To Win</option>
                         <option value="Special Deals">Special Deals</option>
                       </select>
                       {errors.mainCategory && (
