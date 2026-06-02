@@ -3,6 +3,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { rateLimit, getClientIP } from "@/lib/rateLimiter";
 import { logger } from "@/lib/logger";
 import { appendGamingRegistrationToSheet } from "@/lib/gamingSheetSync";
+import { appendHackathonRegistrationToSheet } from "@/lib/hackathonSheetSync";
 
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -334,6 +335,10 @@ export async function POST(request: NextRequest) {
 
     if (body.mainCategory === "E-Sports" && regData) {
       await appendGamingRegistrationToSheet(regData);
+    }
+
+    if (body.mainCategory === "Hackathon" && regData) {
+      await appendHackathonRegistrationToSheet(regData);
     }
 
     return NextResponse.json(

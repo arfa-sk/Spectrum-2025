@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "backfill:gaming-sheet": "node scripts/backfill-gaming-sheet.mjs"
+    "backfill:gaming-sheet": "node scripts/backfill-gaming-sheet.mjs",
+    "backfill:hackathon-sheet": "node scripts/backfill-hackathon-sheet.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
