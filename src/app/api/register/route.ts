@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { rateLimit, getClientIP } from "@/lib/rateLimiter";
 import { logger } from "@/lib/logger";
-import { syncRegistrationToGoogleSheets } from "@/lib/registrationSheetSync";
+import { appendGamingRegistrationToSheet } from "@/lib/gamingSheetSync";
+import { appendHackathonRegistrationToSheet } from "@/lib/hackathonSheetSync";
 
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -332,8 +333,12 @@ export async function POST(request: NextRequest) {
     const processingTime = Date.now() - startTime;
     logger.info("Registration successful", { ip: clientIP, category, processingTime });
 
-    if (regData) {
-      await syncRegistrationToGoogleSheets(regData);
+    if (body.mainCategory === "E-Sports" && regData) {
+      await appendGamingRegistrationToSheet(regData);
+    }
+
+    if (body.mainCategory === "Hackathon" && regData) {
+      await appendHackathonRegistrationToSheet(regData);
     }
 
     return NextResponse.json(
