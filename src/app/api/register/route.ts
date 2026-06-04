@@ -4,6 +4,10 @@ import { rateLimit, getClientIP } from "@/lib/rateLimiter";
 import { logger } from "@/lib/logger";
 import { appendGamingRegistrationToSheet } from "@/lib/gamingSheetSync";
 import { appendHackathonRegistrationToSheet } from "@/lib/hackathonSheetSync";
+import {
+  getHackathonClosedRegistrationMessage,
+  isHackathonSubcategoryRegistrationOpen,
+} from "@/config/hackathon";
 
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -246,6 +250,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: "Validation failed", errors: validation.errors },
         { status: 400 }
+      );
+    }
+
+    if (
+      body.mainCategory === "Hackathon" &&
+      body.subCategory &&
+      !isHackathonSubcategoryRegistrationOpen(body.subCategory)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: getHackathonClosedRegistrationMessage(body.subCategory),
+          registrationClosed: true,
+        },
+        { status: 403 }
       );
     }
 

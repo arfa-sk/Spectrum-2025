@@ -21,7 +21,8 @@ import {
   FaArrowRight,
   FaTimes,
   FaCoins,
-  FaDownload
+  FaDownload,
+  FaLock
 } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -136,6 +137,14 @@ export default function HackathonPage() {
                   {/* Elegant Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/35 transition-all duration-300 group-hover:from-black/85 group-hover:to-black/45"></div>
 
+                  {track.registrationClosed && (
+                    <div className="absolute top-5 right-5 z-10">
+                      <span className={`${spaceGrotesk.className} inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600/95 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full border border-white/20 shadow-lg`}>
+                        <FaLock className="text-[10px]" /> Closed
+                      </span>
+                    </div>
+                  )}
+
                   {/* Card Content - Title at top left */}
                   <div className="absolute top-6 left-6 right-6">
                     {track.presentedBy && (
@@ -185,9 +194,16 @@ export default function HackathonPage() {
 
               {/* Header Title */}
               <div className="mb-6">
-                <span className={`${spaceGrotesk.className} inline-block px-4 py-1.5 text-xs font-bold bg-[#FFD700] text-black rounded-full mb-3 shadow`}>
-                  {activeTrack.format} Competition
-                </span>
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <span className={`${spaceGrotesk.className} inline-block px-4 py-1.5 text-xs font-bold bg-[#FFD700] text-black rounded-full shadow`}>
+                    {activeTrack.format} Competition
+                  </span>
+                  {activeTrack.registrationClosed && (
+                    <span className={`${spaceGrotesk.className} inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold bg-red-600 text-white rounded-full shadow`}>
+                      <FaLock className="text-[10px]" /> Registration Closed
+                    </span>
+                  )}
+                </div>
                 {activeTrack.presentedBy && (
                   <div className="flex items-center gap-4 mb-4 bg-gray-100 px-5 py-3.5 rounded-2xl border-2 border-gray-300 w-fit shadow-sm">
                     <img src={activeTrack.presentedBy.logo} alt={activeTrack.presentedBy.name} className="w-12 h-12 rounded-xl" />
@@ -252,13 +268,26 @@ export default function HackathonPage() {
                     <FaDownload className="text-xs" /> Handbook
                   </Link>
                 )}
-                <Link
-                  href={`/register?category=Hackathon&track=${encodeURIComponent(activeTrack.title)}`}
-                  className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg text-xs sm:text-sm`}
-                >
-                  Register Now
-                </Link>
+                {activeTrack.registrationClosed ? (
+                  <div className={`${orbitron.className} flex-1 py-4 px-4 bg-neutral-100 border-2 border-neutral-300 text-neutral-600 text-center font-bold rounded-2xl text-xs sm:text-sm cursor-not-allowed flex flex-col items-center justify-center gap-1`}>
+                    <span className="inline-flex items-center gap-2 text-black/70">
+                      <FaLock className="text-xs" /> Registration Closed
+                    </span>
+                  </div>
+                ) : (
+                  <Link
+                    href={`/register?category=Hackathon&track=${encodeURIComponent(activeTrack.title)}`}
+                    className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg text-xs sm:text-sm`}
+                  >
+                    Register Now
+                  </Link>
+                )}
               </div>
+              {activeTrack.registrationClosed && (
+                <p className={`${spaceGrotesk.className} mt-4 text-sm text-gray-600 text-center leading-relaxed`}>
+                  {activeTrack.registrationClosedMessage}
+                </p>
+              )}
             </div>
           </div>
         )}

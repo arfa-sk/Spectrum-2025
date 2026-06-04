@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Orbitron, Space_Grotesk } from "next/font/google";
-import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle, FaCogs, FaTicketAlt } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaUniversity, FaIdCard, FaTrophy, FaUsers, FaCheckCircle, FaExclamationCircle, FaCogs, FaTicketAlt, FaLock } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -14,6 +14,11 @@ import {
   MAX_TEAM_LOGO_INPUT_BYTES,
   uploadTeamLogo,
 } from "@/lib/teamLogoUpload";
+import {
+  HACKATHON_CONFIG,
+  getHackathonClosedRegistrationMessage,
+  isHackathonSubcategoryRegistrationOpen,
+} from "@/config/hackathon";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
@@ -56,11 +61,9 @@ const subCategories: SubCategories = {
     "Counter-Strike 2",
     "Valorant"
   ],
-  "Hackathon": [
-    "Competitive Programming",
-    "Build with AI: AR Edition",
-    "Vibe & Pitch Hackathon"
-  ],
+  "Hackathon": Object.values(HACKATHON_CONFIG)
+    .filter((track) => !track.registrationClosed)
+    .map((track) => track.title),
   "Play To Win": [
     "Penta Arcade"
   ],
@@ -184,6 +187,7 @@ export default function RegisterPage() {
     type: "registered" | "not_registered" | "error";
     message: string;
   } | null>(null);
+  const [closedTrackNotice, setClosedTrackNotice] = useState<string | null>(null);
 
   useEffect(() => {
     return () => {
@@ -272,11 +276,26 @@ export default function RegisterPage() {
       } else if (category && subCategories[category]) {
         const rawSub = subCategoryParam || track || game;
         const mappedSub = rawSub ? (trackMap[rawSub] || rawSub) : "";
-        setFormData(prev => ({
-          ...prev,
-          mainCategory: category,
-          subCategory: mappedSub && subCategories[category].includes(mappedSub) ? mappedSub : ""
-        }));
+        if (
+          category === "Hackathon" &&
+          mappedSub &&
+          !isHackathonSubcategoryRegistrationOpen(mappedSub)
+        ) {
+          setClosedTrackNotice(getHackathonClosedRegistrationMessage(mappedSub));
+          setFormData((prev) => ({
+            ...prev,
+            mainCategory: category,
+            subCategory: "",
+          }));
+        } else {
+          setClosedTrackNotice(null);
+          setFormData((prev) => ({
+            ...prev,
+            mainCategory: category,
+            subCategory:
+              mappedSub && subCategories[category].includes(mappedSub) ? mappedSub : "",
+          }));
+        }
       }
     }
   }, []);
@@ -421,8 +440,11 @@ export default function RegisterPage() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "mainCategory" ? { subCategory: "" } : {})
+      ...(name === "mainCategory" ? { subCategory: "" } : {}),
     }));
+    if (name === "mainCategory" || name === "subCategory") {
+      setClosedTrackNotice(null);
+    }
     // Clear error for this field when user starts typing
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -470,6 +492,15 @@ export default function RegisterPage() {
     const categoriesWithSubCategories = ["E-Sports", "Hackathon", "Play To Win", "Qawali Night", "Special Deals"];
     if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
       newErrors.subCategory = "Please select a sub-category";
+    }
+
+    if (
+      formData.mainCategory === "Hackathon" &&
+      formData.subCategory &&
+      !isHackathonSubcategoryRegistrationOpen(formData.subCategory)
+    ) {
+      setClosedTrackNotice(getHackathonClosedRegistrationMessage(formData.subCategory));
+      newErrors.subCategory = "Registration for this track is closed";
     }
 
     // Team validation
@@ -1134,6 +1165,24 @@ export default function RegisterPage() {
                             {errors.subCategory}
                           </p>
                         )}
+                      </div>
+                    )}
+
+                    {closedTrackNotice && (
+                      <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
+                        <p className={`${spaceGrotesk.className} text-sm font-bold text-amber-900 flex items-center gap-2`}>
+                          <FaLock className="text-amber-700 shrink-0" />
+                          Registration closed for this track
+                        </p>
+                        <p className={`${spaceGrotesk.className} text-sm text-amber-900/90 mt-2 leading-relaxed`}>
+                          {closedTrackNotice}
+                        </p>
+                        <Link
+                          href="/modules/hackathon"
+                          className={`${orbitron.className} inline-block mt-3 text-xs font-bold uppercase tracking-wider text-black hover:text-[#C5A100] transition-colors`}
+                        >
+                          View open hackathon tracks →
+                        </Link>
                       </div>
                     )}
 

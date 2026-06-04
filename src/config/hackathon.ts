@@ -31,6 +31,22 @@ export interface HackathonTrack {
   logisticNotes?: string[];
   prizeSplitDetails?: { place: string; prize: string }[];
   mentorSetup?: string[];
+  /** When true, public registration is disabled for this track. */
+  registrationClosed?: boolean;
+  registrationClosedMessage?: string;
+}
+
+const DEFAULT_CLOSED_MESSAGE =
+  "Registration for this track is now closed. Thank you for the overwhelming response — explore our other hackathon tracks below.";
+
+export function isHackathonSubcategoryRegistrationOpen(subCategory: string): boolean {
+  const track = Object.values(HACKATHON_CONFIG).find((t) => t.title === subCategory);
+  return track ? !track.registrationClosed : true;
+}
+
+export function getHackathonClosedRegistrationMessage(subCategory: string): string {
+  const track = Object.values(HACKATHON_CONFIG).find((t) => t.title === subCategory);
+  return track?.registrationClosedMessage ?? DEFAULT_CLOSED_MESSAGE;
 }
 
 export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
@@ -141,6 +157,9 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
   "build-with-ai-ar": {
     id: "build-with-ai-ar",
     title: "Build with AI: AR Edition",
+    registrationClosed: true,
+    registrationClosedMessage:
+      "Registration for Build with AI: AR Edition is now closed — we've reached capacity for this track. You can still register for Competitive Programming or Vibe & Pitch Hackathon, or email spectrum2026.dsu@gmail.com with any questions.",
     presentedBy: { name: "Cognivision", logo: "/gallery/file.svg" },
     tagline: "Live Coding AR Competition · Powered by Cognivision · 1-Day Event",
     description: "A one-day live coding event powered by Cognivision, a spatial computing platform that lets you build real augmented reality and computer vision mobile apps using AI. Start with a hands-on workshop, then compete to build the best AR application. No prior AR experience required — what's tested is your creativity, speed, and ability to ship something that works.",

@@ -12,7 +12,8 @@ import {
   FaCheckCircle,
   FaClipboardList,
   FaBalanceScale,
-  FaArrowRight
+  FaArrowRight,
+  FaLock
 } from "react-icons/fa";
 import { TimelineContent } from "@/components/timeline-animation";
 import { useRef, use } from "react";
@@ -237,17 +238,33 @@ export default function HackathonEventPage({ params }: PageProps) {
 
                   {/* COMMENCE REGISTRATION CTA */}
                   <div className="mt-8">
-                    <Link
-                      href={`/register?category=Hackathon&track=${track.id}`}
-                      className={`${orbitron.className} w-full block text-center py-4 bg-gradient-to-r from-black to-gray-800 text-[#FFD700] hover:bg-gradient-to-r hover:from-[#FFD700] hover:to-[#B8860B] hover:text-black border-2 border-black font-extrabold rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-md`}
-                    >
-                      Commence Registration
-                    </Link>
+                    {track.registrationClosed ? (
+                      <div
+                        className={`${orbitron.className} w-full text-center py-4 bg-neutral-100 text-neutral-600 border-2 border-neutral-300 font-extrabold rounded-xl text-xs uppercase tracking-widest cursor-not-allowed`}
+                      >
+                        <span className="inline-flex items-center justify-center gap-2">
+                          <FaLock className="text-sm" /> Registration Closed
+                        </span>
+                      </div>
+                    ) : (
+                      <Link
+                        href={`/register?category=Hackathon&track=${track.id}`}
+                        className={`${orbitron.className} w-full block text-center py-4 bg-gradient-to-r from-black to-gray-800 text-[#FFD700] hover:bg-gradient-to-r hover:from-[#FFD700] hover:to-[#B8860B] hover:text-black border-2 border-black font-extrabold rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-md`}
+                      >
+                        Commence Registration
+                      </Link>
+                    )}
                   </div>
 
-                  <p className={`${spaceGrotesk.className} text-[10px] text-gray-500 text-center mt-4 font-bold`}>
-                    Registration closes 24 hours prior to technical verification check-in.
-                  </p>
+                  {track.registrationClosed ? (
+                    <p className={`${spaceGrotesk.className} text-xs text-gray-600 text-center mt-4 leading-relaxed`}>
+                      {track.registrationClosedMessage}
+                    </p>
+                  ) : (
+                    <p className={`${spaceGrotesk.className} text-[10px] text-gray-500 text-center mt-4 font-bold`}>
+                      Registration closes 24 hours prior to technical verification check-in.
+                    </p>
+                  )}
 
                 </div>
               </TimelineContent>
