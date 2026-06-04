@@ -39,15 +39,53 @@ export interface RegistrationSheetRow {
   updated_at: string;
 }
 
-export interface CategorySheetConfig {
-  expectedMainCategory: string;
-  sheetIdEnvKey: string;
-  tabEnvKey: string;
+type SheetTarget = "gaming" | "hackathon";
+
+interface SheetTargetConfig {
+  target: SheetTarget;
   logLabel: string;
+  expectedMainCategory: string;
 }
 
-function stripQuotes(val: string | undefined): string | undefined {
-  return val?.replace(/^"|"$/g, "");
+const SHEET_TARGETS: Record<SheetTarget, SheetTargetConfig> = {
+  gaming: {
+    target: "gaming",
+    logLabel: "Gaming",
+    expectedMainCategory: "E-Sports",
+  },
+  hackathon: {
+    target: "hackathon",
+    logLabel: "Hackathon",
+    expectedMainCategory: "Hackathon",
+  },
+};
+
+/** Static env reads — required for Next.js/Vercel to expose vars at runtime */
+function normalizeEnvValue(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
+
+function getSheetId(target: SheetTarget): string | undefined {
+  if (target === "gaming") {
+    return normalizeEnvValue(process.env.GOOGLE_SHEET_ID);
+  }
+  return normalizeEnvValue(process.env.GOOGLE_HACKATHON_SHEET_ID);
+}
+
+function getTabOverride(target: SheetTarget): string | undefined {
+  if (target === "gaming") {
+    return normalizeEnvValue(process.env.GOOGLE_SHEET_TAB);
+  }
+  return normalizeEnvValue(process.env.GOOGLE_HACKATHON_SHEET_TAB);
 }
 
 function parseServiceAccountJson(rawJson: string): { client_email: string; private_key: string } | null {
@@ -59,7 +97,7 @@ function parseServiceAccountJson(rawJson: string): { client_email: string; priva
   }
 }
 
-function getSheetsClient(sheetId: string) {
+function getSheetsClient() {
   const rawJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   if (!rawJson) return null;
 
@@ -71,7 +109,7 @@ function getSheetsClient(sheetId: string) {
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
-  return { sheets: google.sheets({ version: "v4", auth }), sheetId };
+  return google.sheets({ version: "v4", auth });
 }
 
 function formatDate(iso: string): string {
@@ -114,9 +152,9 @@ function googleApiErrorMessage(err: unknown): string {
 async function resolveTabName(
   sheets: ReturnType<typeof google.sheets>,
   sheetId: string,
-  tabEnvKey: string
+  target: SheetTarget
 ): Promise<string> {
-  const configured = stripQuotes(process.env[tabEnvKey]);
+  const configured = getTabOverride(target);
   if (configured) return configured;
 
   const meta = await sheets.spreadsheets.get({ spreadsheetId: sheetId });
@@ -144,32 +182,35 @@ async function ensureHeaders(
   });
 }
 
-/**
- * Append one registration row to the configured Google Sheet.
- * Failures are logged only — registration is never blocked.
- */
-export async function appendRegistrationToCategorySheet(
+export async function appendToSheetTarget(
   reg: RegistrationSheetRow,
-  config: CategorySheetConfig
+  target: SheetTarget
 ): Promise<void> {
-  if (reg.main_category !== config.expectedMainCategory) return;
+  const { logLabel, expectedMainCategory } = SHEET_TARGETS[target];
 
-  const sheetId = stripQuotes(process.env[config.sheetIdEnvKey]);
+  if (reg.main_category !== expectedMainCategory) {
+    return;
+  }
+
+  const sheetId = getSheetId(target);
   if (!sheetId) {
-    logger.warn(`${config.logLabel} sheet sync skipped: ${config.sheetIdEnvKey} not set`);
+    logger.warn(`${logLabel} sheet sync skipped: sheet ID env not set`, {
+      envKey: target === "gaming" ? "GOOGLE_SHEET_ID" : "GOOGLE_HACKATHON_SHEET_ID",
+      registrationId: reg.id,
+    });
     return;
   }
 
-  const client = getSheetsClient(sheetId);
-  if (!client) {
-    logger.warn(`${config.logLabel} sheet sync skipped: GOOGLE_SERVICE_ACCOUNT_JSON not set`);
+  const sheets = getSheetsClient();
+  if (!sheets) {
+    logger.warn(`${logLabel} sheet sync skipped: GOOGLE_SERVICE_ACCOUNT_JSON not set`, {
+      registrationId: reg.id,
+    });
     return;
   }
-
-  const { sheets } = client;
 
   try {
-    const tabName = await resolveTabName(sheets, sheetId, config.tabEnvKey);
+    const tabName = await resolveTabName(sheets, sheetId, target);
     await ensureHeaders(sheets, sheetId, tabName);
 
     await sheets.spreadsheets.values.append({
@@ -182,14 +223,27 @@ export async function appendRegistrationToCategorySheet(
       },
     });
 
-    logger.info(`${config.logLabel} registration appended to Google Sheet`, {
+    logger.info(`${logLabel} registration appended to Google Sheet`, {
       registrationId: reg.id,
       subCategory: reg.sub_category,
+      sheetIdPrefix: sheetId.slice(0, 8),
     });
   } catch (err: unknown) {
-    logger.error(`Failed to append ${config.logLabel.toLowerCase()} registration to Google Sheet`, {
+    logger.error(`Failed to append ${logLabel.toLowerCase()} registration to Google Sheet`, {
       message: googleApiErrorMessage(err),
       registrationId: reg.id,
+      sheetIdPrefix: sheetId.slice(0, 8),
     });
+  }
+}
+
+/**
+ * Route registration to the correct Google Sheet by main_category.
+ */
+export async function syncRegistrationToGoogleSheets(reg: RegistrationSheetRow): Promise<void> {
+  if (reg.main_category === "E-Sports") {
+    await appendToSheetTarget(reg, "gaming");
+  } else if (reg.main_category === "Hackathon") {
+    await appendToSheetTarget(reg, "hackathon");
   }
 }

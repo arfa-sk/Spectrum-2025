@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["googleapis"],
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [60, 75, 85, 100],
