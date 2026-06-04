@@ -152,7 +152,7 @@ export default function ContactUs() {
             }, {
               icon: FaPhoneAlt,
               title: "Call Us",
-              text: "03334445182"
+              text: "+92 334 2862602"
             }].map(({ icon: Icon, title, text }, i) => (
               <div
                 key={i}

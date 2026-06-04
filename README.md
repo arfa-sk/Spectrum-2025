@@ -165,7 +165,7 @@ The project uses:
 ## 📞 Contact
 
 - **Email:** spectrum2026.dsu@gmail.com
-- **Phone:** 03334445182
+- **Phone:** +92 334 2862602
 - **Location:** DHA Suffa University, Karachi
 - **Social:** [@acmatdsu](https://instagram.com/acmatdsu)
 
