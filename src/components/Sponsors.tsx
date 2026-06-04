@@ -12,6 +12,14 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", 
 interface Sponsor {
   name: string;
   image: string;
+  /** Slightly larger logo inside the same partner card */
+  logoScale?: "default" | "large";
+}
+
+function sponsorLogoContainerClass(sponsor: Sponsor): string {
+  return sponsor.logoScale === "large"
+    ? "relative w-36 h-16 flex items-center justify-center"
+    : "relative w-28 h-12 flex items-center justify-center";
 }
 
 export default function Sponsors() {
@@ -23,6 +31,7 @@ export default function Sponsors() {
     { name: "Tapmad", image: "/sponsors/Logo-tapmad.png" },
     { name: "Sports & Youth Affairs Govt of Sindh", image: "/sponsors/Sports & Youth Affairs Department Govt of Sindh Logo.png" },
     { name: "Tapshop", image: "/sponsors/tapshop.png" },
+    { name: "Geeks", image: "/sponsors/geeks logo.avif", logoScale: "large" },
   ];
 
   // Tripled list to ensure a completely seamless and uninterrupted infinite scrolling track
@@ -85,14 +94,14 @@ export default function Sponsors() {
                     className="flex-shrink-0"
                   >
                     <div className="rounded-2xl border border-neutral-200/60 bg-white shadow-sm hover:shadow-md px-6 py-4 transition-all duration-300 hover:scale-105 flex items-center justify-center w-[160px] h-[100px] relative overflow-hidden">
-                      <div className="relative w-28 h-12 flex items-center justify-center">
+                      <div className={sponsorLogoContainerClass(sponsor)}>
                         <Image
                           src={sponsor.image}
                           alt={sponsor.name}
                           fill
                           className="object-contain"
-                          sizes="112px"
-                          priority={i < 4}
+                          sizes={sponsor.logoScale === "large" ? "144px" : "112px"}
+                          priority={i < 5}
                         />
                       </div>
                     </div>
@@ -123,14 +132,14 @@ export default function Sponsors() {
                     className="flex-shrink-0"
                   >
                     <div className="rounded-2xl border border-neutral-200/60 bg-white shadow-sm hover:shadow-md px-6 py-4 transition-all duration-300 hover:scale-105 flex items-center justify-center w-[160px] h-[100px] relative overflow-hidden">
-                      <div className="relative w-28 h-12 flex items-center justify-center">
+                      <div className={sponsorLogoContainerClass(sponsor)}>
                         <Image
                           src={sponsor.image}
                           alt={sponsor.name}
                           fill
                           className="object-contain"
-                          sizes="112px"
-                          priority={i < 4}
+                          sizes={sponsor.logoScale === "large" ? "144px" : "112px"}
+                          priority={i < 5}
                         />
                       </div>
                     </div>

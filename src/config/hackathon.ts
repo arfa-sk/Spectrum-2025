@@ -37,7 +37,7 @@ export interface HackathonTrack {
 }
 
 const DEFAULT_CLOSED_MESSAGE =
-  "Registration for this track is now closed. Thank you for the overwhelming response — explore our other hackathon tracks below.";
+  "Registration for this track has ended — all available slots are full. Thank you for the overwhelming response. Explore our other hackathon tracks below.";
 
 export function isHackathonSubcategoryRegistrationOpen(subCategory: string): boolean {
   const track = Object.values(HACKATHON_CONFIG).find((t) => t.title === subCategory);
@@ -101,6 +101,9 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
   "vibe-and-pitch": {
     id: "vibe-and-pitch",
     title: "Vibe & Pitch Hackathon",
+    registrationClosed: true,
+    registrationClosedMessage:
+      "Registration for Vibe & Pitch Hackathon has ended — all available slots for this track are full. You can still register for Competitive Programming, or email spectrum2026.dsu@gmail.com with any questions.",
     tagline: "Pre-Seed Startup & MVP Software Sprint · 2-Day Event",
     description: "An intensive software sprint where raw ideas transform into working products. Formulate a solution to a real-world problem, build a functional MVP using your choice of modern tech stacks, and deliver a compelling startup-style pitch to industry founders.",
     prizePool: "Rs. 40,000",
@@ -159,7 +162,7 @@ export const HACKATHON_CONFIG: Record<string, HackathonTrack> = {
     title: "Build with AI: AR Edition",
     registrationClosed: true,
     registrationClosedMessage:
-      "Registration for Build with AI: AR Edition is now closed — we've reached capacity for this track. You can still register for Competitive Programming or Vibe & Pitch Hackathon, or email spectrum2026.dsu@gmail.com with any questions.",
+      "Registration for Build with AI: AR Edition has ended — all available slots for this track are full. You can still register for Competitive Programming, or email spectrum2026.dsu@gmail.com with any questions.",
     presentedBy: { name: "Cognivision", logo: "/gallery/file.svg" },
     tagline: "Live Coding AR Competition · Powered by Cognivision · 1-Day Event",
     description: "A one-day live coding event powered by Cognivision, a spatial computing platform that lets you build real augmented reality and computer vision mobile apps using AI. Start with a hands-on workshop, then compete to build the best AR application. No prior AR experience required — what's tested is your creativity, speed, and ability to ship something that works.",
