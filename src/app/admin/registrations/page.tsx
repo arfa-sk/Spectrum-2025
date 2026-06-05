@@ -6,6 +6,7 @@ import { useRegistrationNotifications } from "@/hooks/useRegistrationNotificatio
 import AdminLayout from "@/components/admin/AdminLayout";
 import { FaSearch, FaEye } from "react-icons/fa";
 import { Registration } from "@/types/admin";
+import { getRegistrationCategoryFilterOptions } from "@/config/registrationCategories";
 import { Orbitron } from "next/font/google";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -107,7 +108,9 @@ export default function AdminRegistrations() {
     window.URL.revokeObjectURL(url);
   };
 
-  const categories = Array.from(new Set(registrations.map(reg => reg.main_category)));
+  const categories = getRegistrationCategoryFilterOptions(
+    registrations.map((reg) => reg.main_category)
+  );
 
   return (
     <AdminLayout

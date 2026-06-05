@@ -33,7 +33,7 @@ export default function SpecialDeals() {
         <div className="space-y-2">
           <div className="flex justify-between items-center text-sm border-b border-white/10 pb-2">
             <span className="text-neutral-400">Regular Entry:</span>
-            <span className="line-through text-neutral-500 mr-2 font-semibold">Rs 800</span>
+            <span className="line-through text-neutral-500 mr-2 font-semibold">Rs 700</span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-neutral-400">Bundle Price:</span>

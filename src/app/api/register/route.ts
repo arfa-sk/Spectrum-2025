@@ -62,7 +62,13 @@ function validateRegistration(data: Partial<RegistrationRequest>): {
     errors.push("Main category is required");
   }
 
-  const categoriesWithSubCategories = ["E-Sports", "Hackathon", "Play To Win"];
+  const categoriesWithSubCategories = [
+    "E-Sports",
+    "Hackathon",
+    "Play To Win",
+    "Qawali Night",
+    "Special Deals",
+  ];
   if (categoriesWithSubCategories.includes(data.mainCategory || "") && !data.subCategory) {
     errors.push("Sub-category is required for this category");
   }

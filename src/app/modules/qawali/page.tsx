@@ -205,7 +205,7 @@ export default function QawaliNightPage() {
                       <FaTicketAlt className="text-neutral-600 group-hover:text-[#FFD700] transition-colors" />
                     </div>
                     <h3 className={`${orbitron.className} text-2xl font-bold text-white mb-3`}>
-                      External Entry
+                      External Pass
                     </h3>
                     <p className={`${spaceGrotesk.className} text-xs text-neutral-400 leading-relaxed mb-6`}>
                       Standard gates admission pass for external guests and alumni. Grants full access to DSU main lawn and prime seating rows.
@@ -226,10 +226,10 @@ export default function QawaliNightPage() {
                   <div className="pt-6 border-t border-white/5 space-y-4">
                     <div className="flex justify-between items-end">
                       <span className={`${spaceGrotesk.className} text-xs text-neutral-500 uppercase tracking-wider`}>Ticket Price</span>
-                      <span className={`${spaceGrotesk.className} text-[#FFD700] font-black text-2xl`}>Rs. 800</span>
+                      <span className={`${spaceGrotesk.className} text-[#FFD700] font-black text-2xl`}>Rs. 700</span>
                     </div>
                     <Link
-                      href="/register?category=Qawali&ticket=standard"
+                      href="/register?category=Qawali&ticket=external"
                       className={`${orbitron.className} w-full py-3 bg-neutral-900 group-hover:bg-[#FFD700] border border-neutral-800 group-hover:border-[#FFD700] text-[#FFD700] group-hover:text-black font-black uppercase tracking-[0.2em] text-xs rounded-xl flex items-center justify-center gap-2 transition-all duration-300`}
                     >
                       <span>Book Ticket</span>
@@ -274,10 +274,7 @@ export default function QawaliNightPage() {
                   <div className="pt-6 border-t border-white/5 space-y-4 relative z-10">
                     <div className="flex justify-between items-end">
                       <span className={`${spaceGrotesk.className} text-xs text-neutral-500 uppercase tracking-wider`}>Student Price</span>
-                      <span>
-                        <span className="line-through text-neutral-600 mr-2 text-sm font-bold">Rs. 800</span>
-                        <span className={`${spaceGrotesk.className} text-[#FFD700] font-black text-2xl`}>Rs. 700</span>
-                      </span>
+                      <span className={`${spaceGrotesk.className} text-[#FFD700] font-black text-2xl`}>Rs. 500</span>
                     </div>
                     <Link
                       href="/register?category=Qawali&ticket=student"

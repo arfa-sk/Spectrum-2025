@@ -19,6 +19,13 @@ import {
   getHackathonClosedRegistrationMessage,
   isHackathonSubcategoryRegistrationOpen,
 } from "@/config/hackathon";
+import { REGISTRATION_FORM_MAIN_CATEGORIES } from "@/config/registrationCategories";
+import {
+  QAWALI_NIGHT_SUBCATEGORIES,
+  formatTicketPrice,
+  getPriceFromSubCategoryLabel,
+  resolveQawaliTicketFromUrlParam,
+} from "@/config/qawaliTickets";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
@@ -68,10 +75,7 @@ const subCategories: SubCategories = {
     "Penta Arcade"
   ],
   "Spectrum Startup Arena": [],
-  "Qawali Night": [
-    "Standard Ticket - Rs. 800",
-    "DSU Student Ticket - Rs. 700"
-  ],
+  "Qawali Night": [...QAWALI_NIGHT_SUBCATEGORIES],
   "Special Deals": [
     "Qawali Night Pass - Rs. 700",
     "Hackathon + Qawali Bundle - Rs. 800",
@@ -260,7 +264,7 @@ export default function RegisterPage() {
         setFormData(prev => ({
           ...prev,
           mainCategory: "Qawali Night",
-          subCategory: ticket === "student" ? "DSU Student Ticket - Rs. 700" : "Standard Ticket - Rs. 800"
+          subCategory: resolveQawaliTicketFromUrlParam(ticket)
         }));
       } else if (category === "Special Deals" || category === "Special%20Deals") {
         let mappedDeal = "";
@@ -935,7 +939,10 @@ export default function RegisterPage() {
                       <div className="sm:text-right">
                         <p className="text-gray-400 font-semibold">Payable Amount:</p>
                         <p className={`${orbitron.className} text-xl font-black text-[#FFD700] mt-0.5`}>
-                          {formData.subCategory?.includes("Rs. 800") ? "Rs. 800" : formData.subCategory?.includes("Rs. 700") ? "Rs. 700" : "Select below"}
+                          {(() => {
+                            const price = getPriceFromSubCategoryLabel(formData.subCategory);
+                            return price ? formatTicketPrice(price) : "Select below";
+                          })()}
                         </p>
                       </div>
                     </div>
@@ -1126,10 +1133,11 @@ export default function RegisterPage() {
                           }`}
                       >
                         <option value="">Select a category</option>
-                        <option value="Hackathon">Hackathon</option>
-                        <option value="E-Sports">E-Sports</option>
-                        <option value="Play To Win">Play To Win</option>
-                        <option value="Special Deals">Special Deals</option>
+                        {REGISTRATION_FORM_MAIN_CATEGORIES.map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
                       </select>
                       {errors.mainCategory && (
                         <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
