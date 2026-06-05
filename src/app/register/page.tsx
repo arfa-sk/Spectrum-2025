@@ -447,7 +447,12 @@ export default function RegisterPage() {
       ...(name === "mainCategory" ? { subCategory: "" } : {}),
     }));
     if (name === "mainCategory" || name === "subCategory") {
-      setClosedTrackNotice(null);
+      const newMainCategory = name === "mainCategory" ? value : formData.mainCategory;
+      if (newMainCategory === "Hackathon") {
+        setClosedTrackNotice("Registration for all Hackathon tracks has ended — all available slots are full. Thank you for your overwhelming response.");
+      } else {
+        setClosedTrackNotice(null);
+      }
     }
     // Clear error for this field when user starts typing
     if (errors[name as keyof FormData]) {
@@ -498,13 +503,9 @@ export default function RegisterPage() {
       newErrors.subCategory = "Please select a sub-category";
     }
 
-    if (
-      formData.mainCategory === "Hackathon" &&
-      formData.subCategory &&
-      !isHackathonSubcategoryRegistrationOpen(formData.subCategory)
-    ) {
-      setClosedTrackNotice(getHackathonClosedRegistrationMessage(formData.subCategory));
-      newErrors.subCategory = "Registration for this track is closed";
+    if (formData.mainCategory === "Hackathon") {
+      setClosedTrackNotice("Registration for all Hackathon tracks has ended — all available slots are full. Thank you for your overwhelming response.");
+      newErrors.mainCategory = "Registration for all Hackathon tracks is closed";
     }
 
     // Team validation
@@ -1185,34 +1186,10 @@ export default function RegisterPage() {
                         <p className={`${spaceGrotesk.className} text-sm text-amber-900/90 mt-2 leading-relaxed`}>
                           {closedTrackNotice}
                         </p>
-                        <Link
-                          href="/modules/hackathon"
-                          className={`${orbitron.className} inline-block mt-3 text-xs font-bold uppercase tracking-wider text-black hover:text-[#C5A100] transition-colors`}
-                        >
-                          View open hackathon tracks →
-                        </Link>
                       </div>
                     )}
 
-                    {/* Participation Format */}
-                    {formData.mainCategory === "Hackathon" && (
-                      <div>
-                        <label className="block text-sm font-bold mb-2">
-                          Participation Format <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={hackathonFormat}
-                            onChange={(e) => setHackathonFormat(e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all appearance-none bg-white cursor-pointer"
-                          >
-                            <option value="Solo">Solo (1 Participant)</option>
-                            <option value="Duo">Duo (2 Participants)</option>
-                            <option value="Triplet">Triplet (3 Participants)</option>
-                          </select>
-                        </div>
-                      </div>
-                    )}
+
                   </div>
                 </div>
 
