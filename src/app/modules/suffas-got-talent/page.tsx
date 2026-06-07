@@ -12,6 +12,7 @@ import {
   FaClock,
   FaDownload,
   FaCalendarAlt,
+  FaLock,
 } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -148,6 +149,12 @@ export default function SuffasGotTalentPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/40 transition-all duration-300 group-hover:from-black/90" />
 
+                  <div className="absolute top-5 right-5 z-10">
+                    <span className={`${spaceGrotesk.className} inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600/95 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full border border-white/20 shadow-lg`}>
+                      <FaLock className="text-[10px]" /> Closed
+                    </span>
+                  </div>
+
                   <div className="absolute top-6 left-6 right-6">
                     {game.gameType === "surprise" && (
                       <span className={`${spaceGrotesk.className} inline-block px-3 py-1 text-[10px] font-bold bg-[#FFD700] text-black rounded-full mb-3 uppercase tracking-wider`}>
@@ -245,6 +252,9 @@ export default function SuffasGotTalentPage() {
                   Registration Closed
                 </button>
               </div>
+              <p className={`${spaceGrotesk.className} mt-4 text-sm text-gray-600 text-center leading-relaxed`}>
+                Registration has ended — all available slots are full. Thank you for your overwhelming response.
+              </p>
             </div>
           </div>
         )}

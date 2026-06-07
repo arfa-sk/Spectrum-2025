@@ -497,11 +497,7 @@ export default function RegisterPage() {
       newErrors.mainCategory = "Please select a main category";
     }
 
-    // Sub-category validation (only required if the category has sub-categories)
-    const categoriesWithSubCategories = ["E-Sports", "Hackathon", "Play To Win", "Qawali Night", "Special Deals"];
-    if (categoriesWithSubCategories.includes(formData.mainCategory) && !formData.subCategory) {
-      newErrors.subCategory = "Please select a sub-category";
-    }
+    // Sub-category validation removed since all registrations are closed
 
     if (formData.mainCategory) {
       setClosedTrackNotice(`Registration for ${formData.mainCategory} has ended — all available slots are full. Thank you for your overwhelming response.`);
@@ -802,15 +798,18 @@ export default function RegisterPage() {
             <h1
               className={`${orbitron.className} text-3xl sm:text-4xl md:text-7xl font-bold mb-6 text-black`}
             >
-              REGISTER NOW
+              REGISTRATION CLOSED
             </h1>
           </TimelineContent>
           <TimelineContent animationNum={2} timelineRef={sectionRef} once={false}>
             <div className="w-32 h-1 bg-gradient-to-r from-[#FFD700] to-black mx-auto mb-6"></div>
           </TimelineContent>
           <TimelineContent animationNum={3} timelineRef={sectionRef} once={false}>
-            <p className={`${spaceGrotesk.className} text-lg md:text-xl text-gray-700 max-w-2xl mx-auto`}>
+            <p className={`${spaceGrotesk.className} text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-2`}>
               Join Pakistan&apos;s Premier Tech Festival — Spectrum 2026
+            </p>
+            <p className={`${spaceGrotesk.className} text-md text-red-600 font-bold max-w-2xl mx-auto`}>
+              All slots are fully booked. Thank you for your overwhelming response!
             </p>
           </TimelineContent>
         </div>
@@ -1148,34 +1147,7 @@ export default function RegisterPage() {
                       )}
                     </div>
 
-                    {/* Sub Category */}
-                    {formData.mainCategory && availableSubCategories.length > 0 && (
-                      <div>
-                        <label className="block text-sm font-bold mb-2">
-                          Sub-Category <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name="subCategory"
-                          value={formData.subCategory}
-                          onChange={handleInputChange}
-                          className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all appearance-none bg-white cursor-pointer ${errors.subCategory ? "border-red-500" : "border-gray-300"
-                            }`}
-                        >
-                          <option value="">Select a sub-category</option>
-                          {availableSubCategories.map((subCat) => (
-                            <option key={subCat} value={subCat}>
-                              {subCat}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.subCategory && (
-                          <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                            <FaExclamationCircle className="text-xs" />
-                            {errors.subCategory}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    {/* Sub Category removed since all registrations are closed */}
 
                     {closedTrackNotice && (
                       <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
@@ -1193,113 +1165,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                 {/* Team Information Section */}
-                 {requiredTeamMemberCount > 0 && (
-                 <div className="pt-6 border-t-2 border-gray-200">
-                   <h2 className={`${orbitron.className} text-2xl font-bold mb-6 flex items-center gap-3`}>
-                     <FaUsers className="text-[#FFD700]" />
-                     Team Information
-                   </h2>
-                   <div className="space-y-8">
-                     {/* Team Name */}
-                     <div>
-                       <label className="block text-sm font-bold mb-2">
-                         Team Name <span className="text-red-500">*</span>
-                       </label>
-                       <input
-                         type="text"
-                         name="teamName"
-                         value={formData.teamName}
-                         onChange={handleInputChange}
-                         placeholder="Enter your team name"
-                         className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all ${errors.teamName ? "border-red-500" : "border-gray-300"}`}
-                       />
-                       {errors.teamName && (
-                         <p className="text-red-500 text-sm mt-1">{errors.teamName}</p>
-                       )}
-                     </div>
- 
-                     {/* Team Logo */}
-                     <div>
-                       <label className="block text-sm font-bold mb-2">Team Logo (Optional)</label>
-                       <input
-                         type="file"
-                         accept="image/png,image/jpeg,image/jpg,image/webp"
-                         disabled={isProcessingLogo || isSubmitting}
-                         onChange={(e) => {
-                           void handleTeamLogoSelect(e.target.files?.[0]);
-                           e.target.value = "";
-                         }}
-                         className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#FFD700] focus:border-transparent outline-none transition-all disabled:opacity-60 ${logoError ? "border-red-500" : "border-gray-300"}`}
-                       />
-                       <p className="text-sm text-gray-500 mt-1">
-                         PNG or JPEG. Large photos are auto-compressed before upload.
-                       </p>
-                       {isProcessingLogo && (
-                         <p className="text-sm text-gray-600 mt-1">Processing image...</p>
-                       )}
-                       {logoError && (
-                         <p className="text-red-500 text-sm mt-1">{logoError}</p>
-                       )}
-                       {teamLogo && !logoError && !isProcessingLogo && (
-                         <p className="text-green-700 text-sm mt-1">
-                           Ready: {teamLogo.name} ({formatLogoSize(teamLogo.size)})
-                         </p>
-                       )}
-                       {logoPreview && !logoError && (
-                         <img
-                           src={logoPreview}
-                           alt="Team logo preview"
-                           className="mt-3 h-20 w-20 rounded-lg border border-gray-200 object-cover"
-                         />
-                       )}
-                     </div>
- 
-                     {/* Team Members */}
-                     <div>
-                       <h3 className="text-lg font-bold mb-4">Team Members Details</h3>
-                       <p className="text-sm text-gray-600 mb-4 font-semibold">
-                         Leader is Player 1. {formData.mainCategory === "Hackathon"
-                           ? "Please provide details for Member 2 (and Member 3 if registering as a triplet)."
-                           : `Please provide details for the remaining ${requiredTeamMemberCount} member${requiredTeamMemberCount === 1 ? "" : "s"}.`}
-                       </p>
-                       
-                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                         {Array.from({ length: requiredTeamMemberCount }, (_, index) => index).map((index) => (
-                           <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-                             <h4 className="font-bold text-sm mb-3 text-[#FFD700] bg-black inline-block px-3 py-1 rounded">Member {index + 2}</h4>
-                             <div className="space-y-3">
-                               <input
-                                 type="text"
-                                 placeholder="Full Name *"
-                                 value={formData.teamMembersDetails[index].name}
-                                onChange={(e) => {
-                                  const newDetails = [...formData.teamMembersDetails];
-                                  newDetails[index].name = e.target.value;
-                                  setFormData({ ...formData, teamMembersDetails: newDetails });
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#FFD700] outline-none text-sm"
-                              />
-                              <input
-                                type="text"
-                                placeholder="Phone Number *"
-                                value={formData.teamMembersDetails[index].phoneNumber}
-                                onChange={(e) => {
-                                  const newDetails = [...formData.teamMembersDetails];
-                                  newDetails[index].phoneNumber = e.target.value;
-                                  setFormData({ ...formData, teamMembersDetails: newDetails });
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#FFD700] outline-none text-sm"
-                              />
-
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                )}
+                 {/* Team Information Section removed since all registrations are closed */}
 
                 {/* Consent & Submission */}
                 <div className="pt-6 border-t-2 border-gray-200">
@@ -1330,40 +1196,13 @@ export default function RegisterPage() {
                 <div className="pt-6 text-center">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className={`${orbitron.className} inline-block px-8 sm:px-12 py-5 bg-black text-white font-bold rounded-full shadow-lg transition transform hover:shadow-xl hover:scale-105 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                    disabled
+                    className={`${orbitron.className} inline-block px-8 sm:px-12 py-5 bg-neutral-300 text-neutral-500 font-bold rounded-full shadow-lg cursor-not-allowed`}
                   >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center gap-3">
-                        <svg
-                          className="animate-spin h-5 w-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Submitting...
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center gap-3">
-                        <FaCheckCircle />
-                        Complete Registration
-                      </span>
-                    )}
+                    <span className="flex items-center justify-center gap-3">
+                      <FaLock />
+                      Registration Closed
+                    </span>
                   </button>
                 </div>
 

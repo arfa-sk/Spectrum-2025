@@ -2,7 +2,7 @@
 
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
-import { FaGamepad, FaTimes, FaTrophy, FaUsers, FaCoins } from "react-icons/fa";
+import { FaGamepad, FaTimes, FaTrophy, FaUsers, FaCoins, FaLock } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { TimelineContent } from "@/components/timeline-animation";
@@ -162,6 +162,12 @@ export default function GamingArenaPage() {
                   {/* Elegant Gradient Overlay - Minimal & bright to let beautiful game art pop */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/35 transition-all duration-300 group-hover:from-black/85 group-hover:to-black/45"></div>
                   
+                  <div className="absolute top-5 right-5 z-10">
+                    <span className={`${spaceGrotesk.className} inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600/95 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full border border-white/20 shadow-lg`}>
+                      <FaLock className="text-[10px]" /> Closed
+                    </span>
+                  </div>
+                  
                   {/* Card Content - Title at top left */}
                   <div className="absolute top-6 left-6 right-6">
                     <h3 className={`${orbitron.className} text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-wider leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]`}>
@@ -260,7 +266,9 @@ export default function GamingArenaPage() {
                   Registration Closed
                 </button>
               </div>
-
+              <p className={`${spaceGrotesk.className} mt-4 text-sm text-gray-600 text-center leading-relaxed`}>
+                Registration has ended — all available slots are full. Thank you for your overwhelming response.
+              </p>
             </div>
           </div>
         )}

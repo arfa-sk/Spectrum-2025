@@ -213,8 +213,8 @@ export default function CreativeGamePage({ params }: PageProps) {
                     </Link>
                   </div>
 
-                  <p className={`${spaceGrotesk.className} text-[10px] text-gray-500 text-center mt-4 font-bold`}>
-                    One registration covers all 5 games across the 3-day event.
+                  <p className={`${spaceGrotesk.className} mt-4 text-sm text-gray-600 text-center leading-relaxed`}>
+                    Registration has ended — all available slots are full. Thank you for your overwhelming response.
                   </p>
                 </div>
               </TimelineContent>

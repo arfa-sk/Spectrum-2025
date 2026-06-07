@@ -276,8 +276,8 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                   </TimelineContent>
 
                   <TimelineContent animationNum={24} timelineRef={sectionRef} once={true} as="p">
-                    <p className={`${spaceGrotesk.className} text-xs text-black/60 text-center mt-4`}>
-                      Registration closes 24 hours before the event
+                    <p className={`${spaceGrotesk.className} mt-4 text-sm text-gray-600 text-center leading-relaxed`}>
+                      Registration has ended — all available slots are full. Thank you for your overwhelming response.
                     </p>
                   </TimelineContent>
                 </div>
