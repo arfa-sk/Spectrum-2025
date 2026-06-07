@@ -238,12 +238,12 @@ export default function SuffasGotTalentPage() {
                 >
                   Full Details
                 </Link>
-                <Link
-                  href="/register?category=Play%20To%20Win&game=Penta%20Arcade"
-                  className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg text-xs sm:text-sm`}
+                <button
+                  disabled
+                  className={`${orbitron.className} flex-1 py-4 bg-neutral-200 text-gray-500 text-center font-bold rounded-2xl cursor-not-allowed shadow-none text-xs sm:text-sm`}
                 >
-                  Register Team
-                </Link>
+                  Registration Closed
+                </button>
               </div>
             </div>
           </div>
@@ -351,12 +351,12 @@ export default function SuffasGotTalentPage() {
               >
                 <FaDownload /> Download Handbook
               </Link>
-              <Link
-                href="/register?category=Play%20To%20Win&game=Penta%20Arcade"
-                className={`${orbitron.className} inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 font-bold rounded-2xl text-xs sm:text-sm uppercase tracking-wider shadow-lg`}
+              <button
+                disabled
+                className={`${orbitron.className} inline-flex items-center justify-center gap-2 px-8 py-4 bg-neutral-200 text-gray-500 font-bold rounded-2xl text-xs sm:text-sm uppercase tracking-wider cursor-not-allowed`}
               >
-                Register Your Team
-              </Link>
+                Registration Closed
+              </button>
             </div>
           </div>
         </section>

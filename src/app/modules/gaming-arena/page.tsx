@@ -253,12 +253,12 @@ export default function GamingArenaPage() {
                 >
                   Cancel
                 </button>
-                <Link
-                  href={`/register?category=E-Sports&game=${encodeURIComponent(activeGame.title)}`}
-                  className={`${orbitron.className} flex-1 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 text-center font-bold rounded-2xl transition-all duration-300 shadow-lg text-xs sm:text-sm`}
+                <button
+                  disabled
+                  className={`${orbitron.className} flex-1 py-4 bg-neutral-200 text-gray-500 font-bold rounded-2xl cursor-not-allowed shadow-none text-xs sm:text-sm`}
                 >
-                  Register Now
-                </Link>
+                  Registration Closed
+                </button>
               </div>
 
             </div>

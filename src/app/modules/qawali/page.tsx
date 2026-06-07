@@ -228,13 +228,12 @@ export default function QawaliNightPage() {
                       <span className={`${spaceGrotesk.className} text-xs text-neutral-500 uppercase tracking-wider`}>Ticket Price</span>
                       <span className={`${spaceGrotesk.className} text-[#FFD700] font-black text-2xl`}>Rs. 700</span>
                     </div>
-                    <Link
-                      href="/register?category=Qawali&ticket=external"
-                      className={`${orbitron.className} w-full py-3 bg-neutral-900 group-hover:bg-[#FFD700] border border-neutral-800 group-hover:border-[#FFD700] text-[#FFD700] group-hover:text-black font-black uppercase tracking-[0.2em] text-xs rounded-xl flex items-center justify-center gap-2 transition-all duration-300`}
+                    <button
+                      disabled
+                      className={`${orbitron.className} w-full py-3 bg-neutral-900 border border-neutral-800 text-gray-500 font-black uppercase tracking-[0.2em] text-xs rounded-xl flex items-center justify-center gap-2 cursor-not-allowed`}
                     >
-                      <span>Book Ticket</span>
-                      <FaArrowRight className="text-xs" />
-                    </Link>
+                      <span>Registration Closed</span>
+                    </button>
                   </div>
                 </div>
               </TimelineContent>
@@ -276,13 +275,12 @@ export default function QawaliNightPage() {
                       <span className={`${spaceGrotesk.className} text-xs text-neutral-500 uppercase tracking-wider`}>Student Price</span>
                       <span className={`${spaceGrotesk.className} text-[#FFD700] font-black text-2xl`}>Rs. 500</span>
                     </div>
-                    <Link
-                      href="/register?category=Qawali&ticket=student"
-                      className={`${orbitron.className} w-full py-3 bg-[#FFD700] text-black font-black uppercase tracking-[0.2em] text-xs rounded-xl flex items-center justify-center gap-2 hover:bg-white hover:text-black transition-all duration-300 border border-[#FFD700]`}
+                    <button
+                      disabled
+                      className={`${orbitron.className} w-full py-3 bg-neutral-900 border border-neutral-800 text-gray-500 font-black uppercase tracking-[0.2em] text-xs rounded-xl flex items-center justify-center gap-2 cursor-not-allowed`}
                     >
-                      <span>Book Student Ticket</span>
-                      <FaArrowRight className="text-xs" />
-                    </Link>
+                      <span>Registration Closed</span>
+                    </button>
                   </div>
                 </div>
               </TimelineContent>

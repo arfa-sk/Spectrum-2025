@@ -198,12 +198,12 @@ export default function CreativeGamePage({ params }: PageProps) {
                   </div>
 
                   <div className="space-y-3">
-                    <Link
-                      href="/register?category=Play%20To%20Win&game=Penta%20Arcade"
-                      className={`${orbitron.className} w-full block text-center py-4 bg-black text-[#FFD700] hover:bg-neutral-900 border-2 border-black font-extrabold rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-md`}
+                    <button
+                      disabled
+                      className={`${orbitron.className} w-full block text-center py-4 bg-neutral-200 text-gray-500 font-extrabold rounded-xl text-xs uppercase tracking-widest cursor-not-allowed`}
                     >
-                      Register Team
-                    </Link>
+                      Registration Closed
+                    </button>
                     <Link
                       href={meta.handbookUrl}
                       download

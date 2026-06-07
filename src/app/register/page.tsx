@@ -448,8 +448,8 @@ export default function RegisterPage() {
     }));
     if (name === "mainCategory" || name === "subCategory") {
       const newMainCategory = name === "mainCategory" ? value : formData.mainCategory;
-      if (newMainCategory === "Hackathon") {
-        setClosedTrackNotice("Registration for all Hackathon tracks has ended — all available slots are full. Thank you for your overwhelming response.");
+      if (newMainCategory) {
+        setClosedTrackNotice(`Registration for ${newMainCategory} has ended — all available slots are full. Thank you for your overwhelming response.`);
       } else {
         setClosedTrackNotice(null);
       }
@@ -503,9 +503,9 @@ export default function RegisterPage() {
       newErrors.subCategory = "Please select a sub-category";
     }
 
-    if (formData.mainCategory === "Hackathon") {
-      setClosedTrackNotice("Registration for all Hackathon tracks has ended — all available slots are full. Thank you for your overwhelming response.");
-      newErrors.mainCategory = "Registration for all Hackathon tracks is closed";
+    if (formData.mainCategory) {
+      setClosedTrackNotice(`Registration for ${formData.mainCategory} has ended — all available slots are full. Thank you for your overwhelming response.`);
+      newErrors.mainCategory = `Registration for ${formData.mainCategory} is closed`;
     }
 
     // Team validation

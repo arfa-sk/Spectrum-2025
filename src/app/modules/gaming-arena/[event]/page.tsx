@@ -267,12 +267,12 @@ export default function GamingArenaEventPage({ params }: PageProps) {
                   </div>
 
                   <TimelineContent animationNum={23} timelineRef={sectionRef} once={true} as="div">
-                    <Link
-                      href={`/register?category=E-Sports&game=${encodeURIComponent(config.title.replace(" Tournament", "").replace(" Championship", "").replace(" Showdown", "").replace(" Spike Clash", ""))}`}
-                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-black text-[#FFD700] hover:bg-neutral-900 font-bold rounded-full transition transform hover:scale-105 shadow-lg`}
+                    <button
+                      disabled
+                      className={`${orbitron.className} w-full inline-block text-center px-8 py-4 bg-neutral-200 text-gray-500 font-bold rounded-full cursor-not-allowed`}
                     >
-                      Register Now
-                    </Link>
+                      Registration Closed
+                    </button>
                   </TimelineContent>
 
                   <TimelineContent animationNum={24} timelineRef={sectionRef} once={true} as="p">
